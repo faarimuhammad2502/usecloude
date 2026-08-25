@@ -85,7 +85,7 @@
             </div>
             
             <h1 class="text-xl font-bold mb-2">Masuk ke usecloude Pribadimu</h1>
-            <p class="text-xs text-slate-500 dark:text-slate-400 mb-6">Penyimpanan galeri & dokumen privat tingkat lanjut.</p>
+            <p class="text-xs text-slate-500 dark:text-slate-400 mb-6">Penyimpanan galeri privat yang aman dan handal.</p>
             
             <div class="space-y-4 text-left">
                 <div>
@@ -133,7 +133,7 @@
         </div>
     </div>
 
-    <!-- ================= MODAL METADATA & TAG EDITOR ================= -->
+    <!-- ================= MODAL METADATA & TAG ================= -->
     <div id="metadataModal" class="fixed inset-0 z-50 bg-slate-950/70 backdrop-blur-sm hidden flex items-center justify-center p-4">
         <div class="app-surface border rounded-3xl max-w-md w-full p-6 shadow-2xl space-y-4 animate-fade-in">
             <div class="flex items-center justify-between pb-2 border-b border-slate-200 dark:border-slate-800">
@@ -178,7 +178,7 @@
                 <span class="text-lg sm:text-xl font-bold tracking-tight bg-gradient-to-r from-indigo-500 to-cyan-500 bg-clip-text text-transparent">usecloude</span>
                 <span class="hidden sm:inline-flex items-center space-x-1 px-2 py-0.5 rounded-full bg-emerald-500/10 border border-emerald-500/30 text-[10px] text-emerald-600 dark:text-emerald-400 font-medium">
                     <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-ping"></span>
-                    <span>Pro v9.4 Ultimate</span>
+                    <span>Pro Ultimate</span>
                 </span>
             </div>
             
@@ -192,18 +192,15 @@
             </div>
 
             <div class="flex items-center space-x-2 shrink-0 relative">
-                <!-- Sakelar Tema Terang / Gelap -->
                 <button onclick="toggleLightDarkMode()" class="p-2.5 rounded-xl app-surface-sub hover:opacity-85 border transition text-xs flex items-center cursor-pointer shadow-sm active:scale-95" title="Ubah Tema Terang/Gelap">
                     <span id="themeToggleIcon">🌙</span>
                 </button>
 
-                <!-- Tombol Panduan Shortcut -->
-                <button onclick="openShortcutsModal()" class="hidden md:flex p-2.5 rounded-xl app-surface-sub hover:opacity-85 border transition text-xs items-center cursor-pointer shadow-sm active:scale-95" title="Panduan Keyboard Shortcuts">
+                <button onclick="openShortcutsModal()" class="hidden md:flex p-2.5 rounded-xl app-surface-sub hover:opacity-85 border transition text-xs items-center cursor-pointer shadow-sm active:scale-95" title="Pintasan Keyboard">
                     <span>⌨️</span>
                 </button>
 
-                <!-- Dropdown Ukuran Grid & Tampilan -->
-                <button onclick="toggleGridSizeDropdown(event)" id="gridSizeToggleBtn" class="p-2.5 rounded-xl app-surface-sub hover:opacity-85 border transition text-xs flex items-center space-x-1 cursor-pointer shadow-sm active:scale-95" title="Atur Tampilan Galeri">
+                <button onclick="toggleGridSizeDropdown(event)" id="gridSizeToggleBtn" class="p-2.5 rounded-xl app-surface-sub hover:opacity-85 border transition text-xs flex items-center space-x-1 cursor-pointer shadow-sm active:scale-95">
                     <span id="gridSizeIcon">📐 Medium</span>
                 </button>
                 <div id="gridSizeDropdown" class="hidden absolute right-14 top-12 w-48 app-surface border rounded-2xl shadow-2xl p-2 z-50 text-xs space-y-1 animate-fade-in">
@@ -221,7 +218,7 @@
                 <div id="profileDropdown" class="hidden absolute right-0 top-12 w-72 sm:w-80 app-surface border rounded-3xl shadow-2xl p-4 sm:p-5 z-50 text-xs animate-fade-in">
                     <div class="flex items-center justify-between mb-3 pb-2 border-b border-slate-200 dark:border-slate-800">
                         <span class="text-slate-500 dark:text-slate-400 font-medium">Akun usecloude</span>
-                        <span class="text-[10px] bg-indigo-600/20 text-indigo-500 border border-indigo-500/30 px-2 py-0.5 rounded-full">Ultimate Pro</span>
+                        <span class="text-[10px] bg-indigo-600/20 text-indigo-500 border border-indigo-500/30 px-2 py-0.5 rounded-full">Pro Member</span>
                     </div>
                     <div class="bg-indigo-600/10 border border-indigo-500/30 p-3 rounded-2xl flex items-center space-x-3 mb-4">
                         <div class="w-9 h-9 rounded-full theme-bg text-white font-bold flex items-center justify-center text-sm shrink-0" id="dropdownAvatar">F</div>
@@ -366,7 +363,7 @@
                             <button onclick="setFileTypeFilter('starred')" id="filterStarred" class="px-2.5 py-1 rounded-lg text-slate-600 dark:text-slate-400 hover:opacity-85 transition cursor-pointer">⭐ Favorit</button>
                             <button onclick="setFileTypeFilter('image')" id="filterImage" class="px-2.5 py-1 rounded-lg text-slate-600 dark:text-slate-400 hover:opacity-85 transition cursor-pointer">Foto</button>
                             <button onclick="setFileTypeFilter('video')" id="filterVideo" class="px-2.5 py-1 rounded-lg text-slate-600 dark:text-slate-400 hover:opacity-85 transition cursor-pointer">Video</button>
-                            <button onclick="setFileTypeFilter('doc')" id="filterDoc" class="px-2.5 py-1 rounded-lg text-slate-600 dark:text-slate-400 hover:opacity-85 transition cursor-pointer">Dokumen/Audio</button>
+                            <button onclick="setFileTypeFilter('other')" id="filterOther" class="px-2.5 py-1 rounded-lg text-slate-600 dark:text-slate-400 hover:opacity-85 transition cursor-pointer">Lainnya</button>
                         </div>
                         <select id="sortSelect" onchange="renderApp()" class="app-surface border px-3 py-1.5 rounded-xl focus:outline-none focus:border-indigo-500 cursor-pointer shadow-sm">
                             <option value="newest">🕒 Terbaru</option>
@@ -412,7 +409,6 @@
                         <p class="text-[11px] text-slate-500 dark:text-slate-400">Penyimpanan Terenkripsi (UseCloudeDB)</p>
                     </div>
 
-                    <!-- Statistik Penyimpanan Visual Interaktif -->
                     <div class="app-surface-sub p-4 rounded-2xl border space-y-3">
                         <span class="font-semibold block theme-text">📊 Statistik Penyimpanan Visual</span>
                         <div class="space-y-1">
@@ -427,10 +423,8 @@
                         </div>
                     </div>
 
-                    <!-- Pengaturan Kustomisasi Tema Warna -->
                     <div class="app-surface-sub p-4 rounded-2xl border space-y-2">
                         <span class="font-semibold block theme-text">🎨 Kustomisasi Tema Warna</span>
-                        <p class="text-[11px] text-slate-500 dark:text-slate-400">Pilih warna aksen favorit untuk antarmuka usecloude Anda.</p>
                         <div class="flex space-x-3 pt-2">
                             <button onclick="setAppTheme('#6366f1', '#4f46e5')" class="w-8 h-8 rounded-full bg-indigo-500 hover:scale-110 transition shadow cursor-pointer" title="Indigo"></button>
                             <button onclick="setAppTheme('#06b6d4', '#0891b2')" class="w-8 h-8 rounded-full bg-cyan-500 hover:scale-110 transition shadow cursor-pointer" title="Cyan"></button>
@@ -439,10 +433,8 @@
                         </div>
                     </div>
 
-                    <!-- Pengaturan PIN Keamanan -->
                     <div class="app-surface-sub p-4 rounded-2xl border space-y-2">
                         <span class="font-semibold block theme-text">🔒 Keamanan PIN Galeri</span>
-                        <p class="text-[11px] text-slate-500 dark:text-slate-400">Atur PIN 4 digit agar galeri aman saat dibuka orang lain.</p>
                         <div class="flex space-x-2 pt-1">
                             <input type="password" maxlength="4" id="setupPinInput" placeholder="PIN Baru" class="w-1/2 app-surface border px-3 py-2 rounded-xl focus:outline-none focus:border-indigo-500 transition">
                             <button onclick="saveSecurityPin()" class="w-1/2 theme-bg text-white py-2 rounded-xl transition font-medium cursor-pointer shadow-sm active:scale-95">Simpan PIN</button>
@@ -451,7 +443,6 @@
 
                     <div class="app-surface-sub p-4 rounded-2xl border space-y-3">
                         <span class="font-semibold block theme-text">💾 Backup & Cadangan Data</span>
-                        <p class="text-[11px] text-slate-500 dark:text-slate-400">Simpan cadangan seluruh file dan folder Anda ke perangkat atau impor kembali.</p>
                         <div class="flex space-x-2 pt-1">
                             <button onclick="exportAppData()" class="w-1/2 theme-bg text-white py-2 px-3 rounded-xl transition font-medium cursor-pointer text-center shadow-sm active:scale-95">Unduh Backup (.JSON)</button>
                             <label class="w-1/2 app-surface hover:opacity-85 border py-2 px-3 rounded-xl transition font-medium cursor-pointer text-center block shadow-sm active:scale-95">
@@ -463,18 +454,17 @@
 
                     <div class="app-surface-sub p-4 rounded-2xl border border-rose-500/30 space-y-2">
                         <span class="font-semibold text-rose-500 block">⚠️ Zona Berbahaya</span>
-                        <p class="text-[11px] text-slate-500 dark:text-slate-400">Menghapus seluruh cache dan database lokal secara permanen.</p>
                         <button onclick="resetAllAppData()" class="w-full bg-rose-500/10 hover:bg-rose-500 text-rose-500 hover:text-white py-2 rounded-xl border border-rose-500/30 transition font-medium cursor-pointer active:scale-98">Reset Semua Data</button>
                     </div>
                 </div>
             </div>
             <div class="mt-8 pt-4 border-t border-slate-200 dark:border-slate-800 text-center text-[11px] text-slate-400">
-                <p class="font-semibold">usecloude Pro v9.4 Ultimate Edition</p>
+                <p class="font-semibold">usecloude Pro v9.5 (Fixed Edition)</p>
             </div>
         </div>
     </div>
 
-    <!-- ================= MODAL RENAME FILE / FOLDER ================= -->
+    <!-- ================= MODAL RENAME ================= -->
     <div id="renameModal" class="fixed inset-0 z-50 bg-slate-950/70 backdrop-blur-sm hidden flex items-center justify-center p-4">
         <div class="app-surface border rounded-3xl max-w-sm w-full p-6 shadow-2xl space-y-4 animate-fade-in">
             <div class="flex items-center justify-between">
@@ -491,33 +481,17 @@
         </div>
     </div>
 
-    <!-- ================= MENU TITIK TIGA KARTU ================= -->
+    <!-- ================= MENU KARTU ================= -->
     <div id="cardDropdown" class="hidden fixed z-50 w-48 app-surface border rounded-2xl shadow-2xl py-2 text-xs animate-fade-in">
-        <button onclick="dropdownAction('preview')" id="menuOptPreview" class="w-full text-left flex items-center space-x-2.5 px-4 py-2.5 hover:bg-indigo-50 dark:hover:bg-slate-800 transition cursor-pointer">
-            <span>👁️ Pratinjau</span>
-        </button>
-        <button onclick="dropdownAction('metadata')" id="menuOptMetadata" class="w-full text-left flex items-center space-x-2.5 px-4 py-2.5 hover:bg-indigo-50 dark:hover:bg-slate-800 transition cursor-pointer text-cyan-500">
-            <span>ℹ️ Info & Tag File</span>
-        </button>
-        <button onclick="dropdownAction('rename')" id="menuOptRename" class="w-full text-left flex items-center space-x-2.5 px-4 py-2.5 hover:bg-indigo-50 dark:hover:bg-slate-800 transition cursor-pointer text-indigo-500">
-            <span>✏️ Ganti Nama</span>
-        </button>
-        <button onclick="dropdownAction('share')" id="menuOptShare" class="w-full text-left flex items-center space-x-2.5 px-4 py-2.5 hover:bg-indigo-50 dark:hover:bg-slate-800 transition cursor-pointer text-indigo-500 font-medium">
-            <span>🔗 Bagikan (Share)</span>
-        </button>
-        <button onclick="dropdownAction('star')" id="menuOptStar" class="w-full text-left flex items-center space-x-2.5 px-4 py-2.5 hover:bg-indigo-50 dark:hover:bg-slate-800 transition cursor-pointer text-amber-500">
-            <span>⭐ Berbintang</span>
-        </button>
-        <button onclick="dropdownAction('move')" id="menuOptMove" class="w-full text-left flex items-center space-x-2.5 px-4 py-2.5 hover:bg-indigo-50 dark:hover:bg-slate-800 transition cursor-pointer">
-            <span>📁 Pindahkan ke...</span>
-        </button>
-        <a id="dropdownDownload" href="#" download class="w-full text-left flex items-center space-x-2.5 px-4 py-2.5 hover:bg-indigo-50 dark:hover:bg-slate-800 transition cursor-pointer">
-            <span>⬇️ Unduh</span>
-        </a>
+        <button onclick="dropdownAction('preview')" id="menuOptPreview" class="w-full text-left flex items-center space-x-2.5 px-4 py-2.5 hover:bg-indigo-50 dark:hover:bg-slate-800 transition cursor-pointer"><span>👁️ Pratinjau</span></button>
+        <button onclick="dropdownAction('metadata')" id="menuOptMetadata" class="w-full text-left flex items-center space-x-2.5 px-4 py-2.5 hover:bg-indigo-50 dark:hover:bg-slate-800 transition cursor-pointer text-cyan-500"><span>ℹ️ Info & Tag File</span></button>
+        <button onclick="dropdownAction('rename')" id="menuOptRename" class="w-full text-left flex items-center space-x-2.5 px-4 py-2.5 hover:bg-indigo-50 dark:hover:bg-slate-800 transition cursor-pointer text-indigo-500"><span>✏️ Ganti Nama</span></button>
+        <button onclick="dropdownAction('share')" id="menuOptShare" class="w-full text-left flex items-center space-x-2.5 px-4 py-2.5 hover:bg-indigo-50 dark:hover:bg-slate-800 transition cursor-pointer text-indigo-500 font-medium"><span>🔗 Bagikan</span></button>
+        <button onclick="dropdownAction('star')" id="menuOptStar" class="w-full text-left flex items-center space-x-2.5 px-4 py-2.5 hover:bg-indigo-50 dark:hover:bg-slate-800 transition cursor-pointer text-amber-500"><span>⭐ Berbintang</span></button>
+        <button onclick="dropdownAction('move')" id="menuOptMove" class="w-full text-left flex items-center space-x-2.5 px-4 py-2.5 hover:bg-indigo-50 dark:hover:bg-slate-800 transition cursor-pointer"><span>📁 Pindahkan ke...</span></button>
+        <a id="dropdownDownload" href="#" download class="w-full text-left flex items-center space-x-2.5 px-4 py-2.5 hover:bg-indigo-50 dark:hover:bg-slate-800 transition cursor-pointer"><span>⬇️ Unduh</span></a>
         <div class="h-[1px] bg-slate-200 dark:bg-slate-800 my-1"></div>
-        <button onclick="dropdownAction('delete')" id="menuOptDelete" class="w-full text-left flex items-center space-x-2.5 px-4 py-2.5 text-rose-500 hover:bg-rose-50 dark:hover:bg-rose-600/20 transition cursor-pointer">
-            <span>🗑️ Pindahkan ke Sampah</span>
-        </button>
+        <button onclick="dropdownAction('delete')" id="menuOptDelete" class="w-full text-left flex items-center space-x-2.5 px-4 py-2.5 text-rose-500 hover:bg-rose-50 dark:hover:bg-rose-600/20 transition cursor-pointer"><span>🗑️ Pindahkan ke Sampah</span></button>
     </div>
 
     <!-- ================= MODAL SHARE ================= -->
@@ -527,9 +501,7 @@
                 <h3 class="text-sm font-bold">🔗 Bagikan File</h3>
                 <button onclick="closeShareModal()" class="text-slate-400 hover:text-indigo-500 text-sm cursor-pointer transition">✕</button>
             </div>
-            
             <p id="shareFileName" class="text-xs theme-text font-medium truncate">Nama File</p>
-
             <div class="space-y-1.5">
                 <label class="text-[11px] text-slate-500 dark:text-slate-400 block">Salin Tautan File:</label>
                 <div class="flex space-x-2">
@@ -537,30 +509,11 @@
                     <button onclick="copyShareLink()" class="theme-bg text-white text-xs px-4 py-2 rounded-xl transition shrink-0 cursor-pointer font-medium active:scale-95">Salin</button>
                 </div>
             </div>
-
-            <div class="pt-2 border-t border-slate-200 dark:border-slate-800 space-y-2">
-                <label class="text-[11px] text-slate-500 dark:text-slate-400 block">Kirim Cepat ke:</label>
-                <div class="grid grid-cols-3 gap-2">
-                    <a id="shareEmailBtn" href="#" target="_blank" class="app-surface-sub hover:opacity-85 border p-2.5 rounded-xl text-center text-xs transition flex flex-col items-center space-y-1 shadow-sm active:scale-95">
-                        <span>📧</span>
-                        <span class="text-[10px]">Email</span>
-                    </a>
-                    <a id="shareWhatsappBtn" href="#" target="_blank" class="bg-emerald-500/10 hover:bg-emerald-500/20 border border-emerald-500/30 p-2.5 rounded-xl text-center text-xs text-emerald-600 dark:text-emerald-300 transition flex flex-col items-center space-y-1 shadow-sm active:scale-95">
-                        <span>💬</span>
-                        <span class="text-[10px]">WhatsApp</span>
-                    </a>
-                    <a id="shareTelegramBtn" href="#" target="_blank" class="bg-sky-500/10 hover:bg-sky-500/20 border border-sky-500/30 p-2.5 rounded-xl text-center text-xs text-sky-600 dark:text-sky-300 transition flex flex-col items-center space-y-1 shadow-sm active:scale-95">
-                        <span>✈️</span>
-                        <span class="text-[10px]">Telegram</span>
-                    </a>
-                </div>
-            </div>
-
             <button onclick="closeShareModal()" class="w-full app-surface-sub hover:opacity-85 border text-xs py-2.5 rounded-xl transition cursor-pointer mt-2 shadow-sm active:scale-95">Tutup</button>
         </div>
     </div>
 
-    <!-- ================= MODAL PINDAH FOLDER ================= -->
+    <!-- ================= MODAL PINDAH ================= -->
     <div id="moveModal" class="fixed inset-0 z-50 bg-slate-950/70 backdrop-blur-sm hidden flex items-center justify-center p-4">
         <div class="app-surface border rounded-3xl max-w-sm w-full p-6 shadow-2xl space-y-4 animate-fade-in">
             <div class="flex items-center justify-between">
@@ -568,7 +521,6 @@
                 <button onclick="closeMoveModal()" class="text-slate-400 hover:text-indigo-500 text-sm cursor-pointer transition">✕</button>
             </div>
             <div>
-                <label class="text-[11px] text-slate-500 dark:text-slate-400 block mb-2">Pilih Folder Tujuan:</label>
                 <select id="modalFolderSelect" class="w-full app-surface-sub text-xs p-3 rounded-xl border focus:outline-none focus:border-indigo-500 transition">
                     <option value="">(Root) Drive Saya</option>
                 </select>
@@ -583,22 +535,12 @@
     <!-- ================= LIGHTBOX PREVIEW ================= -->
     <div id="lightboxModal" class="fixed inset-0 w-full h-full z-50 bg-slate-950/80 backdrop-blur-md hidden flex items-center justify-center p-4 animate-fade-in" onclick="closeLightbox()">
         <div class="relative max-w-4xl w-full app-surface border rounded-3xl overflow-hidden shadow-2xl flex flex-col md:flex-row group/lightbox" onclick="event.stopPropagation()">
-            
-            <button onclick="closeLightbox()" class="absolute top-3 right-3 z-40 w-9 h-9 rounded-full bg-slate-950/80 hover:bg-rose-600 text-white flex items-center justify-center text-sm shadow transition cursor-pointer" title="Tutup Pratinjau">
-                ✕
-            </button>
-
-            <button onclick="navigateLightbox(-1)" class="absolute left-3 top-1/2 -translate-y-1/2 z-30 w-10 h-10 rounded-full bg-slate-950/80 theme-bg text-white flex items-center justify-center text-lg shadow-lg opacity-0 group-hover/lightbox:opacity-100 transition cursor-pointer" title="Sebelumnya">
-                ‹
-            </button>
-            <button onclick="navigateLightbox(1)" class="absolute right-[calc(33.33%+12px)] md:right-[calc(33.33%+12px)] top-1/2 -translate-y-1/2 z-30 w-10 h-10 rounded-full bg-slate-950/80 theme-bg text-white flex items-center justify-center text-lg shadow-lg opacity-0 group-hover/lightbox:opacity-100 transition cursor-pointer" title="Berikutnya">
-                ›
-            </button>
-
+            <button onclick="closeLightbox()" class="absolute top-3 right-3 z-40 w-9 h-9 rounded-full bg-slate-950/80 hover:bg-rose-600 text-white flex items-center justify-center text-sm shadow transition cursor-pointer">✕</button>
+            <button onclick="navigateLightbox(-1)" class="absolute left-3 top-1/2 -translate-y-1/2 z-30 w-10 h-10 rounded-full bg-slate-950/80 theme-bg text-white flex items-center justify-center text-lg shadow-lg opacity-0 group-hover/lightbox:opacity-100 transition cursor-pointer">‹</button>
+            <button onclick="navigateLightbox(1)" class="absolute right-[calc(33.33%+12px)] top-1/2 -translate-y-1/2 z-30 w-10 h-10 rounded-full bg-slate-950/80 theme-bg text-white flex items-center justify-center text-lg shadow-lg opacity-0 group-hover/lightbox:opacity-100 transition cursor-pointer">›</button>
             <div class="md:w-2/3 bg-slate-950 flex items-center justify-center p-4 relative min-h-[300px]">
                 <div id="lightboxContent" class="w-full flex justify-center items-center"></div>
             </div>
-
             <div class="md:w-1/3 p-6 flex flex-col justify-between app-surface">
                 <div>
                     <h3 id="lightboxTitle" class="text-sm font-semibold truncate mb-2 pr-6">Judul File</h3>
@@ -617,10 +559,7 @@
     <div id="uploadProgressWidget" class="fixed bottom-6 right-6 z-[99999] app-surface border rounded-2xl p-4 shadow-2xl w-80 hidden backdrop-blur-xl animate-slide-left">
         <div class="flex items-center justify-between mb-2">
             <span id="progressTitle" class="text-xs font-semibold truncate max-w-[200px]">Mengunggah...</span>
-            <div class="flex items-center space-x-2">
-                <span id="progressPercent" class="text-xs font-bold theme-text">0%</span>
-                <button onclick="document.getElementById('uploadProgressWidget').classList.add('hidden')" class="text-slate-400 hover:text-indigo-500 text-xs p-1 cursor-pointer transition" title="Tutup">✕</button>
-            </div>
+            <span id="progressPercent" class="text-xs font-bold theme-text">0%</span>
         </div>
         <div class="w-full app-surface-sub rounded-full h-2 overflow-hidden border">
             <div id="progressBarFill" class="theme-bg h-full rounded-full transition-all duration-300 ease-out" style="width: 0%;"></div>
@@ -635,10 +574,10 @@
                 <button onclick="closeFolderModal()" class="text-slate-400 hover:text-indigo-500 text-sm cursor-pointer transition">✕</button>
             </div>
             <div class="space-y-4 mb-6">
-                <input type="text" id="folderNameInput" placeholder="Nama folder (misal: Dokumen, Pekerjaan)" class="w-full px-4 py-3 rounded-xl app-surface-sub border text-sm focus:outline-none focus:border-indigo-500 transition">
+                <input type="text" id="folderNameInput" placeholder="Nama folder..." class="w-full px-4 py-3 rounded-xl app-surface-sub border text-sm focus:outline-none focus:border-indigo-500 transition">
             </div>
             <div class="flex space-x-3">
-                <button onclick="closeFolderModal()" class="w-1/2 app-surface-sub hover:opacity-85 border text-sm py-2.5 rounded-xl transition cursor-pointer shadow-sm active:scale-95">Batal</button>
+                <button onclick="closeFolderModal()" class="w-1/2 app-surface-sub border text-sm py-2.5 rounded-xl transition cursor-pointer shadow-sm active:scale-95">Batal</button>
                 <button onclick="createFolderAction()" class="w-1/2 theme-bg text-white text-sm py-2.5 rounded-xl transition cursor-pointer active:scale-95">Buat</button>
             </div>
         </div>
@@ -650,7 +589,7 @@
             <h3 id="confirmTitle" class="text-base font-semibold mb-2">Konfirmasi</h3>
             <p id="confirmMessage" class="text-xs text-slate-500 dark:text-slate-400 mb-6">Apakah Anda yakin?</p>
             <div class="flex space-x-3">
-                <button id="confirmCancelBtn" class="w-1/2 app-surface-sub hover:opacity-85 border text-sm py-2.5 rounded-xl transition cursor-pointer shadow-sm active:scale-95">Batal</button>
+                <button id="confirmCancelBtn" class="w-1/2 app-surface-sub border text-sm py-2.5 rounded-xl transition cursor-pointer shadow-sm active:scale-95">Batal</button>
                 <button id="confirmYesBtn" class="w-1/2 bg-rose-500 hover:bg-rose-600 text-white text-sm py-2.5 rounded-xl transition cursor-pointer active:scale-95">Ya</button>
             </div>
         </div>
@@ -663,27 +602,23 @@
                 <h3 class="text-sm font-bold">Upload File ke usecloude</h3>
                 <button onclick="closeUploadModal()" class="text-slate-400 hover:text-indigo-500 text-sm cursor-pointer transition">✕</button>
             </div>
-            
             <div>
                 <label class="text-[11px] text-slate-500 dark:text-slate-400 block mb-1.5">Unggah ke Folder:</label>
                 <select id="uploadTargetFolderSelect" class="w-full app-surface-sub text-xs p-3 rounded-xl border focus:outline-none focus:border-indigo-500 transition">
                     <option value="">(Root) Drive Saya</option>
                 </select>
             </div>
-
             <div class="flex items-center space-x-2 app-surface-sub p-3 rounded-xl border">
                 <input type="checkbox" id="compressImageCheckbox" class="w-4 h-4 rounded border-slate-300 text-indigo-600 focus:ring-indigo-500">
                 <label for="compressImageCheckbox" class="text-xs cursor-pointer">Kompres gambar otomatis (Hemat Kuota)</label>
             </div>
-
             <div id="dropZone" onclick="document.getElementById('fileInput').click()" class="border-2 border-dashed border-slate-300 dark:border-slate-800 hover:border-indigo-500 transition rounded-2xl p-6 text-center cursor-pointer app-surface-sub">
                 <svg class="w-10 h-10 theme-text mx-auto mb-2 animate-bounce" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"/></svg>
-                <p id="fileNameDisplay" class="text-xs font-medium">Seret foto, video, dokumen, atau audio ke sini atau <span class="theme-text underline">pilih file</span></p>
+                <p id="fileNameDisplay" class="text-xs font-medium">Seret file ke sini atau <span class="theme-text underline">pilih file</span></p>
                 <input type="file" id="fileInput" accept="image/*,video/*,audio/*,.pdf,.txt,.doc,.docx" multiple class="hidden" onchange="handleFileSelect(event)">
             </div>
-
             <div class="flex space-x-3 pt-2">
-                <button onclick="closeUploadModal()" class="w-1/2 app-surface-sub hover:opacity-85 border text-xs py-2.5 rounded-xl transition cursor-pointer shadow-sm active:scale-95">Batal</button>
+                <button onclick="closeUploadModal()" class="w-1/2 app-surface-sub border text-xs py-2.5 rounded-xl transition cursor-pointer shadow-sm active:scale-95">Batal</button>
                 <button onclick="uploadFilesAction()" class="w-1/2 theme-bg text-white text-xs py-2.5 rounded-xl transition cursor-pointer active:scale-95">Unggah Sekarang</button>
             </div>
         </div>
@@ -731,23 +666,8 @@
 
             request.onsuccess = function(event) {
                 uploadedFiles = event.target.result || [];
-                cleanOldTrashFiles();
                 renderApp();
             };
-        }
-
-        async function cleanOldTrashFiles() {
-            let now = Date.now();
-            let thirtyDaysMs = 30 * 24 * 60 * 60 * 1000;
-            let updated = false;
-            for (let f of uploadedFiles) {
-                if (f.isTrash && f.trashTimestamp && (now - f.trashTimestamp > thirtyDaysMs)) {
-                    await deleteFileFromDB(f.id);
-                    uploadedFiles = uploadedFiles.filter(item => item.id !== f.id);
-                    updated = true;
-                }
-            }
-            if (updated) renderApp();
         }
 
         function saveFileToDB(fileObj) {
@@ -813,9 +733,7 @@
         function loadSavedTheme() {
             let savedColor = localStorage.getItem('usecloude_theme_color');
             let savedHover = localStorage.getItem('usecloude_theme_hover');
-            if (savedColor && savedHover) {
-                setAppTheme(savedColor, savedHover, false);
-            }
+            if (savedColor && savedHover) setAppTheme(savedColor, savedHover, false);
         }
 
         function setAppTheme(color, hoverColor, save = true) {
@@ -867,11 +785,8 @@
             renderApp();
 
             const urlState = { view: currentView, folderId: currentFolderId };
-            if (replace) {
-                history.replaceState(urlState, "", "");
-            } else {
-                history.pushState(urlState, "", "");
-            }
+            if (replace) history.replaceState(urlState, "", "");
+            else history.pushState(urlState, "", "");
         }
 
         function updateSidebarActiveUI() {
@@ -889,14 +804,11 @@
 
         function setFileTypeFilter(type) {
             currentFileTypeFilter = type;
-            ['all', 'starred', 'image', 'video', 'doc'].forEach(t => {
+            ['all', 'starred', 'image', 'video', 'other'].forEach(t => {
                 const btn = document.getElementById('filter' + t.charAt(0).toUpperCase() + t.slice(1));
                 if (btn) {
-                    if (t === type) {
-                        btn.className = "px-2.5 py-1 rounded-lg theme-bg text-white font-medium transition cursor-pointer";
-                    } else {
-                        btn.className = "px-2.5 py-1 rounded-lg text-slate-600 dark:text-slate-400 hover:opacity-85 transition cursor-pointer";
-                    }
+                    if (t === type) btn.className = "px-2.5 py-1 rounded-lg theme-bg text-white font-medium transition cursor-pointer";
+                    else btn.className = "px-2.5 py-1 rounded-lg text-slate-600 dark:text-slate-400 hover:opacity-85 transition cursor-pointer";
                 }
             });
             renderApp();
@@ -910,15 +822,9 @@
                 } else if (e.shiftKey && e.key === '?') {
                     e.preventDefault();
                     openShortcutsModal();
-                } else if (e.key === 'ArrowLeft') {
-                    navigateLightbox(-1);
-                } else if (e.key === 'ArrowRight') {
-                    navigateLightbox(1);
-                } else if (e.key === 'Escape') {
-                    closeLightbox();
-                    closeShortcutsModal();
-                    closeMetadataModal();
-                }
+                } else if (e.key === 'ArrowLeft') { navigateLightbox(-1); }
+                else if (e.key === 'ArrowRight') { navigateLightbox(1); }
+                else if (e.key === 'Escape') { closeLightbox(); closeShortcutsModal(); closeMetadataModal(); }
             });
         }
 
@@ -942,17 +848,14 @@
                 if (fObj) folderName = fObj.name;
             }
             document.getElementById('metaFolder').innerText = folderName;
-
             document.getElementById('metaDimension').innerText = fileObj.type === 'image' ? "Memuat..." : "N/A";
+
             if (fileObj.type === 'image') {
                 const img = new Image();
                 img.src = fileObj.url;
-                img.onload = () => {
-                    document.getElementById('metaDimension').innerText = `${img.width} x ${img.height} px`;
-                };
+                img.onload = () => { document.getElementById('metaDimension').innerText = `${img.width} x ${img.height} px`; };
             }
 
-            // Highlight active tag
             const tagBtns = document.querySelectorAll('#tagSelectorContainer button[data-tag]');
             tagBtns.forEach(btn => {
                 if (btn.getAttribute('data-tag') === (fileObj.tag || '')) {
@@ -979,9 +882,7 @@
         function openMetadataFromLightbox() {
             currentFilteredFilesForLightbox = getFilteredFilesList();
             const file = currentFilteredFilesForLightbox[activeLightboxIndex];
-            if (file) {
-                openMetadataModalForFile(file.id);
-            }
+            if (file) openMetadataModalForFile(file.id);
         }
 
         function closeMetadataModal() { document.getElementById('metadataModal').classList.add('hidden'); }
@@ -1017,9 +918,7 @@
             if (enteredPin === savedPin) {
                 sessionStorage.setItem('usecloude_unlocked', 'true');
                 document.getElementById('pinLockModal').classList.add('hidden');
-            } else {
-                alert("PIN salah!");
-            }
+            } else { alert("PIN salah!"); }
         }
 
         function saveSecurityPin() {
@@ -1028,17 +927,12 @@
                 localStorage.setItem('usecloude_pin_' + currentUser, newPin);
                 alert("PIN keamanan berhasil disimpan!");
                 document.getElementById('setupPinInput').value = '';
-            } else {
-                alert("PIN harus tepat 4 digit angka.");
-            }
+            } else { alert("PIN harus tepat 4 digit angka."); }
         }
 
         function handleLogin() {
             const email = document.getElementById('loginEmail').value.trim();
-            if(!email || !email.includes('@')) {
-                alert("Masukkan alamat email yang valid!");
-                return;
-            }
+            if(!email || !email.includes('@')) { alert("Masukkan alamat email yang valid!"); return; }
             localStorage.setItem('usecloude_logged_user', email);
             currentUser = email;
             checkAuthStatus();
@@ -1056,10 +950,7 @@
         function toggleNewDropdown(e) { e.stopPropagation(); document.getElementById('newDropdown').classList.toggle('hidden'); }
         function toggleProfileDropdown(e) { e.stopPropagation(); document.getElementById('profileDropdown').classList.toggle('hidden'); }
         
-        function openSettingsSupportPanel(e) { 
-            if(e) e.stopPropagation(); 
-            document.getElementById('settingsSupportPanel').classList.remove('hidden'); 
-        }
+        function openSettingsSupportPanel(e) { if(e) e.stopPropagation(); document.getElementById('settingsSupportPanel').classList.remove('hidden'); }
         function closeSettingsSupportPanel() { document.getElementById('settingsSupportPanel').classList.add('hidden'); }
 
         function openFolderModal() { document.getElementById('folderModal').classList.remove('hidden'); }
@@ -1204,10 +1095,7 @@
             if (fileInput.files && fileInput.files.length > 0) {
                 selectedFilesArray = Array.from(fileInput.files);
             }
-            if (selectedFilesArray.length === 0) {
-                alert("Silakan pilih file terlebih dahulu!");
-                return;
-            }
+            if (selectedFilesArray.length === 0) { alert("Silakan pilih file terlebih dahulu!"); return; }
 
             const targetFolderId = document.getElementById('uploadTargetFolderSelect').value || null;
             const shouldCompress = document.getElementById('compressImageCheckbox').checked;
@@ -1232,10 +1120,13 @@
                     const reader = new FileReader();
                     reader.onload = async function(e) {
                         let base64Url = e.target.result;
-                        let fileType = 'doc';
+                        
+                        // Perbaikan deteksi tipe file agar konsisten dengan filter galeri
+                        let fileType = 'other';
                         if (file.type && file.type.startsWith('image')) fileType = 'image';
                         else if (file.type && file.type.startsWith('video')) fileType = 'video';
-                        else if (file.type && file.type.startsWith('audio')) fileType = 'audio';
+                        else if (file.name.match(/\.(jpg|jpeg|png|webp|gif)$/i)) fileType = 'image';
+                        else if (file.name.match(/\.(mp4|mkv|mov|avi)$/i)) fileType = 'video';
 
                         if (shouldCompress && fileType === 'image') {
                             try {
@@ -1248,11 +1139,8 @@
                                         const MAX_HEIGHT = 1280;
                                         let width = img.width;
                                         let height = img.height;
-                                        if (width > height) {
-                                            if (width > MAX_WIDTH) { height *= MAX_WIDTH / width; width = MAX_WIDTH; }
-                                        } else {
-                                            if (height > MAX_HEIGHT) { width *= MAX_HEIGHT / height; height = MAX_HEIGHT; }
-                                        }
+                                        if (width > height) { if (width > MAX_WIDTH) { height *= MAX_WIDTH / width; width = MAX_WIDTH; } }
+                                        else { if (height > MAX_HEIGHT) { width *= MAX_HEIGHT / height; height = MAX_HEIGHT; } }
                                         canvas.width = width;
                                         canvas.height = height;
                                         const ctx = canvas.getContext('2d');
@@ -1303,7 +1191,7 @@
                     if (!file.isStarred) return false;
                 } else if (currentFileTypeFilter === 'image' || currentFileTypeFilter === 'video') {
                     if (file.type !== currentFileTypeFilter) return false;
-                } else if (currentFileTypeFilter === 'doc') {
+                } else if (currentFileTypeFilter === 'other') {
                     if (file.type === 'image' || file.type === 'video') return false;
                 }
 
@@ -1361,10 +1249,9 @@
                                 await new Promise(res => {
                                     const r = new FileReader();
                                     r.onload = async function(evt) {
-                                        let fType = 'doc';
+                                        let fType = 'other';
                                         if (df.type && df.type.startsWith('image')) fType = 'image';
                                         else if (df.type && df.type.startsWith('video')) fType = 'video';
-                                        else if (df.type && df.type.startsWith('audio')) fType = 'audio';
 
                                         let nf = {
                                             id: Date.now() + Math.random(),
@@ -1389,10 +1276,7 @@
                         } else if (selectedFileIds.size > 0) {
                             for (let id of selectedFileIds) {
                                 let fObj = uploadedFiles.find(f => f.id === id);
-                                if (fObj) {
-                                    fObj.folderId = folder.id;
-                                    await saveFileToDB(fObj);
-                                }
+                                if (fObj) { fObj.folderId = folder.id; await saveFileToDB(fObj); }
                             }
                             selectedFileIds.clear();
                         }
@@ -1477,8 +1361,7 @@
                 for (let dateKey in groups) {
                     timelineHtml += `<div class="space-y-3"><h4 class="text-xs font-bold theme-text uppercase tracking-wider sticky top-16 bg-slate-950/60 backdrop-blur-md py-1 px-3 rounded-lg w-max">${dateKey}</h4><div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-4">`;
                     groups[dateKey].forEach((file) => {
-                        let isSelected = selectedFileIds.has(file.id);
-                        let iconOrPrev = file.type === 'image' ? `<img src="${file.url}" class="w-full h-36 object-cover rounded-2xl">` : `<div class="w-full h-36 bg-slate-900 rounded-2xl flex items-center justify-center text-xl">${file.type === 'video' ? '🎬' : file.type === 'audio' ? '🎵' : '📄'}</div>`;
+                        let iconOrPrev = file.type === 'image' ? `<img src="${file.url}" class="w-full h-36 object-cover rounded-2xl">` : `<div class="w-full h-36 bg-slate-900 rounded-2xl flex items-center justify-center text-xl">${file.type === 'video' ? '🎬' : '📄'}</div>`;
                         timelineHtml += `<div onclick="openMetadataModalForFile(${file.id})" class="app-surface border p-3 rounded-3xl cursor-pointer hover:border-indigo-500 transition shadow-sm relative">${iconOrPrev}<div class="mt-2 flex justify-between items-center"><span class="text-xs font-semibold truncate">${file.title}</span>${file.tag ? `<span class="text-[9px] bg-indigo-500/20 text-indigo-400 px-2 py-0.5 rounded-full">${file.tag}</span>`:''}</div></div>`;
                     });
                     timelineHtml += `</div></div>`;
@@ -1505,7 +1388,7 @@
                     };
 
                     let sizeFormatted = file.size > 1024*1024 ? (file.size/(1024*1024)).toFixed(1) + ' MB' : Math.round(file.size/1024) + ' KB';
-                    let typeIcon = file.type === 'video' ? '🎬' : file.type === 'audio' ? '🎵' : file.type === 'image' ? '🖼️' : '📄';
+                    let typeIcon = file.type === 'video' ? '🎬' : file.type === 'image' ? '🖼️' : '📄';
 
                     row.innerHTML = `
                         <div class="flex items-center space-x-3 truncate">
@@ -1543,7 +1426,6 @@
                         if (!selectedFileIds.has(file.id)) { selectedFileIds.clear(); selectedFileIds.add(file.id); }
                         e.dataTransfer.setData('text/plain', file.id);
                     };
-
                     card.onclick = (e) => {
                         if (e.ctrlKey || e.metaKey || e.shiftKey) { e.stopPropagation(); toggleFileSelection(file.id); }
                         else { openLightboxByIndex(index); }
@@ -1555,10 +1437,8 @@
                         mediaPreview = `<div class="relative bg-slate-900 dark:bg-slate-950 overflow-hidden rounded-2xl ${hClass}"><img src="${file.url}" alt="${file.title}" class="w-full h-full object-cover group-hover:scale-105 transition duration-500"></div>`;
                     } else if (file.type === 'video') {
                         mediaPreview = `<div class="relative bg-slate-900 dark:bg-slate-950 overflow-hidden rounded-2xl ${hClass} flex items-center justify-center"><video src="${file.url}" class="w-full h-full object-cover group-hover:scale-105 transition duration-500" preload="metadata"></video><span class="absolute top-3 left-3 bg-slate-950/75 text-[10px] px-2.5 py-1 rounded-full text-cyan-300 font-medium">Video</span></div>`;
-                    } else if (file.type === 'audio') {
-                        mediaPreview = `<div class="relative bg-slate-900 dark:bg-slate-950 overflow-hidden rounded-2xl ${hClass} flex flex-col items-center justify-center p-4"><span class="text-3xl mb-2">🎵</span><span class="text-[10px] text-cyan-300">File Audio / Musik</span></div>`;
                     } else {
-                        mediaPreview = `<div class="relative bg-slate-900 dark:bg-slate-950 overflow-hidden rounded-2xl ${hClass} flex flex-col items-center justify-center p-4"><span class="text-3xl mb-2">📄</span><span class="text-[10px] text-indigo-300">Dokumen / Teks</span></div>`;
+                        mediaPreview = `<div class="relative bg-slate-900 dark:bg-slate-950 overflow-hidden rounded-2xl ${hClass} flex flex-col items-center justify-center p-4"><span class="text-3xl mb-2">📄</span><span class="text-[10px] text-indigo-300">Dokumen</span></div>`;
                     }
 
                     card.innerHTML = `
@@ -1591,19 +1471,14 @@
             renderApp();
         }
 
-        function clearSelection() {
-            selectedFileIds.clear();
-            renderApp();
-        }
+        function clearSelection() { selectedFileIds.clear(); renderApp(); }
 
         function updateBulkActionBar() {
             const bar = document.getElementById('bulkActionBar');
             if (selectedFileIds.size > 0) {
                 bar.classList.remove('hidden');
                 document.getElementById('selectedCountText').innerText = `${selectedFileIds.size} item dipilih`;
-            } else {
-                bar.classList.add('hidden');
-            }
+            } else { bar.classList.add('hidden'); }
         }
 
         function openCardDropdown(e, fileId, fileUrl, isTrash) {
@@ -1622,19 +1497,11 @@
             let fileObj = uploadedFiles.find(f => f.id === fileId);
 
             if (isTrash) {
-                starBtn.style.display = 'none';
-                renameBtn.style.display = 'none';
-                shareBtn.style.display = 'none';
-                moveBtn.style.display = 'none';
-                metaBtn.style.display = 'block';
+                starBtn.style.display = 'none'; renameBtn.style.display = 'none'; shareBtn.style.display = 'none'; moveBtn.style.display = 'none'; metaBtn.style.display = 'block';
                 deleteBtn.innerHTML = `<span>♻️ Pulihkan File</span>`;
                 deleteBtn.className = "w-full text-left flex items-center space-x-2.5 px-4 py-2.5 text-emerald-500 hover:bg-emerald-50 dark:hover:bg-emerald-600/20 transition cursor-pointer";
             } else {
-                starBtn.style.display = 'block';
-                renameBtn.style.display = 'block';
-                shareBtn.style.display = 'block';
-                moveBtn.style.display = 'block';
-                metaBtn.style.display = 'block';
+                starBtn.style.display = 'block'; renameBtn.style.display = 'block'; shareBtn.style.display = 'block'; moveBtn.style.display = 'block'; metaBtn.style.display = 'block';
                 starBtn.innerHTML = fileObj && fileObj.isStarred ? `<span>⭐ Hapus Bintang</span>` : `<span>⭐ Berbintang</span>`;
                 deleteBtn.innerHTML = `<span>🗑️ Pindahkan ke Sampah</span>`;
                 deleteBtn.className = "w-full text-left flex items-center space-x-2.5 px-4 py-2.5 text-rose-500 hover:bg-rose-50 dark:hover:bg-rose-600/20 transition cursor-pointer";
@@ -1655,31 +1522,15 @@
                 let currentList = getFilteredFilesList();
                 let index = currentList.findIndex(f => f.id === fileObj.id);
                 if (index !== -1) openLightboxByIndex(index);
-            } else if (action === 'metadata') {
-                openMetadataModalForFile(activeDropdownFileId);
-            } else if (action === 'rename') {
-                openRenameModalForFile();
-            } else if (action === 'share') {
-                openShareModal(fileObj);
-            } else if (action === 'star') {
-                fileObj.isStarred = !fileObj.isStarred;
+            } else if (action === 'metadata') { openMetadataModalForFile(activeDropdownFileId); }
+            else if (action === 'rename') { openRenameModalForFile(); }
+            else if (action === 'share') { openShareModal(fileObj); }
+            else if (action === 'star') { fileObj.isStarred = !fileObj.isStarred; await saveFileToDB(fileObj); renderApp(); }
+            else if (action === 'move') { selectedFileIds.clear(); selectedFileIds.add(activeDropdownFileId); openMoveModal(); }
+            else if (action === 'delete') {
+                fileObj.isTrash = !fileObj.isTrash;
                 await saveFileToDB(fileObj);
                 renderApp();
-            } else if (action === 'move') {
-                selectedFileIds.clear();
-                selectedFileIds.add(activeDropdownFileId);
-                openMoveModal();
-            } else if (action === 'delete') {
-                if (fileObj.isTrash) {
-                    fileObj.isTrash = false;
-                    await saveFileToDB(fileObj);
-                    renderApp();
-                } else {
-                    fileObj.isTrash = true;
-                    fileObj.trashTimestamp = Date.now();
-                    await saveFileToDB(fileObj);
-                    renderApp();
-                }
             }
         }
 
@@ -1696,12 +1547,6 @@
             document.getElementById('shareFileName').innerText = fileObj.title;
             const shareUrl = fileObj.url; 
             document.getElementById('shareLinkInput').value = shareUrl;
-
-            const textMsg = encodeURIComponent(`Halo, silakan lihat file "${fileObj.title}" dari usecloude saya.`);
-            document.getElementById('shareEmailBtn').href = `mailto:?subject=File%20usecloude:%20${encodeURIComponent(fileObj.title)}&body=${textMsg}%0A%0A${encodeURIComponent(shareUrl)}`;
-            document.getElementById('shareWhatsappBtn').href = `https://api.whatsapp.com/send?text=${textMsg}%20${encodeURIComponent(shareUrl)}`;
-            document.getElementById('shareTelegramBtn').href = `https://t.me/share/url?url=${encodeURIComponent(shareUrl)}&text=${textMsg}`;
-
             document.getElementById('shareModal').classList.remove('hidden');
         }
 
@@ -1710,25 +1555,17 @@
         function copyShareLink() {
             const input = document.getElementById('shareLinkInput');
             input.select();
-            input.setSelectionRange(0, 99999);
             navigator.clipboard.writeText(input.value);
-            alert("Tautan file berhasil disalin ke clipboard!");
+            alert("Tautan file berhasil disalin!");
         }
 
-        function openBulkMoveModal() {
-            if (selectedFileIds.size === 0) return;
-            openMoveModal();
-        }
-
+        function openBulkMoveModal() { if (selectedFileIds.size > 0) openMoveModal(); }
         function openMoveModal() {
             const selectFolder = document.getElementById('modalFolderSelect');
             selectFolder.innerHTML = `<option value="">(Root) Drive Saya</option>`;
-            uploadedFolders.forEach(folder => {
-                selectFolder.innerHTML += `<option value="${folder.id}">📁 ${folder.name}</option>`;
-            });
+            uploadedFolders.forEach(folder => { selectFolder.innerHTML += `<option value="${folder.id}">📁 ${folder.name}</option>`; });
             document.getElementById('moveModal').classList.remove('hidden');
         }
-
         function closeMoveModal() { document.getElementById('moveModal').classList.add('hidden'); }
 
         async function executeMove() {
@@ -1744,18 +1581,14 @@
 
         async function bulkDeleteFiles() {
             let actionName = currentView === 'trash' ? "Hapus Permanen" : "Pindahkan ke Sampah";
-            showCustomConfirm(actionName, `Yakin ingin ${actionName.toLowerCase()} ${selectedFileIds.size} file yang dipilih?`, async () => {
+            showCustomConfirm(actionName, `Yakin ingin ${actionName.toLowerCase()} ${selectedFileIds.size} file?`, async () => {
                 for (let id of selectedFileIds) {
-                    let fObj = uploadedFiles.find(f => f.id === id);
-                    if (fObj) {
-                        if (currentView === 'trash') {
-                            await deleteFileFromDB(id);
-                            uploadedFiles = uploadedFiles.filter(f => f.id !== id);
-                        } else {
-                            fObj.isTrash = true;
-                            fObj.trashTimestamp = Date.now();
-                            await saveFileToDB(fObj);
-                        }
+                    if (currentView === 'trash') {
+                        await deleteFileFromDB(id);
+                        uploadedFiles = uploadedFiles.filter(f => f.id !== id);
+                    } else {
+                        let fObj = uploadedFiles.find(f => f.id === id);
+                        if (fObj) { fObj.isTrash = true; await saveFileToDB(fObj); }
                     }
                 }
                 selectedFileIds.clear();
@@ -1765,16 +1598,11 @@
 
         function deleteFolder(e, id) {
             e.stopPropagation();
-            showCustomConfirm("Hapus Folder", "Semua file di dalamnya juga akan dipindahkan ke sampah?", async () => {
+            showCustomConfirm("Hapus Folder", "Semua file di dalamnya akan dipindahkan ke sampah?", async () => {
                 uploadedFolders = uploadedFolders.filter(f => f.id !== id);
                 localStorage.setItem('usecloude_private_folders', JSON.stringify(uploadedFolders));
-                
                 let filesToDelete = uploadedFiles.filter(f => f.folderId === id);
-                for (let f of filesToDelete) { 
-                    f.isTrash = true;
-                    f.trashTimestamp = Date.now();
-                    await saveFileToDB(f); 
-                }
+                for (let f of filesToDelete) { f.isTrash = true; await saveFileToDB(f); }
                 renderApp();
             });
         }
@@ -1798,12 +1626,10 @@
             
             if (file.type === 'video') {
                 contentDiv.innerHTML = `<video src="${file.url}" class="max-h-[60vh] sm:max-h-[70vh] w-full object-contain rounded-2xl" controls autoplay></video>`;
-            } else if (file.type === 'audio') {
-                contentDiv.innerHTML = `<div class="flex flex-col items-center justify-center p-8 text-center"><span class="text-6xl mb-4">🎵</span><audio src="${file.url}" controls class="w-full mt-4" autoplay></audio></div>`;
             } else if (file.type === 'image') {
                 contentDiv.innerHTML = `<img src="${file.url}" alt="${file.title}" class="max-h-[60vh] sm:max-h-[70vh] object-contain rounded-2xl">`;
             } else {
-                contentDiv.innerHTML = `<div class="flex flex-col items-center justify-center p-8 text-center text-white"><span class="text-6xl mb-4">📄</span><p class="text-sm font-semibold mb-3">${file.title}</p><a href="${file.url}" download="${file.title}" class="theme-bg px-4 py-2 rounded-xl text-xs">Unduh Dokumen untuk Dibaca</a></div>`;
+                contentDiv.innerHTML = `<div class="text-white text-center"><span class="text-5xl block mb-2">📄</span><p class="text-sm">${file.title}</p></div>`;
             }
 
             document.getElementById('lightboxTitle').innerText = file.title;
@@ -1812,7 +1638,7 @@
             const deleteBtn = document.getElementById('deleteBtn');
             if (file.isTrash) {
                 deleteBtn.innerText = "Pulihkan File";
-                deleteBtn.className = "w-full bg-emerald-500/10 hover:bg-emerald-500 text-emerald-500 hover:text-white text-sm py-2.5 rounded-xl border border-emerald-500/30 transition cursor-pointer";
+                deleteBtn.className = "w-full bg-emerald-500/10 hover:bg-emerald-500 text-emerald-500 hover:text-white text-sm py-2.5 rounded-xl border border-emerald-500/35 transition cursor-pointer";
                 deleteBtn.setAttribute('onclick', `restoreFileFromLightbox(${file.id})`);
             } else {
                 deleteBtn.innerText = "Pindahkan ke Sampah";
@@ -1828,23 +1654,14 @@
             document.getElementById('lightboxFolderLocation').innerText = `Lokasi Folder: ${currentFolderName}`;
         }
 
-        function navigateLightbox(direction) {
-            activeLightboxIndex += direction;
-            updateLightboxContent();
-        }
-
-        function closeLightbox() { 
-            document.getElementById('lightboxContent').innerHTML = '';
-            document.getElementById('lightboxModal').classList.add('hidden'); 
-        }
+        function navigateLightbox(direction) { activeLightboxIndex += direction; updateLightboxContent(); }
+        function closeLightbox() { document.getElementById('lightboxContent').innerHTML = ''; document.getElementById('lightboxModal').classList.add('hidden'); }
 
         async function deleteFileFromLightbox(id) {
-            showCustomConfirm("Pindahkan ke Sampah", "Yakin ingin memindahkan file ini ke sampah?", async () => {
-                let fObj = uploadedFiles.find(f => f.id === id);
-                if (fObj) { fObj.isTrash = true; fObj.trashTimestamp = Date.now(); await saveFileToDB(fObj); }
-                closeLightbox();
-                renderApp();
-            });
+            let fObj = uploadedFiles.find(f => f.id === id);
+            if (fObj) { fObj.isTrash = true; await saveFileToDB(fObj); }
+            closeLightbox();
+            renderApp();
         }
 
         async function restoreFileFromLightbox(id) {
