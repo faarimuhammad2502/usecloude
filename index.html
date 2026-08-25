@@ -24,7 +24,7 @@
             --surface-sub: #f1f5f9;
             --border-color: #e2e8f0;
             --cloud-opacity: 0.05; 
-            --cloud-color: '%2394a3b8'; /* Diubah menjadi abu-abu terang yang lembut agar teks sangat jelas terbaca */
+            --cloud-color: '%2394a3b8';
         }
         body {
             background-color: var(--bg-main);
@@ -32,18 +32,40 @@
             min-height: 100vh;
             margin: 0;
             overflow-x: hidden;
-            transition: background-color 0.3s ease, color 0.3s ease;
+            transition: background-color 0.4s ease, color 0.4s ease;
             background-image: 
                 radial-gradient(circle at 20% 20%, rgba(79, 70, 229, 0.08) 0%, transparent 50%),
                 radial-gradient(circle at 80% 80%, rgba(34, 211, 238, 0.05) 0%, transparent 50%),
                 url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 400' width='220' height='220' opacity='var(--cloud-opacity)'%3E%3Cpath fill='var(--cloud-color)' d='M45 120c-11 0-20 9-20 20 0 6 3 11 8 14-4 3-6 8-6 13 0 10 8 18 18 18h25c11 0 20-9 20-20 0-8-5-15-12-18 2-4 3-8 3-13 0-14-11-25-25-25-5 0-10 2-14 5-3-3-7-4-12-4zm180 80c-8 0-15 7-15 15 0 5 2 9 6 11-3 2-4 6-4 10 0 8 6 14 14 14h20c8 0 14-6 14-14 0-6-4-11-10-13 1-3 2-6 2-9 0-10-8-18-18-18-4 0-7 1-10 4-2-2-5-4-9-4zm-90 120c-14 0-25 11-25 25 0 8 4 15 10 19-5 4-8 10-8 17 0 12 10 22 22 22h35c12 0 22-10 22-22 0-7-3-13-8-17 6-4 10-11 10-19 0-14-11-25-25-25-7 0-13 3-18 8-5-5-11-8-18-8z'/%3E%3C/svg%3E");
             background-repeat: repeat;
         }
+
+        @keyframes fadeInScale {
+            from { opacity: 0; transform: scale(0.96) translateY(6px); }
+            to { opacity: 1; transform: scale(1) translateY(0); }
+        }
+        @keyframes slideInLeft {
+            from { opacity: 0; transform: translateX(-15px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+        
+        .animate-fade-in { animation: fadeInScale 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+        .animate-slide-left { animation: slideInLeft 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+
+        .card-item {
+            transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.25s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.25s ease;
+        }
+        .card-item:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 24px -8px rgba(99, 102, 241, 0.18);
+        }
+
         .theme-bg { background-color: var(--theme-color) !important; }
         .theme-bg:hover { background-color: var(--theme-color-hover) !important; }
         .theme-text { color: var(--theme-color) !important; }
         .app-surface { background-color: var(--surface-color); border-color: var(--border-color); }
         .app-surface-sub { background-color: var(--surface-sub); border-color: var(--border-color); }
+        
         ::-webkit-scrollbar { width: 6px; height: 6px; }
         ::-webkit-scrollbar-track { background: var(--bg-main); }
         ::-webkit-scrollbar-thumb { background: var(--border-color); border-radius: 9999px; }
@@ -53,9 +75,9 @@
 
     <!-- ================= HALAMAN LOGIN ================= -->
     <div id="loginPage" class="w-full min-h-screen flex items-center justify-center p-4 relative z-50">
-        <div class="max-w-md w-full app-surface backdrop-blur-2xl border p-8 sm:p-10 rounded-3xl shadow-2xl text-center relative z-50">
+        <div class="max-w-md w-full app-surface backdrop-blur-2xl border p-8 sm:p-10 rounded-3xl shadow-2xl text-center relative z-50 animate-fade-in">
             <div class="flex justify-center items-center space-x-2.5 mb-6">
-                <svg class="w-10 h-10 theme-text" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <svg class="w-10 h-10 theme-text animate-pulse" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                     <path d="M18 10h-1.26A8 8 0 1 0 9 20h9a5 5 0 0 0 0-10z"></path>
                     <circle cx="12" cy="14" r="2" fill="#22d3ee" stroke="none"></circle>
                 </svg>
@@ -63,35 +85,35 @@
             </div>
             
             <h1 class="text-xl font-bold mb-2">Masuk ke usecloude Pribadimu</h1>
-            <p class="text-xs text-slate-500 dark:text-slate-400 mb-6">Penyimpanan galeri privat yang aman, cepat, dan elegan.</p>
+            <p class="text-xs text-slate-500 dark:text-slate-400 mb-6">Penyimpanan galeri & dokumen privat tingkat lanjut.</p>
             
             <div class="space-y-4 text-left">
                 <div>
                     <label class="text-xs text-slate-500 dark:text-slate-400 block mb-1">Alamat Email</label>
-                    <input type="email" id="loginEmail" placeholder="nama@email.com" onkeydown="if(event.key === 'Enter') handleLogin()" class="w-full px-4 py-3 rounded-xl app-surface-sub border text-sm focus:outline-none focus:border-indigo-500 shadow-inner relative z-50">
+                    <input type="email" id="loginEmail" placeholder="nama@email.com" onkeydown="if(event.key === 'Enter') handleLogin()" class="w-full px-4 py-3 rounded-xl app-surface-sub border text-sm focus:outline-none focus:border-indigo-500 shadow-inner transition">
                 </div>
-                <button onclick="handleLogin()" class="w-full theme-bg font-medium py-3 rounded-xl text-sm transition shadow-lg cursor-pointer text-white relative z-50">Masuk / Buat Akun</button>
+                <button onclick="handleLogin()" class="w-full theme-bg font-medium py-3 rounded-xl text-sm transition shadow-lg hover:shadow-indigo-500/25 active:scale-[0.98] cursor-pointer text-white">Masuk / Buat Akun</button>
             </div>
         </div>
     </div>
 
     <!-- ================= MODAL PIN KEAMANAN ================= -->
     <div id="pinLockModal" class="fixed inset-0 z-[9999] bg-slate-950/80 backdrop-blur-md hidden flex items-center justify-center p-4">
-        <div class="max-w-xs w-full app-surface border p-6 rounded-3xl text-center shadow-2xl space-y-4">
-            <div class="w-12 h-12 bg-indigo-600/20 text-indigo-500 rounded-2xl mx-auto flex items-center justify-center text-xl">🔒</div>
+        <div class="max-w-xs w-full app-surface border p-6 rounded-3xl text-center shadow-2xl space-y-4 animate-fade-in">
+            <div class="w-12 h-12 bg-indigo-600/20 text-indigo-500 rounded-2xl mx-auto flex items-center justify-center text-xl animate-bounce">🔒</div>
             <h3 class="text-sm font-bold">Masukkan PIN Keamanan</h3>
             <p class="text-[11px] text-slate-500 dark:text-slate-400">Masukkan 4 digit PIN Anda untuk membuka galeri.</p>
-            <input type="password" maxlength="4" id="pinInputField" placeholder="••••" onkeydown="if(event.key === 'Enter') verifyPinLock()" class="w-full text-center tracking-widest text-lg py-3 rounded-xl app-surface-sub border focus:outline-none focus:border-indigo-500">
-            <button onclick="verifyPinLock()" class="w-full theme-bg py-2.5 rounded-xl text-xs font-medium text-white transition cursor-pointer">Buka Kunci</button>
+            <input type="password" maxlength="4" id="pinInputField" placeholder="••••" onkeydown="if(event.key === 'Enter') verifyPinLock()" class="w-full text-center tracking-widest text-lg py-3 rounded-xl app-surface-sub border focus:outline-none focus:border-indigo-500 transition">
+            <button onclick="verifyPinLock()" class="w-full theme-bg py-2.5 rounded-xl text-xs font-medium text-white transition active:scale-[0.98] cursor-pointer shadow-md">Buka Kunci</button>
         </div>
     </div>
 
-    <!-- ================= MODAL KEYBOARD SHORTCUTS GUIDE ================= -->
+    <!-- ================= MODAL SHORTCUTS ================= -->
     <div id="shortcutsModal" class="fixed inset-0 z-50 bg-slate-950/70 backdrop-blur-sm hidden flex items-center justify-center p-4">
-        <div class="app-surface border rounded-3xl max-w-md w-full p-6 shadow-2xl space-y-4">
+        <div class="app-surface border rounded-3xl max-w-md w-full p-6 shadow-2xl space-y-4 animate-fade-in">
             <div class="flex items-center justify-between pb-2 border-b border-slate-200 dark:border-slate-800">
                 <h3 class="text-sm font-bold">⌨️ Panduan Pintasan Keyboard</h3>
-                <button onclick="closeShortcutsModal()" class="text-slate-400 hover:text-indigo-500 text-sm cursor-pointer">✕</button>
+                <button onclick="closeShortcutsModal()" class="text-slate-400 hover:text-indigo-500 text-sm cursor-pointer transition">✕</button>
             </div>
             <div class="space-y-2 text-xs">
                 <div class="flex justify-between app-surface-sub p-2.5 rounded-xl border">
@@ -99,28 +121,24 @@
                     <span class="font-mono text-indigo-500">Ctrl + U</span>
                 </div>
                 <div class="flex justify-between app-surface-sub p-2.5 rounded-xl border">
-                    <span>Navigasi Foto Sebelumnya / Berikutnya</span>
+                    <span>Navigasi Pratinjau Sebelumnya / Berikutnya</span>
                     <span class="font-mono text-indigo-500">Panah Kiri / Kanan</span>
                 </div>
                 <div class="flex justify-between app-surface-sub p-2.5 rounded-xl border">
                     <span>Tutup Pratinjau / Modal</span>
                     <span class="font-mono text-indigo-500">Esc</span>
                 </div>
-                <div class="flex justify-between app-surface-sub p-2.5 rounded-xl border">
-                    <span>Buka Panduan Ini</span>
-                    <span class="font-mono text-indigo-500">Shift + ?</span>
-                </div>
             </div>
             <button onclick="closeShortcutsModal()" class="w-full theme-bg text-white text-xs py-2 rounded-xl transition cursor-pointer">Tutup</button>
         </div>
     </div>
 
-    <!-- ================= MODAL FILE METADATA INSPECTOR ================= -->
+    <!-- ================= MODAL METADATA & TAG EDITOR ================= -->
     <div id="metadataModal" class="fixed inset-0 z-50 bg-slate-950/70 backdrop-blur-sm hidden flex items-center justify-center p-4">
-        <div class="app-surface border rounded-3xl max-w-md w-full p-6 shadow-2xl space-y-4">
+        <div class="app-surface border rounded-3xl max-w-md w-full p-6 shadow-2xl space-y-4 animate-fade-in">
             <div class="flex items-center justify-between pb-2 border-b border-slate-200 dark:border-slate-800">
-                <h3 class="text-sm font-bold">ℹ️ Informasi Detail File</h3>
-                <button onclick="closeMetadataModal()" class="text-slate-400 hover:text-indigo-500 text-sm cursor-pointer">✕</button>
+                <h3 class="text-sm font-bold">ℹ️ Informasi Detail & Tag File</h3>
+                <button onclick="closeMetadataModal()" class="text-slate-400 hover:text-indigo-500 text-sm cursor-pointer transition">✕</button>
             </div>
             <div class="space-y-3 text-xs">
                 <div class="app-surface-sub p-3 rounded-xl border space-y-1.5">
@@ -131,25 +149,36 @@
                     <div class="flex justify-between"><span class="text-slate-500 dark:text-slate-400">Tanggal Unggah:</span> <span id="metaDate" class="font-medium">-</span></div>
                     <div class="flex justify-between"><span class="text-slate-500 dark:text-slate-400">Lokasi Folder:</span> <span id="metaFolder" class="text-amber-500 font-medium">-</span></div>
                 </div>
+
+                <div class="app-surface-sub p-3 rounded-xl border space-y-2">
+                    <span class="font-semibold block text-slate-700 dark:text-slate-300">🏷️ Pilih Tag / Kategori File:</span>
+                    <div class="flex flex-wrap gap-2 pt-1" id="tagSelectorContainer">
+                        <button onclick="assignTagToFile('Penting')" class="px-2.5 py-1 rounded-lg border text-[11px] font-medium transition hover:border-indigo-500" data-tag="Penting">⭐ Penting</button>
+                        <button onclick="assignTagToFile('Kerja')" class="px-2.5 py-1 rounded-lg border text-[11px] font-medium transition hover:border-indigo-500" data-tag="Kerja">💼 Kerja</button>
+                        <button onclick="assignTagToFile('Liburan')" class="px-2.5 py-1 rounded-lg border text-[11px] font-medium transition hover:border-indigo-500" data-tag="Liburan">🌴 Liburan</button>
+                        <button onclick="assignTagToFile('Pribadi')" class="px-2.5 py-1 rounded-lg border text-[11px] font-medium transition hover:border-indigo-500" data-tag="Pribadi">🔒 Pribadi</button>
+                        <button onclick="assignTagToFile('')" class="px-2.5 py-1 rounded-lg border text-[11px] text-rose-500 font-medium transition hover:border-rose-500">Hapus Tag</button>
+                    </div>
+                </div>
             </div>
-            <button onclick="closeMetadataModal()" class="w-full theme-bg text-white text-xs py-2.5 rounded-xl transition cursor-pointer">Tutup</button>
+            <button onclick="closeMetadataModal()" class="w-full theme-bg text-white text-xs py-2.5 rounded-xl transition cursor-pointer">Simpan & Tutup</button>
         </div>
     </div>
 
     <!-- ================= HALAMAN UTAMA ================= -->
-    <div id="mainAppPage" class="hidden h-screen flex flex-col w-full overflow-hidden">
+    <div id="mainAppPage" class="hidden h-screen flex flex-col w-full overflow-hidden animate-fade-in">
         
         <!-- Top Navbar -->
         <header class="shrink-0 z-40 app-surface backdrop-blur-md border-b px-3 lg:px-6 h-16 flex items-center justify-between gap-2 sm:gap-4 shadow-sm">
-            <div class="flex items-center space-x-2 sm:space-x-3 cursor-pointer shrink-0" onclick="navigateToState({view: 'drive', folderId: null}, true)">
-                <svg class="w-8 h-8 theme-text" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <div class="flex items-center space-x-2 sm:space-x-3 cursor-pointer shrink-0 group" onclick="navigateToState({view: 'drive', folderId: null}, true)">
+                <svg class="w-8 h-8 theme-text transition group-hover:rotate-12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                     <path d="M18 10h-1.26A8 8 0 1 0 9 20h9a5 5 0 0 0 0-10z"></path>
                     <circle cx="12" cy="14" r="2" fill="#22d3ee" stroke="none"></circle>
                 </svg>
                 <span class="text-lg sm:text-xl font-bold tracking-tight bg-gradient-to-r from-indigo-500 to-cyan-500 bg-clip-text text-transparent">usecloude</span>
                 <span class="hidden sm:inline-flex items-center space-x-1 px-2 py-0.5 rounded-full bg-emerald-500/10 border border-emerald-500/30 text-[10px] text-emerald-600 dark:text-emerald-400 font-medium">
-                    <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
-                    <span>Offline-Ready</span>
+                    <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-ping"></span>
+                    <span>Pro v9.4 Ultimate</span>
                 </span>
             </div>
             
@@ -158,46 +187,47 @@
                     <span class="absolute inset-y-0 left-0 flex items-center pl-3 sm:pl-4 pointer-events-none text-slate-400">
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
                     </span>
-                    <input type="text" id="searchInput" onkeyup="renderApp()" placeholder="Cari file di usecloude..." class="w-full pl-10 sm:pl-11 pr-3 py-2 rounded-2xl app-surface-sub border focus:outline-none focus:border-indigo-500 text-xs sm:text-sm transition shadow-inner">
+                    <input type="text" id="searchInput" onkeyup="renderApp()" placeholder="Cari file berdasarkan nama atau tag..." class="w-full pl-10 sm:pl-11 pr-3 py-2 rounded-2xl app-surface-sub border focus:outline-none focus:border-indigo-500 text-xs sm:text-sm transition shadow-inner">
                 </div>
             </div>
 
             <div class="flex items-center space-x-2 shrink-0 relative">
                 <!-- Sakelar Tema Terang / Gelap -->
-                <button onclick="toggleLightDarkMode()" class="p-2.5 rounded-xl app-surface-sub hover:opacity-85 border transition text-xs flex items-center cursor-pointer shadow-sm" title="Ubah Tema Terang/Gelap">
+                <button onclick="toggleLightDarkMode()" class="p-2.5 rounded-xl app-surface-sub hover:opacity-85 border transition text-xs flex items-center cursor-pointer shadow-sm active:scale-95" title="Ubah Tema Terang/Gelap">
                     <span id="themeToggleIcon">🌙</span>
                 </button>
 
                 <!-- Tombol Panduan Shortcut -->
-                <button onclick="openShortcutsModal()" class="hidden md:flex p-2.5 rounded-xl app-surface-sub hover:opacity-85 border transition text-xs items-center cursor-pointer shadow-sm" title="Panduan Keyboard Shortcuts (Shift + ?)">
+                <button onclick="openShortcutsModal()" class="hidden md:flex p-2.5 rounded-xl app-surface-sub hover:opacity-85 border transition text-xs items-center cursor-pointer shadow-sm active:scale-95" title="Panduan Keyboard Shortcuts">
                     <span>⌨️</span>
                 </button>
 
                 <!-- Dropdown Ukuran Grid & Tampilan -->
-                <button onclick="toggleGridSizeDropdown(event)" id="gridSizeToggleBtn" class="p-2.5 rounded-xl app-surface-sub hover:opacity-85 border transition text-xs flex items-center space-x-1 cursor-pointer shadow-sm" title="Atur Ukuran Grid / Tampilan">
+                <button onclick="toggleGridSizeDropdown(event)" id="gridSizeToggleBtn" class="p-2.5 rounded-xl app-surface-sub hover:opacity-85 border transition text-xs flex items-center space-x-1 cursor-pointer shadow-sm active:scale-95" title="Atur Tampilan Galeri">
                     <span id="gridSizeIcon">📐 Medium</span>
                 </button>
-                <div id="gridSizeDropdown" class="hidden absolute right-14 top-12 w-44 app-surface border rounded-2xl shadow-2xl p-2 z-50 text-xs space-y-1">
+                <div id="gridSizeDropdown" class="hidden absolute right-14 top-12 w-48 app-surface border rounded-2xl shadow-2xl p-2 z-50 text-xs space-y-1 animate-fade-in">
                     <button onclick="setGridSize('list')" class="w-full text-left px-3 py-2 rounded-xl hover:bg-indigo-50 dark:hover:bg-slate-800 transition">📋 Mode List</button>
+                    <button onclick="setGridSize('timeline')" class="w-full text-left px-3 py-2 rounded-xl hover:bg-indigo-50 dark:hover:bg-slate-800 transition">📅 Timeline View</button>
                     <button onclick="setGridSize('small')" class="w-full text-left px-3 py-2 rounded-xl hover:bg-indigo-50 dark:hover:bg-slate-800 transition">⏹️ Grid Kecil</button>
                     <button onclick="setGridSize('medium')" class="w-full text-left px-3 py-2 rounded-xl hover:bg-indigo-50 dark:hover:bg-slate-800 transition">🖼️ Grid Sedang</button>
                     <button onclick="setGridSize('large')" class="w-full text-left px-3 py-2 rounded-xl hover:bg-indigo-50 dark:hover:bg-slate-800 transition">🔲 Grid Besar</button>
                 </div>
 
-                <button onclick="toggleProfileDropdown(event)" class="w-9 h-9 sm:w-10 sm:h-10 rounded-full theme-bg text-white font-bold flex items-center justify-center text-xs sm:text-sm shadow-md transition cursor-pointer" id="userAvatarBtn">
+                <button onclick="toggleProfileDropdown(event)" class="w-9 h-9 sm:w-10 sm:h-10 rounded-full theme-bg text-white font-bold flex items-center justify-center text-xs sm:text-sm shadow-md transition hover:scale-105 active:scale-95 cursor-pointer" id="userAvatarBtn">
                     <span id="userAvatar">F</span>
                 </button>
 
-                <div id="profileDropdown" class="hidden absolute right-0 top-12 w-72 sm:w-80 app-surface border rounded-3xl shadow-2xl p-4 sm:p-5 z-50 text-xs">
+                <div id="profileDropdown" class="hidden absolute right-0 top-12 w-72 sm:w-80 app-surface border rounded-3xl shadow-2xl p-4 sm:p-5 z-50 text-xs animate-fade-in">
                     <div class="flex items-center justify-between mb-3 pb-2 border-b border-slate-200 dark:border-slate-800">
                         <span class="text-slate-500 dark:text-slate-400 font-medium">Akun usecloude</span>
-                        <span class="text-[10px] bg-indigo-600/20 text-indigo-500 border border-indigo-500/30 px-2 py-0.5 rounded-full">Pro Member</span>
+                        <span class="text-[10px] bg-indigo-600/20 text-indigo-500 border border-indigo-500/30 px-2 py-0.5 rounded-full">Ultimate Pro</span>
                     </div>
                     <div class="bg-indigo-600/10 border border-indigo-500/30 p-3 rounded-2xl flex items-center space-x-3 mb-4">
                         <div class="w-9 h-9 rounded-full theme-bg text-white font-bold flex items-center justify-center text-sm shrink-0" id="dropdownAvatar">F</div>
                         <div class="overflow-hidden">
                             <h4 id="dropdownName" class="font-bold truncate text-xs sm:text-sm">Nama User</h4>
-                            <p class="text-[10px] text-slate-500 dark:text-slate-400">Penyimpanan Aman (UseCloudeDB)</p>
+                            <p class="text-[10px] text-slate-500 dark:text-slate-400">Penyimpanan Terenkripsi</p>
                             <p id="dropdownEmail" class="text-[10px] text-indigo-500 truncate mt-0.5">email@domain.com</p>
                         </div>
                     </div>
@@ -234,12 +264,12 @@
             <aside class="w-16 sm:w-20 lg:w-64 app-surface border-r p-2 sm:p-4 flex flex-col justify-between shrink-0 h-full shadow-sm">
                 <div class="space-y-6">
                     <div class="relative">
-                        <button onclick="toggleNewDropdown(event)" class="w-full theme-bg text-white font-medium py-3 px-2 sm:px-3 rounded-2xl shadow-lg transition flex items-center justify-center space-x-2 cursor-pointer">
+                        <button onclick="toggleNewDropdown(event)" class="w-full theme-bg text-white font-medium py-3 px-2 sm:px-3 rounded-2xl shadow-lg transition hover:scale-[1.02] active:scale-[0.98] flex items-center justify-center space-x-2 cursor-pointer">
                             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
                             <span class="hidden lg:inline text-sm">Baru (+)</span>
                         </button>
                         
-                        <div id="newDropdown" class="hidden absolute left-0 top-14 w-48 app-surface border rounded-2xl shadow-2xl py-2 z-30 text-xs">
+                        <div id="newDropdown" class="hidden absolute left-0 top-14 w-48 app-surface border rounded-2xl shadow-2xl py-2 z-30 text-xs animate-fade-in">
                             <button onclick="openFolderModal()" class="w-full text-left flex items-center space-x-2.5 px-4 py-3 hover:bg-indigo-50 dark:hover:bg-slate-800 transition cursor-pointer">
                                 <svg class="w-4 h-4 text-amber-500" fill="currentColor" viewBox="0 0 24 24"><path d="M10 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2h-8l-2-2z"/></svg>
                                 <span>Folder baru</span>
@@ -253,7 +283,7 @@
 
                     <!-- Navigasi Menu Samping -->
                     <nav class="space-y-1 text-xs">
-                        <button onclick="navigateToState({view: 'drive', folderId: null})" id="navDrive" class="w-full flex items-center justify-center lg:justify-start space-x-3 p-3 lg:px-3.5 lg:py-2.5 rounded-xl font-medium transition cursor-pointer bg-indigo-600/15 text-indigo-500 border border-indigo-500/30" title="Drive Saya">
+                        <button onclick="navigateToState({view: 'drive', folderId: null})" id="navDrive" class="w-full flex items-center justify-center lg:justify-start space-x-3 p-3 lg:px-3.5 lg:py-2.5 rounded-xl font-medium transition cursor-pointer bg-indigo-600/15 text-indigo-500 border border-indigo-500/30 shadow-sm" title="Drive Saya">
                             <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z"/></svg>
                             <span class="hidden lg:inline">Drive Saya</span>
                         </button>
@@ -273,7 +303,7 @@
                 </div>
 
                 <div class="space-y-4">
-                    <button onclick="openSettingsSupportPanel(event)" class="w-12 h-12 lg:w-full lg:py-3 lg:px-4 app-surface-sub hover:opacity-85 border rounded-2xl flex items-center justify-center lg:justify-start space-x-3 transition cursor-pointer shadow-sm" title="Settings & Support">
+                    <button onclick="openSettingsSupportPanel(event)" class="w-12 h-12 lg:w-full lg:py-3 lg:px-4 app-surface-sub hover:opacity-85 border rounded-2xl flex items-center justify-center lg:justify-start space-x-3 transition cursor-pointer shadow-sm active:scale-95" title="Settings & Support">
                         <svg class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
                         <span class="hidden lg:inline text-xs font-semibold">Settings & Support</span>
                     </button>
@@ -285,7 +315,7 @@
                             <span>Penyimpanan usecloude</span>
                         </div>
                         <div class="w-full app-surface-sub rounded-full h-2 overflow-hidden border">
-                            <div id="storageBar" class="theme-bg h-full rounded-full transition-all duration-500" style="width: 0%;"></div>
+                            <div id="storageBar" class="theme-bg h-full rounded-full transition-all duration-700 ease-out" style="width: 0%;"></div>
                         </div>
                         <div class="flex justify-between text-[11px] text-slate-500 dark:text-slate-400">
                             <span id="storageText">0 KB</span>
@@ -299,19 +329,19 @@
             <main id="driveWorkspace" class="flex-grow p-4 sm:p-6 lg:p-8 overflow-y-auto h-full relative">
                 
                 <!-- Action Bar Melayang Saat File Dipilih (Aksi Massal) -->
-                <div id="bulkActionBar" class="hidden sticky top-0 z-30 mb-6 app-surface border border-indigo-500/50 backdrop-blur-md px-4 sm:px-5 py-3 rounded-2xl shadow-xl flex items-center justify-between text-xs">
+                <div id="bulkActionBar" class="hidden sticky top-0 z-30 mb-6 app-surface border border-indigo-500/50 backdrop-blur-md px-4 sm:px-5 py-3 rounded-2xl shadow-xl flex items-center justify-between text-xs animate-slide-left">
                     <div class="flex items-center space-x-2 sm:space-x-3">
                         <span id="selectedCountText" class="font-bold text-indigo-500">1 item dipilih</span>
                         <button onclick="clearSelection()" class="text-slate-500 hover:text-indigo-500 underline cursor-pointer">Batalkan</button>
                     </div>
                     <div class="flex items-center space-x-2">
-                        <button onclick="bulkStarFiles()" class="app-surface-sub hover:opacity-85 text-amber-500 px-3 py-2 rounded-xl border transition flex items-center space-x-1 cursor-pointer">
+                        <button onclick="bulkStarFiles()" class="app-surface-sub hover:opacity-85 text-amber-500 px-3 py-2 rounded-xl border transition flex items-center space-x-1 cursor-pointer active:scale-95">
                             <span>⭐ Berbintang</span>
                         </button>
-                        <button onclick="openBulkMoveModal()" class="app-surface-sub hover:opacity-85 px-3 py-2 rounded-xl border transition flex items-center space-x-1 cursor-pointer">
+                        <button onclick="openBulkMoveModal()" class="app-surface-sub hover:opacity-85 px-3 py-2 rounded-xl border transition flex items-center space-x-1 cursor-pointer active:scale-95">
                             <span>📁 Pindahkan</span>
                         </button>
-                        <button onclick="bulkDeleteFiles()" class="bg-rose-500/10 hover:bg-rose-500 text-rose-500 hover:text-white px-3 py-2 rounded-xl border border-rose-500/30 transition flex items-center space-x-1 cursor-pointer">
+                        <button onclick="bulkDeleteFiles()" class="bg-rose-500/10 hover:bg-rose-500 text-rose-500 hover:text-white px-3 py-2 rounded-xl border border-rose-500/30 transition flex items-center space-x-1 cursor-pointer active:scale-95">
                             <span>🗑️ Hapus</span>
                         </button>
                     </div>
@@ -320,7 +350,7 @@
                 <!-- Bagian Navigasi & Judul Halaman -->
                 <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-6">
                     <div class="flex items-center space-x-3">
-                        <button id="backButton" onclick="navigateToState({view: 'drive', folderId: null})" class="hidden w-9 h-9 rounded-xl app-surface border flex items-center justify-center transition shadow-sm cursor-pointer" title="Kembali">
+                        <button id="backButton" onclick="navigateToState({view: 'drive', folderId: null})" class="hidden w-9 h-9 rounded-xl app-surface border flex items-center justify-center transition shadow-sm cursor-pointer hover:scale-105 active:scale-95" title="Kembali">
                             ←
                         </button>
                         <div class="flex items-center space-x-2 text-sm">
@@ -336,14 +366,13 @@
                             <button onclick="setFileTypeFilter('starred')" id="filterStarred" class="px-2.5 py-1 rounded-lg text-slate-600 dark:text-slate-400 hover:opacity-85 transition cursor-pointer">⭐ Favorit</button>
                             <button onclick="setFileTypeFilter('image')" id="filterImage" class="px-2.5 py-1 rounded-lg text-slate-600 dark:text-slate-400 hover:opacity-85 transition cursor-pointer">Foto</button>
                             <button onclick="setFileTypeFilter('video')" id="filterVideo" class="px-2.5 py-1 rounded-lg text-slate-600 dark:text-slate-400 hover:opacity-85 transition cursor-pointer">Video</button>
-                            <button onclick="setFileTypeFilter('heavy')" id="filterHeavy" class="px-2.5 py-1 rounded-lg text-slate-600 dark:text-slate-400 hover:opacity-85 transition cursor-pointer" title="File > 5 MB">⚡ > 5MB</button>
+                            <button onclick="setFileTypeFilter('doc')" id="filterDoc" class="px-2.5 py-1 rounded-lg text-slate-600 dark:text-slate-400 hover:opacity-85 transition cursor-pointer">Dokumen/Audio</button>
                         </div>
                         <select id="sortSelect" onchange="renderApp()" class="app-surface border px-3 py-1.5 rounded-xl focus:outline-none focus:border-indigo-500 cursor-pointer shadow-sm">
                             <option value="newest">🕒 Terbaru</option>
-                            <option value="oldest">⏳ Terlama (Paling Awal)</option>
+                            <option value="oldest">⏳ Terlama</option>
                             <option value="name">🔤 Nama (A-Z)</option>
                             <option value="size">📦 Ukuran Terbesar</option>
-                            <option value="smallest">📐 Ukuran Terkecil</option>
                         </select>
                         <span id="fileCount" class="app-surface border px-3 py-1.5 rounded-xl font-medium hidden sm:inline shadow-sm">0 item</span>
                     </div>
@@ -366,14 +395,14 @@
 
     <!-- ================= PANEL SETTINGS & SUPPORT ================= -->
     <div id="settingsSupportPanel" class="fixed inset-0 z-50 bg-slate-950/70 backdrop-blur-sm hidden flex justify-start">
-        <div class="app-surface border-r w-full max-w-md h-full p-6 overflow-y-auto shadow-2xl flex flex-col justify-between">
+        <div class="app-surface border-r w-full max-w-md h-full p-6 overflow-y-auto shadow-2xl flex flex-col justify-between animate-slide-left">
             <div class="space-y-6">
                 <div class="flex items-center justify-between pb-4 border-b border-slate-200 dark:border-slate-800">
                     <div class="flex items-center space-x-2">
                         <span class="text-lg">⚙️</span>
                         <h2 class="text-base font-bold">Settings & Support</h2>
                     </div>
-                    <button onclick="closeSettingsSupportPanel()" class="text-slate-400 hover:text-indigo-500 p-2 rounded-full cursor-pointer">✕</button>
+                    <button onclick="closeSettingsSupportPanel()" class="text-slate-400 hover:text-indigo-500 p-2 rounded-full cursor-pointer transition">✕</button>
                 </div>
 
                 <div class="space-y-4 text-xs">
@@ -389,11 +418,11 @@
                         <div class="space-y-1">
                             <div class="flex justify-between text-[11px] text-slate-500 dark:text-slate-400">
                                 <span id="statImageLabel">Foto (0 KB)</span>
-                                <span id="statVideoLabel">Video (0 KB)</span>
+                                <span id="statVideoLabel">Video/Lainnya (0 KB)</span>
                             </div>
                             <div class="w-full app-surface rounded-full h-3 overflow-hidden flex border">
-                                <div id="statImageBar" class="bg-indigo-500 h-full transition-all duration-500" style="width: 0%;" title="Foto"></div>
-                                <div id="statVideoBar" class="bg-cyan-500 h-full transition-all duration-500" style="width: 0%;" title="Video"></div>
+                                <div id="statImageBar" class="bg-indigo-500 h-full transition-all duration-700 ease-out" style="width: 0%;" title="Foto"></div>
+                                <div id="statVideoBar" class="bg-cyan-500 h-full transition-all duration-700 ease-out" style="width: 0%;" title="Video"></div>
                             </div>
                         </div>
                     </div>
@@ -403,10 +432,10 @@
                         <span class="font-semibold block theme-text">🎨 Kustomisasi Tema Warna</span>
                         <p class="text-[11px] text-slate-500 dark:text-slate-400">Pilih warna aksen favorit untuk antarmuka usecloude Anda.</p>
                         <div class="flex space-x-3 pt-2">
-                            <button onclick="setAppTheme('#6366f1', '#4f46e5')" class="w-8 h-8 rounded-full bg-indigo-500 hover:scale-110 transition shadow" title="Indigo"></button>
-                            <button onclick="setAppTheme('#06b6d4', '#0891b2')" class="w-8 h-8 rounded-full bg-cyan-500 hover:scale-110 transition shadow" title="Cyan"></button>
-                            <button onclick="setAppTheme('#10b981', '#059669')" class="w-8 h-8 rounded-full bg-emerald-500 hover:scale-110 transition shadow" title="Emerald"></button>
-                            <button onclick="setAppTheme('#f43f5e', '#e11d48')" class="w-8 h-8 rounded-full bg-rose-500 hover:scale-110 transition shadow" title="Rose"></button>
+                            <button onclick="setAppTheme('#6366f1', '#4f46e5')" class="w-8 h-8 rounded-full bg-indigo-500 hover:scale-110 transition shadow cursor-pointer" title="Indigo"></button>
+                            <button onclick="setAppTheme('#06b6d4', '#0891b2')" class="w-8 h-8 rounded-full bg-cyan-500 hover:scale-110 transition shadow cursor-pointer" title="Cyan"></button>
+                            <button onclick="setAppTheme('#10b981', '#059669')" class="w-8 h-8 rounded-full bg-emerald-500 hover:scale-110 transition shadow cursor-pointer" title="Emerald"></button>
+                            <button onclick="setAppTheme('#f43f5e', '#e11d48')" class="w-8 h-8 rounded-full bg-rose-500 hover:scale-110 transition shadow cursor-pointer" title="Rose"></button>
                         </div>
                     </div>
 
@@ -415,17 +444,17 @@
                         <span class="font-semibold block theme-text">🔒 Keamanan PIN Galeri</span>
                         <p class="text-[11px] text-slate-500 dark:text-slate-400">Atur PIN 4 digit agar galeri aman saat dibuka orang lain.</p>
                         <div class="flex space-x-2 pt-1">
-                            <input type="password" maxlength="4" id="setupPinInput" placeholder="PIN Baru" class="w-1/2 app-surface border px-3 py-2 rounded-xl focus:outline-none focus:border-indigo-500">
-                            <button onclick="saveSecurityPin()" class="w-1/2 theme-bg text-white py-2 rounded-xl transition font-medium cursor-pointer">Simpan PIN</button>
+                            <input type="password" maxlength="4" id="setupPinInput" placeholder="PIN Baru" class="w-1/2 app-surface border px-3 py-2 rounded-xl focus:outline-none focus:border-indigo-500 transition">
+                            <button onclick="saveSecurityPin()" class="w-1/2 theme-bg text-white py-2 rounded-xl transition font-medium cursor-pointer shadow-sm active:scale-95">Simpan PIN</button>
                         </div>
                     </div>
 
                     <div class="app-surface-sub p-4 rounded-2xl border space-y-3">
                         <span class="font-semibold block theme-text">💾 Backup & Cadangan Data</span>
-                        <p class="text-[11px] text-slate-500 dark:text-slate-400">Simpan cadangan seluruh file dan folder Anda ke perangkat atau impor kembali kapan saja.</p>
+                        <p class="text-[11px] text-slate-500 dark:text-slate-400">Simpan cadangan seluruh file dan folder Anda ke perangkat atau impor kembali.</p>
                         <div class="flex space-x-2 pt-1">
-                            <button onclick="exportAppData()" class="w-1/2 theme-bg text-white py-2 px-3 rounded-xl transition font-medium cursor-pointer text-center">Unduh Backup (.JSON)</button>
-                            <label class="w-1/2 app-surface hover:opacity-85 border py-2 px-3 rounded-xl transition font-medium cursor-pointer text-center block shadow-sm">
+                            <button onclick="exportAppData()" class="w-1/2 theme-bg text-white py-2 px-3 rounded-xl transition font-medium cursor-pointer text-center shadow-sm active:scale-95">Unduh Backup (.JSON)</button>
+                            <label class="w-1/2 app-surface hover:opacity-85 border py-2 px-3 rounded-xl transition font-medium cursor-pointer text-center block shadow-sm active:scale-95">
                                 Impor Data
                                 <input type="file" accept=".json" onchange="importAppData(event)" class="hidden">
                             </label>
@@ -435,40 +464,40 @@
                     <div class="app-surface-sub p-4 rounded-2xl border border-rose-500/30 space-y-2">
                         <span class="font-semibold text-rose-500 block">⚠️ Zona Berbahaya</span>
                         <p class="text-[11px] text-slate-500 dark:text-slate-400">Menghapus seluruh cache dan database lokal secara permanen.</p>
-                        <button onclick="resetAllAppData()" class="w-full bg-rose-500/10 hover:bg-rose-500 text-rose-500 hover:text-white py-2 rounded-xl border border-rose-500/30 transition font-medium cursor-pointer">Reset Semua Data</button>
+                        <button onclick="resetAllAppData()" class="w-full bg-rose-500/10 hover:bg-rose-500 text-rose-500 hover:text-white py-2 rounded-xl border border-rose-500/30 transition font-medium cursor-pointer active:scale-98">Reset Semua Data</button>
                     </div>
                 </div>
             </div>
             <div class="mt-8 pt-4 border-t border-slate-200 dark:border-slate-800 text-center text-[11px] text-slate-400">
-                <p class="font-semibold">usecloude Pro v9.2 (Light Mode Final Fix)</p>
+                <p class="font-semibold">usecloude Pro v9.4 Ultimate Edition</p>
             </div>
         </div>
     </div>
 
     <!-- ================= MODAL RENAME FILE / FOLDER ================= -->
     <div id="renameModal" class="fixed inset-0 z-50 bg-slate-950/70 backdrop-blur-sm hidden flex items-center justify-center p-4">
-        <div class="app-surface border rounded-3xl max-w-sm w-full p-6 shadow-2xl space-y-4">
+        <div class="app-surface border rounded-3xl max-w-sm w-full p-6 shadow-2xl space-y-4 animate-fade-in">
             <div class="flex items-center justify-between">
                 <h3 id="renameModalTitle" class="text-sm font-bold">Ubah Nama</h3>
-                <button onclick="closeRenameModal()" class="text-slate-400 hover:text-indigo-500 text-sm cursor-pointer">✕</button>
+                <button onclick="closeRenameModal()" class="text-slate-400 hover:text-indigo-500 text-sm cursor-pointer transition">✕</button>
             </div>
             <div>
-                <input type="text" id="renameInput" class="w-full app-surface-sub text-xs p-3 rounded-xl border focus:outline-none focus:border-indigo-500">
+                <input type="text" id="renameInput" class="w-full app-surface-sub text-xs p-3 rounded-xl border focus:outline-none focus:border-indigo-500 transition">
             </div>
             <div class="flex space-x-3 pt-2">
-                <button onclick="closeRenameModal()" class="w-1/2 app-surface-sub hover:opacity-85 border text-xs py-2.5 rounded-xl transition cursor-pointer">Batal</button>
-                <button onclick="executeRename()" class="w-1/2 theme-bg text-white text-xs py-2.5 rounded-xl transition cursor-pointer">Simpan</button>
+                <button onclick="closeRenameModal()" class="w-1/2 app-surface-sub hover:opacity-85 border text-xs py-2.5 rounded-xl transition cursor-pointer shadow-sm active:scale-95">Batal</button>
+                <button onclick="executeRename()" class="w-1/2 theme-bg text-white text-xs py-2.5 rounded-xl transition cursor-pointer active:scale-95">Simpan</button>
             </div>
         </div>
     </div>
 
     <!-- ================= MENU TITIK TIGA KARTU ================= -->
-    <div id="cardDropdown" class="hidden fixed z-50 w-48 app-surface border rounded-2xl shadow-2xl py-2 text-xs">
+    <div id="cardDropdown" class="hidden fixed z-50 w-48 app-surface border rounded-2xl shadow-2xl py-2 text-xs animate-fade-in">
         <button onclick="dropdownAction('preview')" id="menuOptPreview" class="w-full text-left flex items-center space-x-2.5 px-4 py-2.5 hover:bg-indigo-50 dark:hover:bg-slate-800 transition cursor-pointer">
             <span>👁️ Pratinjau</span>
         </button>
         <button onclick="dropdownAction('metadata')" id="menuOptMetadata" class="w-full text-left flex items-center space-x-2.5 px-4 py-2.5 hover:bg-indigo-50 dark:hover:bg-slate-800 transition cursor-pointer text-cyan-500">
-            <span>ℹ️ Info Detail</span>
+            <span>ℹ️ Info & Tag File</span>
         </button>
         <button onclick="dropdownAction('rename')" id="menuOptRename" class="w-full text-left flex items-center space-x-2.5 px-4 py-2.5 hover:bg-indigo-50 dark:hover:bg-slate-800 transition cursor-pointer text-indigo-500">
             <span>✏️ Ganti Nama</span>
@@ -493,10 +522,10 @@
 
     <!-- ================= MODAL SHARE ================= -->
     <div id="shareModal" class="fixed inset-0 z-50 bg-slate-950/70 backdrop-blur-sm hidden flex items-center justify-center p-4">
-        <div class="app-surface border rounded-3xl max-w-md w-full p-6 shadow-2xl space-y-4">
+        <div class="app-surface border rounded-3xl max-w-md w-full p-6 shadow-2xl space-y-4 animate-fade-in">
             <div class="flex items-center justify-between pb-2 border-b border-slate-200 dark:border-slate-800">
                 <h3 class="text-sm font-bold">🔗 Bagikan File</h3>
-                <button onclick="closeShareModal()" class="text-slate-400 hover:text-indigo-500 text-sm cursor-pointer">✕</button>
+                <button onclick="closeShareModal()" class="text-slate-400 hover:text-indigo-500 text-sm cursor-pointer transition">✕</button>
             </div>
             
             <p id="shareFileName" class="text-xs theme-text font-medium truncate">Nama File</p>
@@ -505,54 +534,54 @@
                 <label class="text-[11px] text-slate-500 dark:text-slate-400 block">Salin Tautan File:</label>
                 <div class="flex space-x-2">
                     <input type="text" id="shareLinkInput" readonly class="w-full app-surface-sub border rounded-xl px-3 py-2 text-xs focus:outline-none">
-                    <button onclick="copyShareLink()" class="theme-bg text-white text-xs px-4 py-2 rounded-xl transition shrink-0 cursor-pointer font-medium">Salin</button>
+                    <button onclick="copyShareLink()" class="theme-bg text-white text-xs px-4 py-2 rounded-xl transition shrink-0 cursor-pointer font-medium active:scale-95">Salin</button>
                 </div>
             </div>
 
             <div class="pt-2 border-t border-slate-200 dark:border-slate-800 space-y-2">
                 <label class="text-[11px] text-slate-500 dark:text-slate-400 block">Kirim Cepat ke:</label>
                 <div class="grid grid-cols-3 gap-2">
-                    <a id="shareEmailBtn" href="#" target="_blank" class="app-surface-sub hover:opacity-85 border p-2.5 rounded-xl text-center text-xs transition flex flex-col items-center space-y-1 shadow-sm">
+                    <a id="shareEmailBtn" href="#" target="_blank" class="app-surface-sub hover:opacity-85 border p-2.5 rounded-xl text-center text-xs transition flex flex-col items-center space-y-1 shadow-sm active:scale-95">
                         <span>📧</span>
                         <span class="text-[10px]">Email</span>
                     </a>
-                    <a id="shareWhatsappBtn" href="#" target="_blank" class="bg-emerald-500/10 hover:bg-emerald-500/20 border border-emerald-500/30 p-2.5 rounded-xl text-center text-xs text-emerald-600 dark:text-emerald-300 transition flex flex-col items-center space-y-1">
+                    <a id="shareWhatsappBtn" href="#" target="_blank" class="bg-emerald-500/10 hover:bg-emerald-500/20 border border-emerald-500/30 p-2.5 rounded-xl text-center text-xs text-emerald-600 dark:text-emerald-300 transition flex flex-col items-center space-y-1 shadow-sm active:scale-95">
                         <span>💬</span>
                         <span class="text-[10px]">WhatsApp</span>
                     </a>
-                    <a id="shareTelegramBtn" href="#" target="_blank" class="bg-sky-500/10 hover:bg-sky-500/20 border border-sky-500/30 p-2.5 rounded-xl text-center text-xs text-sky-600 dark:text-sky-300 transition flex flex-col items-center space-y-1">
+                    <a id="shareTelegramBtn" href="#" target="_blank" class="bg-sky-500/10 hover:bg-sky-500/20 border border-sky-500/30 p-2.5 rounded-xl text-center text-xs text-sky-600 dark:text-sky-300 transition flex flex-col items-center space-y-1 shadow-sm active:scale-95">
                         <span>✈️</span>
                         <span class="text-[10px]">Telegram</span>
                     </a>
                 </div>
             </div>
 
-            <button onclick="closeShareModal()" class="w-full app-surface-sub hover:opacity-85 border text-xs py-2.5 rounded-xl transition cursor-pointer mt-2 shadow-sm">Tutup</button>
+            <button onclick="closeShareModal()" class="w-full app-surface-sub hover:opacity-85 border text-xs py-2.5 rounded-xl transition cursor-pointer mt-2 shadow-sm active:scale-95">Tutup</button>
         </div>
     </div>
 
     <!-- ================= MODAL PINDAH FOLDER ================= -->
     <div id="moveModal" class="fixed inset-0 z-50 bg-slate-950/70 backdrop-blur-sm hidden flex items-center justify-center p-4">
-        <div class="app-surface border rounded-3xl max-w-sm w-full p-6 shadow-2xl space-y-4">
+        <div class="app-surface border rounded-3xl max-w-sm w-full p-6 shadow-2xl space-y-4 animate-fade-in">
             <div class="flex items-center justify-between">
                 <h3 class="text-sm font-bold">Pindahkan File ke Folder</h3>
-                <button onclick="closeMoveModal()" class="text-slate-400 hover:text-indigo-500 text-sm cursor-pointer">✕</button>
+                <button onclick="closeMoveModal()" class="text-slate-400 hover:text-indigo-500 text-sm cursor-pointer transition">✕</button>
             </div>
             <div>
                 <label class="text-[11px] text-slate-500 dark:text-slate-400 block mb-2">Pilih Folder Tujuan:</label>
-                <select id="modalFolderSelect" class="w-full app-surface-sub text-xs p-3 rounded-xl border focus:outline-none focus:border-indigo-500">
+                <select id="modalFolderSelect" class="w-full app-surface-sub text-xs p-3 rounded-xl border focus:outline-none focus:border-indigo-500 transition">
                     <option value="">(Root) Drive Saya</option>
                 </select>
             </div>
             <div class="flex space-x-3 pt-2">
-                <button onclick="closeMoveModal()" class="w-1/2 app-surface-sub hover:opacity-85 border text-xs py-2.5 rounded-xl transition cursor-pointer shadow-sm">Batal</button>
-                <button onclick="executeMove()" class="w-1/2 theme-bg text-white text-xs py-2.5 rounded-xl transition cursor-pointer">Pindahkan</button>
+                <button onclick="closeMoveModal()" class="w-1/2 app-surface-sub hover:opacity-85 border text-xs py-2.5 rounded-xl transition cursor-pointer shadow-sm active:scale-95">Batal</button>
+                <button onclick="executeMove()" class="w-1/2 theme-bg text-white text-xs py-2.5 rounded-xl transition cursor-pointer active:scale-95">Pindahkan</button>
             </div>
         </div>
     </div>
 
     <!-- ================= LIGHTBOX PREVIEW ================= -->
-    <div id="lightboxModal" class="fixed inset-0 w-full h-full z-50 bg-slate-950/80 backdrop-blur-md hidden flex items-center justify-center p-4" onclick="closeLightbox()">
+    <div id="lightboxModal" class="fixed inset-0 w-full h-full z-50 bg-slate-950/80 backdrop-blur-md hidden flex items-center justify-center p-4 animate-fade-in" onclick="closeLightbox()">
         <div class="relative max-w-4xl w-full app-surface border rounded-3xl overflow-hidden shadow-2xl flex flex-col md:flex-row group/lightbox" onclick="event.stopPropagation()">
             
             <button onclick="closeLightbox()" class="absolute top-3 right-3 z-40 w-9 h-9 rounded-full bg-slate-950/80 hover:bg-rose-600 text-white flex items-center justify-center text-sm shadow transition cursor-pointer" title="Tutup Pratinjau">
@@ -576,68 +605,68 @@
                     <p id="lightboxFolderLocation" class="text-[11px] theme-text mb-6">Lokasi: Drive Saya</p>
                 </div>
                 <div class="space-y-2">
-                    <button onclick="openMetadataFromLightbox()" class="w-full app-surface-sub hover:opacity-85 border text-sm py-2.5 rounded-xl transition cursor-pointer shadow-sm">ℹ️ Info Detail File</button>
-                    <a id="downloadBtn" href="" download="file" class="block text-center w-full theme-bg text-white text-sm py-2.5 rounded-xl transition cursor-pointer">Unduh File</a>
-                    <button id="deleteBtn" onclick="" class="w-full bg-rose-500/10 hover:bg-rose-500 text-rose-500 hover:text-white text-sm py-2.5 rounded-xl border border-rose-500/30 transition cursor-pointer">Pindahkan ke Sampah</button>
+                    <button onclick="openMetadataFromLightbox()" class="w-full app-surface-sub hover:opacity-85 border text-sm py-2.5 rounded-xl transition cursor-pointer shadow-sm active:scale-95">ℹ️ Info & Tag File</button>
+                    <a id="downloadBtn" href="" download="file" class="block text-center w-full theme-bg text-white text-sm py-2.5 rounded-xl transition cursor-pointer active:scale-95">Unduh File</a>
+                    <button id="deleteBtn" onclick="" class="w-full bg-rose-500/10 hover:bg-rose-500 text-rose-500 hover:text-white text-sm py-2.5 rounded-xl border border-rose-500/30 transition cursor-pointer active:scale-95">Pindahkan ke Sampah</button>
                 </div>
             </div>
         </div>
     </div>
 
     <!-- Widget Progres Unggah -->
-    <div id="uploadProgressWidget" class="fixed bottom-6 right-6 z-[99999] app-surface border rounded-2xl p-4 shadow-2xl w-80 hidden backdrop-blur-xl">
+    <div id="uploadProgressWidget" class="fixed bottom-6 right-6 z-[99999] app-surface border rounded-2xl p-4 shadow-2xl w-80 hidden backdrop-blur-xl animate-slide-left">
         <div class="flex items-center justify-between mb-2">
             <span id="progressTitle" class="text-xs font-semibold truncate max-w-[200px]">Mengunggah...</span>
             <div class="flex items-center space-x-2">
                 <span id="progressPercent" class="text-xs font-bold theme-text">0%</span>
-                <button onclick="document.getElementById('uploadProgressWidget').classList.add('hidden')" class="text-slate-400 hover:text-indigo-500 text-xs p-1 cursor-pointer" title="Tutup Progres">✕</button>
+                <button onclick="document.getElementById('uploadProgressWidget').classList.add('hidden')" class="text-slate-400 hover:text-indigo-500 text-xs p-1 cursor-pointer transition" title="Tutup">✕</button>
             </div>
         </div>
         <div class="w-full app-surface-sub rounded-full h-2 overflow-hidden border">
-            <div id="progressBarFill" class="theme-bg h-full rounded-full transition-all duration-200" style="width: 0%;"></div>
+            <div id="progressBarFill" class="theme-bg h-full rounded-full transition-all duration-300 ease-out" style="width: 0%;"></div>
         </div>
     </div>
 
     <!-- Modal Folder Baru -->
     <div id="folderModal" class="fixed inset-0 z-50 bg-slate-950/70 backdrop-blur-sm hidden flex items-center justify-center p-4">
-        <div class="app-surface border rounded-3xl max-w-sm w-full p-6 shadow-2xl">
+        <div class="app-surface border rounded-3xl max-w-sm w-full p-6 shadow-2xl animate-fade-in">
             <div class="flex items-center justify-between mb-4">
                 <h3 class="text-base font-semibold">Folder Baru</h3>
-                <button onclick="closeFolderModal()" class="text-slate-400 hover:text-indigo-500 text-sm cursor-pointer">✕</button>
+                <button onclick="closeFolderModal()" class="text-slate-400 hover:text-indigo-500 text-sm cursor-pointer transition">✕</button>
             </div>
             <div class="space-y-4 mb-6">
-                <input type="text" id="folderNameInput" placeholder="Nama folder (misal: Foto / Video)" class="w-full px-4 py-3 rounded-xl app-surface-sub border text-sm focus:outline-none focus:border-indigo-500">
+                <input type="text" id="folderNameInput" placeholder="Nama folder (misal: Dokumen, Pekerjaan)" class="w-full px-4 py-3 rounded-xl app-surface-sub border text-sm focus:outline-none focus:border-indigo-500 transition">
             </div>
             <div class="flex space-x-3">
-                <button onclick="closeFolderModal()" class="w-1/2 app-surface-sub hover:opacity-85 border text-sm py-2.5 rounded-xl transition cursor-pointer shadow-sm">Batal</button>
-                <button onclick="createFolderAction()" class="w-1/2 theme-bg text-white text-sm py-2.5 rounded-xl transition cursor-pointer">Buat</button>
+                <button onclick="closeFolderModal()" class="w-1/2 app-surface-sub hover:opacity-85 border text-sm py-2.5 rounded-xl transition cursor-pointer shadow-sm active:scale-95">Batal</button>
+                <button onclick="createFolderAction()" class="w-1/2 theme-bg text-white text-sm py-2.5 rounded-xl transition cursor-pointer active:scale-95">Buat</button>
             </div>
         </div>
     </div>
 
     <!-- Modal Konfirmasi -->
     <div id="customConfirmModal" class="fixed inset-0 z-50 bg-slate-950/70 backdrop-blur-sm hidden flex items-center justify-center p-4">
-        <div class="app-surface border rounded-3xl max-w-sm w-full p-6 text-center shadow-2xl">
+        <div class="app-surface border rounded-3xl max-w-sm w-full p-6 text-center shadow-2xl animate-fade-in">
             <h3 id="confirmTitle" class="text-base font-semibold mb-2">Konfirmasi</h3>
             <p id="confirmMessage" class="text-xs text-slate-500 dark:text-slate-400 mb-6">Apakah Anda yakin?</p>
             <div class="flex space-x-3">
-                <button id="confirmCancelBtn" class="w-1/2 app-surface-sub hover:opacity-85 border text-sm py-2.5 rounded-xl transition cursor-pointer shadow-sm">Batal</button>
-                <button id="confirmYesBtn" class="w-1/2 bg-rose-500 hover:bg-rose-600 text-white text-sm py-2.5 rounded-xl transition cursor-pointer">Ya</button>
+                <button id="confirmCancelBtn" class="w-1/2 app-surface-sub hover:opacity-85 border text-sm py-2.5 rounded-xl transition cursor-pointer shadow-sm active:scale-95">Batal</button>
+                <button id="confirmYesBtn" class="w-1/2 bg-rose-500 hover:bg-rose-600 text-white text-sm py-2.5 rounded-xl transition cursor-pointer active:scale-95">Ya</button>
             </div>
         </div>
     </div>
 
     <!-- Modal Unggah File -->
     <div id="uploadModal" class="fixed inset-0 z-50 bg-slate-950/70 backdrop-blur-sm hidden flex items-center justify-center p-4">
-        <div class="app-surface border rounded-3xl max-w-md w-full p-6 relative shadow-2xl space-y-4">
+        <div class="app-surface border rounded-3xl max-w-md w-full p-6 relative shadow-2xl space-y-4 animate-fade-in">
             <div class="flex items-center justify-between pb-2 border-b border-slate-200 dark:border-slate-800">
                 <h3 class="text-sm font-bold">Upload File ke usecloude</h3>
-                <button onclick="closeUploadModal()" class="text-slate-400 hover:text-indigo-500 text-sm cursor-pointer">✕</button>
+                <button onclick="closeUploadModal()" class="text-slate-400 hover:text-indigo-500 text-sm cursor-pointer transition">✕</button>
             </div>
             
             <div>
                 <label class="text-[11px] text-slate-500 dark:text-slate-400 block mb-1.5">Unggah ke Folder:</label>
-                <select id="uploadTargetFolderSelect" class="w-full app-surface-sub text-xs p-3 rounded-xl border focus:outline-none focus:border-indigo-500">
+                <select id="uploadTargetFolderSelect" class="w-full app-surface-sub text-xs p-3 rounded-xl border focus:outline-none focus:border-indigo-500 transition">
                     <option value="">(Root) Drive Saya</option>
                 </select>
             </div>
@@ -648,14 +677,14 @@
             </div>
 
             <div id="dropZone" onclick="document.getElementById('fileInput').click()" class="border-2 border-dashed border-slate-300 dark:border-slate-800 hover:border-indigo-500 transition rounded-2xl p-6 text-center cursor-pointer app-surface-sub">
-                <svg class="w-10 h-10 theme-text mx-auto mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"/></svg>
-                <p id="fileNameDisplay" class="text-xs font-medium">Seret foto/video ke sini atau <span class="theme-text underline">pilih file</span></p>
-                <input type="file" id="fileInput" accept="image/*,video/*" multiple class="hidden" onchange="handleFileSelect(event)">
+                <svg class="w-10 h-10 theme-text mx-auto mb-2 animate-bounce" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"/></svg>
+                <p id="fileNameDisplay" class="text-xs font-medium">Seret foto, video, dokumen, atau audio ke sini atau <span class="theme-text underline">pilih file</span></p>
+                <input type="file" id="fileInput" accept="image/*,video/*,audio/*,.pdf,.txt,.doc,.docx" multiple class="hidden" onchange="handleFileSelect(event)">
             </div>
 
             <div class="flex space-x-3 pt-2">
-                <button onclick="closeUploadModal()" class="w-1/2 app-surface-sub hover:opacity-85 border text-xs py-2.5 rounded-xl transition cursor-pointer shadow-sm">Batal</button>
-                <button onclick="uploadFilesAction()" class="w-1/2 theme-bg text-white text-xs py-2.5 rounded-xl transition cursor-pointer">Unggah Sekarang</button>
+                <button onclick="closeUploadModal()" class="w-1/2 app-surface-sub hover:opacity-85 border text-xs py-2.5 rounded-xl transition cursor-pointer shadow-sm active:scale-95">Batal</button>
+                <button onclick="uploadFilesAction()" class="w-1/2 theme-bg text-white text-xs py-2.5 rounded-xl transition cursor-pointer active:scale-95">Unggah Sekarang</button>
             </div>
         </div>
     </div>
@@ -702,8 +731,23 @@
 
             request.onsuccess = function(event) {
                 uploadedFiles = event.target.result || [];
+                cleanOldTrashFiles();
                 renderApp();
             };
+        }
+
+        async function cleanOldTrashFiles() {
+            let now = Date.now();
+            let thirtyDaysMs = 30 * 24 * 60 * 60 * 1000;
+            let updated = false;
+            for (let f of uploadedFiles) {
+                if (f.isTrash && f.trashTimestamp && (now - f.trashTimestamp > thirtyDaysMs)) {
+                    await deleteFileFromDB(f.id);
+                    uploadedFiles = uploadedFiles.filter(item => item.id !== f.id);
+                    updated = true;
+                }
+            }
+            if (updated) renderApp();
         }
 
         function saveFileToDB(fileObj) {
@@ -810,7 +854,7 @@
             currentGridSize = size;
             localStorage.setItem('usecloude_grid_size', size);
             document.getElementById('gridSizeDropdown').classList.add('hidden');
-            let icons = { list: '📋 List', small: '⏹️ Small', medium: '🖼️ Medium', large: '🔲 Large' };
+            let icons = { list: '📋 List', timeline: '📅 Timeline', small: '⏹️ Small', medium: '🖼️ Medium', large: '🔲 Large' };
             document.getElementById('gridSizeIcon').innerText = icons[size] || '📐 Grid';
             renderApp();
         }
@@ -835,7 +879,7 @@
                 const btn = document.getElementById('nav' + v.charAt(0).toUpperCase() + v.slice(1));
                 if (btn) {
                     if (v === currentView && !currentFolderId) {
-                        btn.className = "w-full flex items-center justify-center lg:justify-start space-x-3 p-3 lg:px-3.5 lg:py-2.5 rounded-xl font-medium transition cursor-pointer bg-indigo-600/15 text-indigo-500 border border-indigo-500/30";
+                        btn.className = "w-full flex items-center justify-center lg:justify-start space-x-3 p-3 lg:px-3.5 lg:py-2.5 rounded-xl font-medium transition cursor-pointer bg-indigo-600/15 text-indigo-500 border border-indigo-500/30 shadow-sm";
                     } else {
                         btn.className = "w-full flex items-center justify-center lg:justify-start space-x-3 p-3 lg:px-3.5 lg:py-2.5 rounded-xl font-medium text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-indigo-50 dark:hover:bg-slate-900 transition cursor-pointer";
                     }
@@ -845,7 +889,7 @@
 
         function setFileTypeFilter(type) {
             currentFileTypeFilter = type;
-            ['all', 'starred', 'image', 'video', 'heavy'].forEach(t => {
+            ['all', 'starred', 'image', 'video', 'doc'].forEach(t => {
                 const btn = document.getElementById('filter' + t.charAt(0).toUpperCase() + t.slice(1));
                 if (btn) {
                     if (t === type) {
@@ -866,12 +910,6 @@
                 } else if (e.shiftKey && e.key === '?') {
                     e.preventDefault();
                     openShortcutsModal();
-                } else if (e.altKey && e.key === 'ArrowLeft') {
-                    e.preventDefault();
-                    window.history.back();
-                } else if (e.altKey && e.key === 'ArrowRight') {
-                    e.preventDefault();
-                    window.history.forward();
                 } else if (e.key === 'ArrowLeft') {
                     navigateLightbox(-1);
                 } else if (e.key === 'ArrowRight') {
@@ -891,8 +929,9 @@
             const fileObj = uploadedFiles.find(f => f.id === fileId);
             if (!fileObj) return;
 
+            activeDropdownFileId = fileId;
             document.getElementById('metaName').innerText = fileObj.title;
-            document.getElementById('metaType').innerText = fileObj.type.toUpperCase();
+            document.getElementById('metaType').innerText = (fileObj.type || 'file').toUpperCase();
             let sizeFormatted = fileObj.size > 1024*1024 ? (fileObj.size/(1024*1024)).toFixed(2) + ' MB' : Math.round(fileObj.size/1024) + ' KB';
             document.getElementById('metaSize').innerText = sizeFormatted;
             document.getElementById('metaDate').innerText = fileObj.date;
@@ -904,22 +943,37 @@
             }
             document.getElementById('metaFolder').innerText = folderName;
 
-            document.getElementById('metaDimension').innerText = "Memuat...";
+            document.getElementById('metaDimension').innerText = fileObj.type === 'image' ? "Memuat..." : "N/A";
             if (fileObj.type === 'image') {
                 const img = new Image();
                 img.src = fileObj.url;
                 img.onload = () => {
                     document.getElementById('metaDimension').innerText = `${img.width} x ${img.height} px`;
                 };
-            } else {
-                const vid = document.createElement('video');
-                vid.src = fileObj.url;
-                vid.onloadedmetadata = () => {
-                    document.getElementById('metaDimension').innerText = `${vid.videoWidth} x ${vid.videoHeight} px`;
-                };
             }
 
+            // Highlight active tag
+            const tagBtns = document.querySelectorAll('#tagSelectorContainer button[data-tag]');
+            tagBtns.forEach(btn => {
+                if (btn.getAttribute('data-tag') === (fileObj.tag || '')) {
+                    btn.className = "px-2.5 py-1 rounded-lg border text-[11px] font-medium theme-bg text-white transition";
+                } else {
+                    btn.className = "px-2.5 py-1 rounded-lg border text-[11px] font-medium transition hover:border-indigo-500";
+                }
+            });
+
             document.getElementById('metadataModal').classList.remove('hidden');
+        }
+
+        async function assignTagToFile(tagName) {
+            if (!activeDropdownFileId) return;
+            const fileObj = uploadedFiles.find(f => f.id === activeDropdownFileId);
+            if (fileObj) {
+                fileObj.tag = tagName;
+                await saveFileToDB(fileObj);
+                renderApp();
+                openMetadataModalForFile(activeDropdownFileId);
+            }
         }
 
         function openMetadataFromLightbox() {
@@ -1151,7 +1205,7 @@
                 selectedFilesArray = Array.from(fileInput.files);
             }
             if (selectedFilesArray.length === 0) {
-                alert("Silakan pilih file foto atau video terlebih dahulu!");
+                alert("Silakan pilih file terlebih dahulu!");
                 return;
             }
 
@@ -1178,9 +1232,12 @@
                     const reader = new FileReader();
                     reader.onload = async function(e) {
                         let base64Url = e.target.result;
-                        let isVideo = file.type && file.type.startsWith('video');
+                        let fileType = 'doc';
+                        if (file.type && file.type.startsWith('image')) fileType = 'image';
+                        else if (file.type && file.type.startsWith('video')) fileType = 'video';
+                        else if (file.type && file.type.startsWith('audio')) fileType = 'audio';
 
-                        if (shouldCompress && !isVideo) {
+                        if (shouldCompress && fileType === 'image') {
                             try {
                                 base64Url = await new Promise((resImg) => {
                                     const img = new Image();
@@ -1212,13 +1269,14 @@
                             id: Date.now() + Math.random() + i,
                             title: file.name.split('.')[0],
                             url: base64Url,
-                            type: isVideo ? 'video' : 'image',
+                            type: fileType,
                             size: actualByteSize,
                             date: new Date().toLocaleDateString(),
                             timestamp: Date.now(),
                             folderId: targetFolderId,
                             isStarred: false,
-                            isTrash: false
+                            isTrash: false,
+                            tag: ''
                         };
                         await saveFileToDB(newFile);
                         uploadedFiles.unshift(newFile);
@@ -1238,15 +1296,15 @@
         function getFilteredFilesList() {
             const searchKeyword = document.getElementById('searchInput').value.toLowerCase();
             return uploadedFiles.filter(file => {
-                let matchSearch = file.title.toLowerCase().includes(searchKeyword);
+                let matchSearch = file.title.toLowerCase().includes(searchKeyword) || (file.tag && file.tag.toLowerCase().includes(searchKeyword));
                 if (!matchSearch) return false;
 
                 if (currentFileTypeFilter === 'starred') {
                     if (!file.isStarred) return false;
-                } else if (currentFileTypeFilter === 'heavy') {
-                    if ((file.size || 0) <= 5 * 1024 * 1024) return false;
-                } else if (currentFileTypeFilter !== 'all' && file.type !== currentFileTypeFilter) {
-                    return false;
+                } else if (currentFileTypeFilter === 'image' || currentFileTypeFilter === 'video') {
+                    if (file.type !== currentFileTypeFilter) return false;
+                } else if (currentFileTypeFilter === 'doc') {
+                    if (file.type === 'image' || file.type === 'video') return false;
                 }
 
                 if (currentView === 'trash') {
@@ -1287,7 +1345,7 @@
                 
                 uploadedFolders.forEach(folder => {
                     const fDiv = document.createElement('div');
-                    fDiv.className = "folder-card card-item app-surface border hover:border-indigo-500/60 p-3 sm:p-4 rounded-3xl flex items-center justify-between cursor-pointer transition shadow-sm group relative";
+                    fDiv.className = "folder-card card-item app-surface border hover:border-indigo-500/60 p-3 sm:p-4 rounded-3xl flex items-center justify-between cursor-pointer transition shadow-sm group relative animate-fade-in";
                     fDiv.setAttribute('onclick', `navigateToState({view: 'drive', folderId: '${folder.id}'})`);
                     
                     fDiv.addEventListener('dragover', (e) => { e.preventDefault(); fDiv.classList.add('border-indigo-500', 'bg-indigo-50', 'dark:bg-indigo-950/40', 'scale-[1.02]'); });
@@ -1303,18 +1361,23 @@
                                 await new Promise(res => {
                                     const r = new FileReader();
                                     r.onload = async function(evt) {
-                                        let isVid = df.type && df.type.startsWith('video');
+                                        let fType = 'doc';
+                                        if (df.type && df.type.startsWith('image')) fType = 'image';
+                                        else if (df.type && df.type.startsWith('video')) fType = 'video';
+                                        else if (df.type && df.type.startsWith('audio')) fType = 'audio';
+
                                         let nf = {
                                             id: Date.now() + Math.random(),
                                             title: df.name.split('.')[0],
                                             url: evt.target.result,
-                                            type: isVid ? 'video' : 'image',
+                                            type: fType,
                                             size: Math.round((evt.target.result.length * 3)/4),
                                             date: new Date().toLocaleDateString(),
                                             timestamp: Date.now(),
                                             folderId: folder.id,
                                             isStarred: false,
-                                            isTrash: false
+                                            isTrash: false,
+                                            tag: ''
                                         };
                                         await saveFileToDB(nf);
                                         uploadedFiles.unshift(nf);
@@ -1342,8 +1405,8 @@
                             <span class="text-xs sm:text-sm font-semibold truncate">${folder.name}</span>
                         </div>
                         <div class="flex items-center space-x-1">
-                            <button onclick="openRenameModalForFolder(event, '${folder.id}')" class="text-slate-400 hover:text-indigo-500 text-xs p-1.5 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800" title="Ganti Nama Folder">✏️</button>
-                            <button onclick="deleteFolder(event, '${folder.id}')" class="text-slate-400 hover:text-rose-500 text-xs p-1.5 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800" title="Hapus Folder">✕</button>
+                            <button onclick="openRenameModalForFolder(event, '${folder.id}')" class="text-slate-400 hover:text-indigo-500 text-xs p-1.5 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 transition" title="Ganti Nama">✏️</button>
+                            <button onclick="deleteFolder(event, '${folder.id}')" class="text-slate-400 hover:text-rose-500 text-xs p-1.5 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 transition" title="Hapus">✕</button>
                         </div>
                     `;
                     folderGrid.appendChild(fDiv);
@@ -1363,17 +1426,10 @@
             let filesToShow = getFilteredFilesList();
 
             const sortVal = document.getElementById('sortSelect').value;
-            if (sortVal === 'newest') {
-                filesToShow.sort((a, b) => (b.timestamp || b.id) - (a.timestamp || a.id));
-            } else if (sortVal === 'oldest') {
-                filesToShow.sort((a, b) => (a.timestamp || a.id) - (b.timestamp || b.id));
-            } else if (sortVal === 'name') {
-                filesToShow.sort((a, b) => a.title.localeCompare(b.title));
-            } else if (sortVal === 'size') {
-                filesToShow.sort((a, b) => (b.size || 0) - (a.size || 0));
-            } else if (sortVal === 'smallest') {
-                filesToShow.sort((a, b) => (a.size || 0) - (b.size || 0));
-            }
+            if (sortVal === 'newest') filesToShow.sort((a, b) => (b.timestamp || b.id) - (a.timestamp || a.id));
+            else if (sortVal === 'oldest') filesToShow.sort((a, b) => (a.timestamp || a.id) - (b.timestamp || b.id));
+            else if (sortVal === 'name') filesToShow.sort((a, b) => a.title.localeCompare(b.title));
+            else if (sortVal === 'size') filesToShow.sort((a, b) => (b.size || 0) - (a.size || 0));
 
             document.getElementById('fileCount').innerText = `${filesToShow.length} item`;
             let activeFilesCount = uploadedFiles.filter(f => !f.isTrash).length;
@@ -1385,38 +1441,54 @@
             let storageTextElement = document.getElementById('storageText');
             let storageBarElement = document.getElementById('storageBar');
 
-            if (totalMB >= 1024) {
-                storageTextElement.innerText = (totalMB / 1024).toFixed(2) + ' GB';
-            } else if (totalMB >= 1) {
-                storageTextElement.innerText = totalMB.toFixed(2) + ' MB';
-            } else {
-                storageTextElement.innerText = Math.round(totalBytes / 1024) + ' KB';
-            }
+            if (totalMB >= 1024) storageTextElement.innerText = (totalMB / 1024).toFixed(2) + ' GB';
+            else if (totalMB >= 1) storageTextElement.innerText = totalMB.toFixed(2) + ' MB';
+            else storageTextElement.innerText = Math.round(totalBytes / 1024) + ' KB';
             storageBarElement.style.width = `${Math.min((totalMB / MAX_STORAGE_MB) * 100, 100)}%`;
 
             let imgBytes = activeFiles.filter(f => f.type === 'image').reduce((acc, f) => acc + (f.size || 0), 0);
-            let vidBytes = activeFiles.filter(f => f.type === 'video').reduce((acc, f) => acc + (f.size || 0), 0);
+            let otherBytes = totalBytes - imgBytes;
             let imgMbText = imgBytes > 1024*1024 ? (imgBytes/(1024*1024)).toFixed(1) + ' MB' : Math.round(imgBytes/1024) + ' KB';
-            let vidMbText = vidBytes > 1024*1024 ? (vidBytes/(1024*1024)).toFixed(1) + ' MB' : Math.round(vidBytes/1024) + ' KB';
+            let otherMbText = otherBytes > 1024*1024 ? (otherBytes/(1024*1024)).toFixed(1) + ' MB' : Math.round(otherBytes/1024) + ' KB';
             
             document.getElementById('statImageLabel').innerText = `Foto (${imgMbText})`;
-            document.getElementById('statVideoLabel').innerText = `Video (${vidMbText})`;
+            document.getElementById('statVideoLabel').innerText = `Lainnya (${otherMbText})`;
             
             let imgPercent = totalBytes > 0 ? (imgBytes / totalBytes) * 100 : 0;
-            let vidPercent = totalBytes > 0 ? (vidBytes / totalBytes) * 100 : 0;
             document.getElementById('statImageBar').style.width = `${imgPercent}%`;
-            document.getElementById('statVideoBar').style.width = `${vidPercent}%`;
+            document.getElementById('statVideoBar').style.width = `${100 - imgPercent}%`;
 
             if (filesToShow.length === 0) {
                 galleryGrid.className = "col-span-full";
-                galleryGrid.innerHTML = `<div class="text-center py-16 text-slate-500 dark:text-slate-400 text-sm app-surface rounded-3xl border shadow-sm">Tidak ada file di sini.</div>`;
+                galleryGrid.innerHTML = `<div class="text-center py-16 text-slate-500 dark:text-slate-400 text-sm app-surface rounded-3xl border shadow-sm animate-fade-in">Tidak ada file di sini.</div>`;
                 return;
             }
 
-            if (currentGridSize === 'list') {
-                galleryGrid.className = "space-y-2";
+            if (currentGridSize === 'timeline') {
+                galleryGrid.className = "space-y-6 col-span-full";
+                let groups = {};
+                filesToShow.forEach(file => {
+                    let dStr = file.date || 'Lainnya';
+                    if (!groups[dStr]) groups[dStr] = [];
+                    groups[dStr].push(file);
+                });
+
+                let timelineHtml = '';
+                for (let dateKey in groups) {
+                    timelineHtml += `<div class="space-y-3"><h4 class="text-xs font-bold theme-text uppercase tracking-wider sticky top-16 bg-slate-950/60 backdrop-blur-md py-1 px-3 rounded-lg w-max">${dateKey}</h4><div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-4">`;
+                    groups[dateKey].forEach((file) => {
+                        let isSelected = selectedFileIds.has(file.id);
+                        let iconOrPrev = file.type === 'image' ? `<img src="${file.url}" class="w-full h-36 object-cover rounded-2xl">` : `<div class="w-full h-36 bg-slate-900 rounded-2xl flex items-center justify-center text-xl">${file.type === 'video' ? '🎬' : file.type === 'audio' ? '🎵' : '📄'}</div>`;
+                        timelineHtml += `<div onclick="openMetadataModalForFile(${file.id})" class="app-surface border p-3 rounded-3xl cursor-pointer hover:border-indigo-500 transition shadow-sm relative">${iconOrPrev}<div class="mt-2 flex justify-between items-center"><span class="text-xs font-semibold truncate">${file.title}</span>${file.tag ? `<span class="text-[9px] bg-indigo-500/20 text-indigo-400 px-2 py-0.5 rounded-full">${file.tag}</span>`:''}</div></div>`;
+                    });
+                    timelineHtml += `</div></div>`;
+                }
+                galleryGrid.innerHTML = timelineHtml;
+
+            } else if (currentGridSize === 'list') {
+                galleryGrid.className = "space-y-2 col-span-full";
                 let listContainer = document.createElement('div');
-                listContainer.className = "app-surface border rounded-2xl overflow-hidden divide-y divide-slate-200 dark:divide-slate-800 shadow-sm";
+                listContainer.className = "app-surface border rounded-2xl overflow-hidden divide-y divide-slate-200 dark:divide-slate-800 shadow-sm animate-fade-in";
                 
                 filesToShow.forEach((file, index) => {
                     const isSelected = selectedFileIds.has(file.id);
@@ -1424,30 +1496,28 @@
                     row.className = `flex items-center justify-between p-3 hover:bg-indigo-50/50 dark:hover:bg-slate-800/50 transition cursor-pointer ${isSelected ? 'bg-indigo-50 dark:bg-indigo-950/30' : ''}`;
                     row.draggable = true;
                     row.ondragstart = (e) => {
-                        if (!selectedFileIds.has(file.id)) {
-                            selectedFileIds.clear();
-                            selectedFileIds.add(file.id);
-                        }
+                        if (!selectedFileIds.has(file.id)) { selectedFileIds.clear(); selectedFileIds.add(file.id); }
                         e.dataTransfer.setData('text/plain', file.id);
                     };
-
                     row.onclick = (e) => {
-                        if (e.ctrlKey || e.metaKey || e.shiftKey) { toggleFileSelection(file.id); } 
-                        else { openLightboxByIndex(index); }
+                        if (e.ctrlKey || e.metaKey || e.shiftKey) toggleFileSelection(file.id);
+                        else openLightboxByIndex(index);
                     };
 
                     let sizeFormatted = file.size > 1024*1024 ? (file.size/(1024*1024)).toFixed(1) + ' MB' : Math.round(file.size/1024) + ' KB';
+                    let typeIcon = file.type === 'video' ? '🎬' : file.type === 'audio' ? '🎵' : file.type === 'image' ? '🖼️' : '📄';
 
                     row.innerHTML = `
                         <div class="flex items-center space-x-3 truncate">
-                            <span class="text-base">${file.type === 'video' ? '🎬' : '🖼️'}</span>
+                            <span class="text-base">${typeIcon}</span>
                             <span class="text-xs font-medium truncate max-w-[180px] sm:max-w-xs">${file.title}</span>
+                            ${file.tag ? `<span class="text-[9px] bg-indigo-500/20 text-indigo-400 px-2 py-0.5 rounded-full">${file.tag}</span>` : ''}
                             ${file.isStarred ? '<span class="text-amber-500 text-xs">⭐</span>' : ''}
                         </div>
                         <div class="flex items-center space-x-4 shrink-0 text-[11px] text-slate-500 dark:text-slate-400">
                             <span>${sizeFormatted}</span>
                             <span class="hidden sm:inline">${file.date}</span>
-                            <button onclick="openCardDropdown(event, ${file.id}, '${file.url}', ${file.isTrash})" class="three-dots-btn p-1.5 hover:bg-slate-200 dark:hover:bg-slate-800 rounded-lg text-slate-500 dark:text-slate-300">⋮</button>
+                            <button onclick="openCardDropdown(event, ${file.id}, '${file.url}', ${file.isTrash})" class="three-dots-btn p-1.5 hover:bg-slate-200 dark:hover:bg-slate-800 rounded-lg text-slate-500 dark:text-slate-300 transition">⋮</button>
                         </div>
                     `;
                     listContainer.appendChild(row);
@@ -1466,45 +1536,46 @@
                 filesToShow.forEach((file, index) => {
                     const isSelected = selectedFileIds.has(file.id);
                     const card = document.createElement('div');
-                    card.className = `card-item app-surface backdrop-blur-md rounded-3xl overflow-hidden border ${isSelected ? 'border-indigo-500 ring-2 ring-indigo-500/40 bg-indigo-50/50 dark:bg-indigo-950/20' : ''} group transition shadow-sm cursor-pointer relative flex flex-col justify-between`;
+                    card.className = `card-item app-surface backdrop-blur-md rounded-3xl overflow-hidden border ${isSelected ? 'border-indigo-500 ring-2 ring-indigo-500/40 bg-indigo-50/50 dark:bg-indigo-950/20' : ''} group transition shadow-sm cursor-pointer relative flex flex-col justify-between animate-fade-in`;
                     
                     card.draggable = true;
                     card.ondragstart = (e) => {
-                        if (!selectedFileIds.has(file.id)) {
-                            selectedFileIds.clear();
-                            selectedFileIds.add(file.id);
-                        }
+                        if (!selectedFileIds.has(file.id)) { selectedFileIds.clear(); selectedFileIds.add(file.id); }
                         e.dataTransfer.setData('text/plain', file.id);
                     };
 
                     card.onclick = (e) => {
-                        if (e.ctrlKey || e.metaKey || e.shiftKey) {
-                            e.stopPropagation();
-                            toggleFileSelection(file.id);
-                        } else {
-                            openLightboxByIndex(index);
-                        }
+                        if (e.ctrlKey || e.metaKey || e.shiftKey) { e.stopPropagation(); toggleFileSelection(file.id); }
+                        else { openLightboxByIndex(index); }
                     };
 
                     let hClass = heightClasses[currentGridSize] || heightClasses['medium'];
-                    let mediaPreview = file.type === 'video' 
-                        ? `<div class="relative bg-slate-900 dark:bg-slate-950 overflow-hidden rounded-2xl ${hClass} flex items-center justify-center"><video src="${file.url}" class="w-full h-full object-cover group-hover:scale-105 transition duration-500" preload="metadata"></video><span class="absolute top-3 left-3 bg-slate-950/75 text-[10px] px-2.5 py-1 rounded-full text-cyan-300 font-medium">Video</span></div>`
-                        : `<div class="relative bg-slate-900 dark:bg-slate-950 overflow-hidden rounded-2xl ${hClass}"><img src="${file.url}" alt="${file.title}" class="w-full h-full object-cover group-hover:scale-105 transition duration-500"></div>`;
+                    let mediaPreview = '';
+                    if (file.type === 'image') {
+                        mediaPreview = `<div class="relative bg-slate-900 dark:bg-slate-950 overflow-hidden rounded-2xl ${hClass}"><img src="${file.url}" alt="${file.title}" class="w-full h-full object-cover group-hover:scale-105 transition duration-500"></div>`;
+                    } else if (file.type === 'video') {
+                        mediaPreview = `<div class="relative bg-slate-900 dark:bg-slate-950 overflow-hidden rounded-2xl ${hClass} flex items-center justify-center"><video src="${file.url}" class="w-full h-full object-cover group-hover:scale-105 transition duration-500" preload="metadata"></video><span class="absolute top-3 left-3 bg-slate-950/75 text-[10px] px-2.5 py-1 rounded-full text-cyan-300 font-medium">Video</span></div>`;
+                    } else if (file.type === 'audio') {
+                        mediaPreview = `<div class="relative bg-slate-900 dark:bg-slate-950 overflow-hidden rounded-2xl ${hClass} flex flex-col items-center justify-center p-4"><span class="text-3xl mb-2">🎵</span><span class="text-[10px] text-cyan-300">File Audio / Musik</span></div>`;
+                    } else {
+                        mediaPreview = `<div class="relative bg-slate-900 dark:bg-slate-950 overflow-hidden rounded-2xl ${hClass} flex flex-col items-center justify-center p-4"><span class="text-3xl mb-2">📄</span><span class="text-[10px] text-indigo-300">Dokumen / Teks</span></div>`;
+                    }
 
                     card.innerHTML = `
                         <div class="p-2 pb-0">
                             <div class="absolute top-4 right-4 z-20 flex space-x-1.5">
                                 ${file.isStarred ? '<span class="w-7 h-7 rounded-full app-surface border text-amber-500 flex items-center justify-center text-xs shadow">⭐</span>' : ''}
-                                <button onclick="openCardDropdown(event, ${file.id}, '${file.url}', ${file.isTrash})" class="three-dots-btn w-8 h-8 rounded-full app-surface border hover:opacity-80 flex items-center justify-center text-sm shadow transition">
-                                    ⋮
-                                </button>
+                                <button onclick="openCardDropdown(event, ${file.id}, '${file.url}', ${file.isTrash})" class="three-dots-btn w-8 h-8 rounded-full app-surface border hover:opacity-80 flex items-center justify-center text-sm shadow transition active:scale-95">⋮</button>
                             </div>
-                            ${isSelected ? '<div class="absolute top-4 left-4 z-20 w-6 h-6 rounded-full theme-bg text-white flex items-center justify-center text-xs font-bold shadow">✓</div>' : ''}
+                            ${isSelected ? '<div class="absolute top-4 left-4 z-20 w-6 h-6 rounded-full theme-bg text-white flex items-center justify-center text-xs font-bold shadow animate-bounce">✓</div>' : ''}
                             ${mediaPreview}
                         </div>
                         <div class="p-3.5 flex items-center justify-between">
-                            <span class="text-xs font-semibold truncate max-w-[150px]">${file.title}</span>
-                            <span class="text-[10px] text-slate-500 dark:text-slate-400 font-medium">${file.date}</span>
+                            <div class="truncate pr-2">
+                                <span class="text-xs font-semibold truncate block">${file.title}</span>
+                                ${file.tag ? `<span class="text-[9px] bg-indigo-500/20 text-indigo-400 px-2 py-0.5 rounded-full inline-block mt-0.5">${file.tag}</span>` : ''}
+                            </div>
+                            <span class="text-[10px] text-slate-500 dark:text-slate-400 font-medium shrink-0">${file.date}</span>
                         </div>
                     `;
                     galleryGrid.appendChild(card);
@@ -1515,8 +1586,8 @@
         }
 
         function toggleFileSelection(id) {
-            if (selectedFileIds.has(id)) { selectedFileIds.delete(id); } 
-            else { selectedFileIds.add(id); }
+            if (selectedFileIds.has(id)) selectedFileIds.delete(id);
+            else selectedFileIds.add(id);
             renderApp();
         }
 
@@ -1605,6 +1676,7 @@
                     renderApp();
                 } else {
                     fileObj.isTrash = true;
+                    fileObj.trashTimestamp = Date.now();
                     await saveFileToDB(fileObj);
                     renderApp();
                 }
@@ -1614,10 +1686,7 @@
         async function bulkStarFiles() {
             for (let id of selectedFileIds) {
                 let fObj = uploadedFiles.find(f => f.id === id);
-                if (fObj) {
-                    fObj.isStarred = true;
-                    await saveFileToDB(fObj);
-                }
+                if (fObj) { fObj.isStarred = true; await saveFileToDB(fObj); }
             }
             selectedFileIds.clear();
             renderApp();
@@ -1666,10 +1735,7 @@
             const targetFolderId = document.getElementById('modalFolderSelect').value || null;
             for (let id of selectedFileIds) {
                 let fObj = uploadedFiles.find(f => f.id === id);
-                if (fObj) {
-                    fObj.folderId = targetFolderId;
-                    await saveFileToDB(fObj);
-                }
+                if (fObj) { fObj.folderId = targetFolderId; await saveFileToDB(fObj); }
             }
             selectedFileIds.clear();
             closeMoveModal();
@@ -1687,6 +1753,7 @@
                             uploadedFiles = uploadedFiles.filter(f => f.id !== id);
                         } else {
                             fObj.isTrash = true;
+                            fObj.trashTimestamp = Date.now();
                             await saveFileToDB(fObj);
                         }
                     }
@@ -1705,6 +1772,7 @@
                 let filesToDelete = uploadedFiles.filter(f => f.folderId === id);
                 for (let f of filesToDelete) { 
                     f.isTrash = true;
+                    f.trashTimestamp = Date.now();
                     await saveFileToDB(f); 
                 }
                 renderApp();
@@ -1721,10 +1789,7 @@
 
         function updateLightboxContent() {
             currentFilteredFilesForLightbox = getFilteredFilesList();
-            if (currentFilteredFilesForLightbox.length === 0) {
-                closeLightbox();
-                return;
-            }
+            if (currentFilteredFilesForLightbox.length === 0) { closeLightbox(); return; }
             if (activeLightboxIndex < 0) activeLightboxIndex = currentFilteredFilesForLightbox.length - 1;
             if (activeLightboxIndex >= currentFilteredFilesForLightbox.length) activeLightboxIndex = 0;
 
@@ -1733,8 +1798,12 @@
             
             if (file.type === 'video') {
                 contentDiv.innerHTML = `<video src="${file.url}" class="max-h-[60vh] sm:max-h-[70vh] w-full object-contain rounded-2xl" controls autoplay></video>`;
-            } else {
+            } else if (file.type === 'audio') {
+                contentDiv.innerHTML = `<div class="flex flex-col items-center justify-center p-8 text-center"><span class="text-6xl mb-4">🎵</span><audio src="${file.url}" controls class="w-full mt-4" autoplay></audio></div>`;
+            } else if (file.type === 'image') {
                 contentDiv.innerHTML = `<img src="${file.url}" alt="${file.title}" class="max-h-[60vh] sm:max-h-[70vh] object-contain rounded-2xl">`;
+            } else {
+                contentDiv.innerHTML = `<div class="flex flex-col items-center justify-center p-8 text-center text-white"><span class="text-6xl mb-4">📄</span><p class="text-sm font-semibold mb-3">${file.title}</p><a href="${file.url}" download="${file.title}" class="theme-bg px-4 py-2 rounded-xl text-xs">Unduh Dokumen untuk Dibaca</a></div>`;
             }
 
             document.getElementById('lightboxTitle').innerText = file.title;
@@ -1772,10 +1841,7 @@
         async function deleteFileFromLightbox(id) {
             showCustomConfirm("Pindahkan ke Sampah", "Yakin ingin memindahkan file ini ke sampah?", async () => {
                 let fObj = uploadedFiles.find(f => f.id === id);
-                if (fObj) {
-                    fObj.isTrash = true;
-                    await saveFileToDB(fObj);
-                }
+                if (fObj) { fObj.isTrash = true; fObj.trashTimestamp = Date.now(); await saveFileToDB(fObj); }
                 closeLightbox();
                 renderApp();
             });
@@ -1783,10 +1849,7 @@
 
         async function restoreFileFromLightbox(id) {
             let fObj = uploadedFiles.find(f => f.id === id);
-            if (fObj) {
-                fObj.isTrash = false;
-                await saveFileToDB(fObj);
-            }
+            if (fObj) { fObj.isTrash = false; await saveFileToDB(fObj); }
             closeLightbox();
             renderApp();
         }
@@ -1795,7 +1858,7 @@
             const modal = document.getElementById('customConfirmModal');
             document.getElementById('confirmTitle').innerText = title;
             document.getElementById('confirmMessage').innerText = msg;
-            modal.classList.add('hidden');
+            modal.classList.remove('hidden');
             const yesBtn = document.getElementById('confirmYesBtn');
             const cancelBtn = document.getElementById('confirmCancelBtn');
 
