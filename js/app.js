@@ -1,6 +1,6 @@
 /**
  * USECLOUD - Main Application Controller
- * Coordinates DB, UI, Storage, Previewer, Event Handlers, and Global Shortcuts.
+ * Coordinates DB, UI, Storage, Previewer, Event Handlers, Shortcuts, ZIP archiving, Folder colors & PIN locks.
  */
 
 class UseCloudApp {
@@ -14,6 +14,10 @@ class UseCloudApp {
         this.viewMode = localStorage.getItem('usecloud_view_mode') || 'grid';
         this.activeFilter = 'all';
         this.searchQuery = '';
+        this.advancedFilters = {
+            dateRange: 'all',
+            sizeRange: 'all'
+        };
         this.detailsPanelOpen = localStorage.getItem('usecloud_details_open') !== 'false';
     }
 
@@ -104,6 +108,27 @@ class UseCloudApp {
             filteredFolders = filteredFolders.filter(f => f.name.toLowerCase().includes(q));
         }
 
+        // Apply Advanced Filters (Date & Size)
+        const now = Date.now();
+        if (this.advancedFilters.dateRange === 'today') {
+            const oneDayAgo = now - 24 * 60 * 60 * 1000;
+            filteredFiles = filteredFiles.filter(f => (f.updatedAt || f.createdAt) >= oneDayAgo);
+        } else if (this.advancedFilters.dateRange === 'week') {
+            const oneWeekAgo = now - 7 * 24 * 60 * 60 * 1000;
+            filteredFiles = filteredFiles.filter(f => (f.updatedAt || f.createdAt) >= oneWeekAgo);
+        } else if (this.advancedFilters.dateRange === 'month') {
+            const oneMonthAgo = now - 30 * 24 * 60 * 60 * 1000;
+            filteredFiles = filteredFiles.filter(f => (f.updatedAt || f.createdAt) >= oneMonthAgo);
+        }
+
+        if (this.advancedFilters.sizeRange === 'small') {
+            filteredFiles = filteredFiles.filter(f => f.size < 1024 * 1024); // < 1MB
+        } else if (this.advancedFilters.sizeRange === 'medium') {
+            filteredFiles = filteredFiles.filter(f => f.size >= 1024 * 1024 && f.size <= 10 * 1024 * 1024); // 1-10MB
+        } else if (this.advancedFilters.sizeRange === 'large') {
+            filteredFiles = filteredFiles.filter(f => f.size > 10 * 1024 * 1024); // > 10MB
+        }
+
         // Apply Category Filter
         if (this.activeFilter !== 'all') {
             filteredFiles = filteredFiles.filter(f => f.category === this.activeFilter);
@@ -127,7 +152,7 @@ class UseCloudApp {
         // Render Folders
         window.useCloudUI.renderFolders(
             filteredFolders,
-            (folderId) => this.openFolder(folderId),
+            (folder) => this.attemptOpenFolder(folder),
             (e, folder, type) => this.openContextMenu(e, folder, type)
         );
 
@@ -164,7 +189,24 @@ class UseCloudApp {
         }
     }
 
-    // ================= FOLDER NAVIGATION =================
+    // ================= FOLDER NAVIGATION & PIN SECURITY =================
+    async attemptOpenFolder(folder) {
+        if (!folder) return;
+
+        // Check if locked
+        if (folder.isLocked && folder.pin) {
+            this.activeFolderToUnlock = folder;
+            const input = document.getElementById('folderPinInput');
+            if (input) input.value = '';
+            document.getElementById('pinLockError')?.classList.add('hidden');
+            this.openModal('folderPinModal');
+            setTimeout(() => input?.focus(), 150);
+            return;
+        }
+
+        await this.openFolder(folder.id);
+    }
+
     async openFolder(folderId) {
         if (!folderId) return;
         const folder = await window.useCloudDB.getFolder(folderId);
@@ -242,10 +284,36 @@ class UseCloudApp {
         const menu = document.getElementById('contextMenu');
         if (!menu) return;
 
-        // Populate context menu item states
-        const starText = menu.querySelector('#cmStarText');
-        if (starText) {
-            starText.textContent = item.isStarred ? 'Hapus Bintang' : 'Beri Bintang';
+        // Context items for folder vs file
+        const cmZipFolder = menu.querySelector('#cmZipFolder');
+        const cmColorFolder = menu.querySelector('#cmColorFolder');
+        const cmLockFolder = menu.querySelector('#cmLockFolder');
+        const cmPreview = menu.querySelector('#cmPreview');
+        const cmStar = menu.querySelector('#cmStar');
+        const cmDownload = menu.querySelector('#cmDownload');
+
+        if (type === 'folder') {
+            if (cmZipFolder) cmZipFolder.style.display = 'flex';
+            if (cmColorFolder) cmColorFolder.style.display = 'flex';
+            if (cmLockFolder) {
+                cmLockFolder.style.display = 'flex';
+                cmLockFolder.querySelector('span').textContent = item.isLocked ? 'Hapus Kunci PIN' : 'Kunci dengan PIN';
+            }
+            if (cmPreview) cmPreview.style.display = 'none';
+            if (cmStar) cmStar.style.display = 'none';
+            if (cmDownload) cmDownload.style.display = 'none';
+        } else {
+            if (cmZipFolder) cmZipFolder.style.display = 'none';
+            if (cmColorFolder) cmColorFolder.style.display = 'none';
+            if (cmLockFolder) cmLockFolder.style.display = 'none';
+            if (cmPreview) cmPreview.style.display = 'flex';
+            if (cmStar) cmStar.style.display = 'flex';
+            if (cmDownload) cmDownload.style.display = 'flex';
+
+            const starText = menu.querySelector('#cmStarText');
+            if (starText) {
+                starText.textContent = item.isStarred ? 'Hapus Bintang' : 'Beri Bintang';
+            }
         }
 
         // Show/hide restore if trash
@@ -259,7 +327,7 @@ class UseCloudApp {
         // Position menu inside viewport
         menu.style.display = 'flex';
         const menuWidth = 230;
-        const menuHeight = 320;
+        const menuHeight = 360;
         let x = e.clientX;
         let y = e.clientY;
 
@@ -283,6 +351,7 @@ class UseCloudApp {
             name: name.trim(),
             parentId: this.currentFolderId,
             color: 'var(--primary)',
+            isLocked: false,
             isTrash: false,
             createdAt: Date.now()
         };
@@ -295,21 +364,36 @@ class UseCloudApp {
     async uploadFiles(fileList) {
         if (!fileList || fileList.length === 0) return;
 
-        window.useCloudUI.showToast(`Mengunggah ${fileList.length} berkas...`, 'info');
+        window.useCloudUI.openUploadQueue(fileList.length);
         let successCount = 0;
 
-        for (const file of fileList) {
+        for (let i = 0; i < fileList.length; i++) {
+            const file = fileList[i];
             try {
                 const fileObj = await window.useCloudStorage.processUploadedFile(file, this.currentFolderId);
                 await window.useCloudDB.saveFile(fileObj);
                 await window.useCloudDB.logActivity('Unggah Berkas', `Berkas "${file.name}" diunggah`, 'upload-cloud');
                 successCount++;
+                window.useCloudUI.addUploadQueueItem(file.name, i + 1, fileList.length);
             } catch (err) {
                 console.error('Upload failed:', err);
             }
         }
 
         window.useCloudUI.showToast(`${successCount} berkas berhasil disimpan!`, 'success');
+        await this.loadCurrentView();
+        await this.updateStorageMeter();
+    }
+
+    async uploadEntireFolder(fileList) {
+        if (!fileList || fileList.length === 0) return;
+
+        window.useCloudUI.openUploadQueue(fileList.length);
+        await window.useCloudStorage.processFolderUpload(fileList, this.currentFolderId, (fileName, current, total) => {
+            window.useCloudUI.addUploadQueueItem(fileName, current, total);
+        });
+
+        window.useCloudUI.showToast('Seluruh folder berhasil diunggah ke UseCloud!', 'success');
         await this.loadCurrentView();
         await this.updateStorageMeter();
     }
@@ -463,6 +547,19 @@ class UseCloudApp {
             }
         });
 
+        // Folder Upload Trigger
+        const folderInput = document.getElementById('folderUploadInput');
+        document.getElementById('actionUploadFolder')?.addEventListener('click', () => {
+            folderInput?.click();
+        });
+
+        folderInput?.addEventListener('change', (e) => {
+            if (e.target.files && e.target.files.length > 0) {
+                this.uploadEntireFolder(Array.from(e.target.files));
+                e.target.value = '';
+            }
+        });
+
         // Backup Export / Import
         document.getElementById('actionExportBackup')?.addEventListener('click', () => {
             window.useCloudStorage.exportBackupJSON();
@@ -507,6 +604,31 @@ class UseCloudApp {
         searchInput?.addEventListener('input', (e) => {
             this.searchQuery = e.target.value;
             this.loadCurrentView();
+        });
+
+        // Advanced Filter Modal Trigger
+        document.getElementById('btnOpenAdvancedFilter')?.addEventListener('click', () => {
+            this.openModal('advancedFilterModal');
+        });
+
+        document.getElementById('btnApplyAdvancedFilter')?.addEventListener('click', () => {
+            const dateVal = document.getElementById('filterDateRangeSelect')?.value || 'all';
+            const sizeVal = document.getElementById('filterSizeRangeSelect')?.value || 'all';
+            this.advancedFilters.dateRange = dateVal;
+            this.advancedFilters.sizeRange = sizeVal;
+            this.closeModal('advancedFilterModal');
+            this.loadCurrentView();
+            window.useCloudUI.showToast('Filter pencarian diterapkan', 'info');
+        });
+
+        document.getElementById('btnResetAdvancedFilter')?.addEventListener('click', () => {
+            this.advancedFilters.dateRange = 'all';
+            this.advancedFilters.sizeRange = 'all';
+            document.getElementById('filterDateRangeSelect').value = 'all';
+            document.getElementById('filterSizeRangeSelect').value = 'all';
+            this.closeModal('advancedFilterModal');
+            this.loadCurrentView();
+            window.useCloudUI.showToast('Filter direset ke default', 'info');
         });
 
         // Filter Chips
@@ -586,6 +708,70 @@ class UseCloudApp {
             this.closeContextMenu();
         });
 
+        document.getElementById('cmZipFolder')?.addEventListener('click', async () => {
+            if (this.activeContextItem && this.activeContextType === 'folder') {
+                await window.useCloudStorage.downloadFolderAsZip(this.activeContextItem.id);
+            }
+            this.closeContextMenu();
+        });
+
+        document.getElementById('cmColorFolder')?.addEventListener('click', () => {
+            if (this.activeContextItem && this.activeContextType === 'folder') {
+                this.openModal('folderColorModal');
+            }
+            this.closeContextMenu();
+        });
+
+        document.querySelectorAll('.color-swatch').forEach(swatch => {
+            swatch.addEventListener('click', async () => {
+                if (this.activeContextItem && this.activeContextType === 'folder') {
+                    const color = swatch.getAttribute('data-color');
+                    await window.useCloudDB.updateFolderColor(this.activeContextItem.id, color);
+                    window.useCloudUI.showToast(`Warna folder diubah`, 'success');
+                    this.closeModal('folderColorModal');
+                    await this.loadCurrentView();
+                }
+            });
+        });
+
+        document.getElementById('cmLockFolder')?.addEventListener('click', async () => {
+            if (this.activeContextItem && this.activeContextType === 'folder') {
+                if (this.activeContextItem.isLocked) {
+                    await window.useCloudDB.setFolderPin(this.activeContextItem.id, null);
+                    window.useCloudUI.showToast('Kunci PIN folder dihapus', 'info');
+                    await this.loadCurrentView();
+                } else {
+                    document.getElementById('setPinInput').value = '';
+                    this.openModal('setFolderPinModal');
+                }
+            }
+            this.closeContextMenu();
+        });
+
+        document.getElementById('btnSaveSetPin')?.addEventListener('click', async () => {
+            const pin = document.getElementById('setPinInput')?.value.trim();
+            if (pin && this.activeContextItem) {
+                await window.useCloudDB.setFolderPin(this.activeContextItem.id, pin);
+                window.useCloudUI.showToast('Folder berhasil dikunci dengan PIN', 'success');
+                this.closeModal('setFolderPinModal');
+                await this.loadCurrentView();
+            }
+        });
+
+        // Unlock Folder Verification
+        document.getElementById('btnSubmitUnlockPin')?.addEventListener('click', async () => {
+            const pin = document.getElementById('folderPinInput')?.value.trim();
+            if (this.activeFolderToUnlock) {
+                if (this.activeFolderToUnlock.pin === pin) {
+                    this.closeModal('folderPinModal');
+                    await this.openFolder(this.activeFolderToUnlock.id);
+                    this.activeFolderToUnlock = null;
+                } else {
+                    document.getElementById('pinLockError')?.classList.remove('hidden');
+                }
+            }
+        });
+
         document.getElementById('cmStar')?.addEventListener('click', () => this.toggleStarActiveItem());
         document.getElementById('cmDelete')?.addEventListener('click', () => this.deleteActiveItem());
         document.getElementById('cmRestore')?.addEventListener('click', () => this.restoreActiveItem());
@@ -640,6 +826,15 @@ class UseCloudApp {
             }
         });
 
+        // Floating Action Bar: Download as ZIP
+        document.getElementById('btnFabZipDownload')?.addEventListener('click', async () => {
+            const files = await window.useCloudDB.getAllFiles();
+            const selectedFiles = files.filter(f => this.selectedFileIds.has(f.id));
+            if (selectedFiles.length > 0) {
+                await window.useCloudStorage.createZipArchive(selectedFiles, 'usecloud-selected-files.zip');
+            }
+        });
+
         document.getElementById('btnFabDeleteAll')?.addEventListener('click', async () => {
             for (const id of this.selectedFileIds) {
                 await window.useCloudDB.deleteFile(id, this.currentView === 'trash');
@@ -656,11 +851,26 @@ class UseCloudApp {
             document.querySelectorAll('.file-card, .file-row').forEach(el => el.classList.remove('selected'));
         });
 
-        // Global Keyboard Shortcuts
-        window.addEventListener('keydown', (e) => {
+        // Global Keyboard Shortcuts (Spacebar Quick Look & Esc)
+        window.addEventListener('keydown', async (e) => {
             if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
 
-            if (e.key === 'Escape') {
+            // Spacebar Quick Look
+            if (e.code === 'Space') {
+                e.preventDefault();
+                const previewModal = document.getElementById('previewModal');
+                if (previewModal && previewModal.classList.contains('open')) {
+                    window.useCloudPreviewer.close();
+                } else if (this.selectedFileIds.size > 0) {
+                    const firstSelectedId = Array.from(this.selectedFileIds)[0];
+                    const file = await window.useCloudDB.getFile(firstSelectedId);
+                    if (file) {
+                        const allFiles = await window.useCloudDB.getAllFiles();
+                        const currentFiles = allFiles.filter(f => f.folderId === this.currentFolderId && !f.isTrash);
+                        window.useCloudPreviewer.open(file, currentFiles);
+                    }
+                }
+            } else if (e.key === 'Escape') {
                 this.closeAllModals();
                 this.closeContextMenu();
             } else if (e.key === 'Delete') {

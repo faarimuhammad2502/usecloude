@@ -1,6 +1,6 @@
 /**
  * USECLOUD - Storage & File Processor
- * Handles upload reading, conversions, export/import backups, downloads, and link sharing.
+ * Handles upload reading, conversions, export/import backups, downloads, ZIP archiving, and folder uploads.
  */
 
 class UseCloudStorage {
@@ -97,12 +97,107 @@ class UseCloudStorage {
         document.body.removeChild(link);
     }
 
+    // ================= ZIP ARCHIVING =================
+    async createZipArchive(files, zipFilename = 'usecloud-download.zip') {
+        if (typeof JSZip === 'undefined') {
+            window.useCloudUI.showToast('Pustaka kompresi ZIP belum siap.', 'error');
+            return;
+        }
+
+        const zip = new JSZip();
+        window.useCloudUI.showToast(`Menyiapkan ${files.length} berkas ke dalam ZIP...`, 'info');
+
+        for (const f of files) {
+            if (f.data) {
+                // Split Base64 header if present
+                const parts = f.data.split(',');
+                if (parts.length === 2) {
+                    zip.file(f.name, parts[1], { base64: true });
+                } else {
+                    zip.file(f.name, f.data);
+                }
+            }
+        }
+
+        const content = await zip.generateAsync({ type: 'blob' });
+        const url = URL.createObjectURL(content);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = zipFilename;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+
+        window.useCloudUI.showToast('ZIP berhasil diunduh!', 'success');
+    }
+
+    async downloadFolderAsZip(folderId) {
+        const folder = await window.useCloudDB.getFolder(folderId);
+        if (!folder) return;
+
+        const allFiles = await window.useCloudDB.getAllFiles();
+        const folderFiles = allFiles.filter(f => f.folderId === folderId && !f.isTrash);
+
+        if (folderFiles.length === 0) {
+            window.useCloudUI.showToast('Folder ini kosong, tidak ada berkas untuk di-ZIP.', 'info');
+            return;
+        }
+
+        const zipName = `${folder.name.replace(/[^a-zA-Z0-9_-]/g, '_')}.zip`;
+        await this.createZipArchive(folderFiles, zipName);
+    }
+
+    // ================= FOLDER UPLOAD (webkitRelativePath) =================
+    async processFolderUpload(fileList, parentFolderId = null, onQueueProgress) {
+        const folderMap = new Map(); // path -> folderId
+
+        for (let i = 0; i < fileList.length; i++) {
+            const file = fileList[i];
+            const relativePath = file.webkitRelativePath || file.name;
+            const segments = relativePath.split('/');
+
+            let currentParent = parentFolderId;
+
+            // Create folders for path segments except the last (the file itself)
+            let accumulatedPath = '';
+            for (let s = 0; s < segments.length - 1; s++) {
+                const folderName = segments[s];
+                accumulatedPath += (s > 0 ? '/' : '') + folderName;
+
+                if (!folderMap.has(accumulatedPath)) {
+                    const newFolder = {
+                        id: 'f_' + Date.now() + '_' + Math.random().toString(36).substr(2, 5),
+                        name: folderName,
+                        parentId: currentParent,
+                        color: 'var(--primary)',
+                        isTrash: false,
+                        createdAt: Date.now()
+                    };
+                    await window.useCloudDB.saveFolder(newFolder);
+                    folderMap.set(accumulatedPath, newFolder.id);
+                    currentParent = newFolder.id;
+                } else {
+                    currentParent = folderMap.get(accumulatedPath);
+                }
+            }
+
+            // Upload the file into currentParent
+            const fileObj = await this.processUploadedFile(file, currentParent);
+            await window.useCloudDB.saveFile(fileObj);
+
+            if (onQueueProgress) {
+                onQueueProgress(file.name, i + 1, fileList.length);
+            }
+        }
+    }
+
     async exportBackupJSON() {
         const files = await window.useCloudDB.getAllFiles();
         const folders = await window.useCloudDB.getAllFolders();
         const backupData = {
             appName: 'USECLOUD',
-            version: '2.0',
+            version: '2.5',
             exportedAt: new Date().toISOString(),
             folders: folders,
             files: files

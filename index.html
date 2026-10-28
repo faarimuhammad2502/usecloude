@@ -19,6 +19,9 @@
     <!-- Lucide Icons CDN -->
     <script src="https://unpkg.com/lucide@latest"></script>
 
+    <!-- JSZip Client-Side Compression CDN -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+
     <!-- App Modular Stylesheets -->
     <link rel="stylesheet" href="css/main.css">
     <link rel="stylesheet" href="css/components.css">
@@ -44,7 +47,7 @@
                 <i data-lucide="search" class="w-5 h-5 app-text-muted shrink-0"></i>
                 <input type="text" id="omniboxSearchInput" placeholder="Cari di UseCloud (nama berkas, folder, atau tipe)..." 
                        class="w-full bg-transparent text-sm focus:outline-none">
-                <button class="app-text-muted hover:text-primary transition-colors" title="Pencarian Cepat">
+                <button id="btnOpenAdvancedFilter" class="app-text-muted hover:text-primary transition-colors" title="Filter Pencarian Lanjutan">
                     <i data-lucide="sliders-horizontal" class="w-4 h-4"></i>
                 </button>
             </div>
@@ -123,9 +126,13 @@
                             <i data-lucide="upload" class="w-4 h-4 text-emerald-500"></i>
                             <span>Unggah Berkas</span>
                         </div>
+                        <div id="actionUploadFolder" class="action-dropdown-item">
+                            <i data-lucide="folder-up" class="w-4 h-4 text-cyan-500"></i>
+                            <span>Unggah Seluruh Folder</span>
+                        </div>
                         <div class="context-menu-separator"></div>
                         <div id="actionExportBackup" class="action-dropdown-item">
-                            <i data-lucide="download" class="w-4 h-4 text-cyan-500"></i>
+                            <i data-lucide="download" class="w-4 h-4 text-indigo-400"></i>
                             <span>Ekspor Cadangan</span>
                         </div>
                         <div id="actionImportBackup" class="action-dropdown-item">
@@ -227,7 +234,10 @@
 
                 <!-- Files Section -->
                 <section id="filesSection">
-                    <h3 class="text-xs font-semibold app-text-muted uppercase tracking-wider mb-3">Berkas</h3>
+                    <div class="flex items-center justify-between mb-3">
+                        <h3 class="text-xs font-semibold app-text-muted uppercase tracking-wider">Berkas</h3>
+                        <span class="text-[11px] app-text-muted">Tekan <kbd class="px-1.5 py-0.5 rounded bg-slate-500/10 font-mono text-[10px]">Spasi</kbd> untuk Pratinjau Cepat</span>
+                    </div>
                     <div id="filesContainer">
                         <!-- Grid or List rendered here -->
                     </div>
@@ -275,8 +285,11 @@
         <span id="selectedItemsCount" class="text-xs font-semibold app-text-main">0 dipilih</span>
         <div class="h-4 w-[1px] bg-slate-500/30"></div>
         <div class="flex items-center gap-2">
-            <button id="btnFabDownloadAll" class="p-1.5 rounded-lg app-text-sub hover:text-primary hover:bg-slate-500/10" title="Unduh Terpilih">
+            <button id="btnFabDownloadAll" class="p-1.5 rounded-lg app-text-sub hover:text-primary hover:bg-slate-500/10" title="Unduh Berkas Satu per Satu">
                 <i data-lucide="download" class="w-4 h-4"></i>
+            </button>
+            <button id="btnFabZipDownload" class="p-1.5 rounded-lg app-text-sub hover:text-primary hover:bg-slate-500/10" title="Unduh Semua sebagai ZIP">
+                <i data-lucide="archive" class="w-4 h-4"></i>
             </button>
             <button id="btnFabDeleteAll" class="p-1.5 rounded-lg text-rose-500 hover:bg-rose-500/10" title="Hapus Terpilih">
                 <i data-lucide="trash-2" class="w-4 h-4"></i>
@@ -291,11 +304,23 @@
     <div id="contextMenu" class="context-menu">
         <div id="cmPreview" class="context-menu-item">
             <i data-lucide="eye" class="w-4 h-4 text-indigo-500"></i>
-            <span>Pratinjau</span>
+            <span>Pratinjau (Spasi)</span>
         </div>
         <div id="cmDownload" class="context-menu-item">
             <i data-lucide="download" class="w-4 h-4 text-emerald-500"></i>
             <span>Unduh</span>
+        </div>
+        <div id="cmZipFolder" class="context-menu-item" style="display: none;">
+            <i data-lucide="archive" class="w-4 h-4 text-amber-500"></i>
+            <span>Unduh Folder (ZIP)</span>
+        </div>
+        <div id="cmColorFolder" class="context-menu-item" style="display: none;">
+            <i data-lucide="palette" class="w-4 h-4 text-purple-500"></i>
+            <span>Ubah Warna Folder</span>
+        </div>
+        <div id="cmLockFolder" class="context-menu-item" style="display: none;">
+            <i data-lucide="lock" class="w-4 h-4 text-rose-500"></i>
+            <span>Kunci dengan PIN</span>
         </div>
         <div id="cmShare" class="context-menu-item">
             <i data-lucide="share-2" class="w-4 h-4 text-cyan-500"></i>
@@ -317,6 +342,27 @@
         <div id="cmDelete" class="context-menu-item danger">
             <i data-lucide="trash-2" class="w-4 h-4"></i>
             <span>Pindahkan ke Sampah</span>
+        </div>
+    </div>
+
+    <!-- ================= FLOATING UPLOAD QUEUE DIALOG ================= -->
+    <div id="uploadQueueDialog" class="upload-queue-dialog">
+        <div class="upload-queue-header">
+            <div class="flex items-center gap-2">
+                <i data-lucide="upload-cloud" class="w-4 h-4 text-indigo-500"></i>
+                <span id="uploadQueueTitle" class="text-xs font-semibold app-text-main">Mengunggah...</span>
+            </div>
+            <div class="flex items-center gap-1">
+                <button onclick="document.getElementById('uploadQueueDialog').classList.toggle('minimized')" class="p-1 rounded app-text-muted hover:text-primary">
+                    <i data-lucide="chevron-down" class="w-3.5 h-3.5"></i>
+                </button>
+                <button onclick="document.getElementById('uploadQueueDialog').classList.remove('open')" class="p-1 rounded app-text-muted hover:text-primary">
+                    <i data-lucide="x" class="w-3.5 h-3.5"></i>
+                </button>
+            </div>
+        </div>
+        <div id="uploadQueueBody" class="upload-queue-body">
+            <!-- Queue items injected here -->
         </div>
     </div>
 
@@ -457,6 +503,123 @@
         </div>
     </div>
 
+    <!-- ================= MODAL: UBAH WARNA FOLDER ================= -->
+    <div id="folderColorModal" class="modal-backdrop">
+        <div class="modal-content max-w-sm">
+            <h3 class="text-base font-bold app-text-main mb-1">Pilih Warna Folder</h3>
+            <p class="text-xs app-text-muted mb-5">Atur warna ikon folder agar mudah dikelompokkan.</p>
+            <div class="grid grid-cols-4 gap-4 justify-items-center mb-6">
+                <div class="color-swatch bg-indigo-600" data-color="#6366f1" title="Royal Indigo"></div>
+                <div class="color-swatch bg-emerald-500" data-color="#10b981" title="Emerald Green"></div>
+                <div class="color-swatch bg-cyan-500" data-color="#06b6d4" title="Ocean Cyan"></div>
+                <div class="color-swatch bg-rose-500" data-color="#f43f5e" title="Rose Red"></div>
+                <div class="color-swatch bg-amber-500" data-color="#f59e0b" title="Amber Orange"></div>
+                <div class="color-swatch bg-purple-600" data-color="#9333ea" title="Royal Purple"></div>
+                <div class="color-swatch bg-pink-500" data-color="#ec4899" title="Neon Pink"></div>
+                <div class="color-swatch bg-slate-500" data-color="#64748b" title="Classic Slate"></div>
+            </div>
+            <div class="flex justify-end">
+                <button onclick="window.useCloudApp.closeModal('folderColorModal')" class="px-4 py-2 rounded-xl text-xs font-semibold app-text-sub hover:bg-slate-500/10 transition">
+                    Tutup
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ================= MODAL: ATUR PIN FOLDER ================= -->
+    <div id="setFolderPinModal" class="modal-backdrop">
+        <div class="modal-content max-w-sm">
+            <h3 class="text-base font-bold app-text-main mb-1">Kunci Folder dengan PIN</h3>
+            <p class="text-xs app-text-muted mb-4">Masukkan kode PIN rahasia untuk mengamankan folder ini.</p>
+            <input type="password" id="setPinInput" maxlength="6" placeholder="Masukkan 4-6 digit PIN..." 
+                   class="w-full text-center tracking-widest text-lg font-bold rounded-xl px-4 py-2.5 app-text-main focus:outline-none mb-6"
+                   style="background-color: var(--bg-surface-elevated); border: 1px solid var(--border-subtle);">
+            <div class="flex justify-end gap-3">
+                <button onclick="window.useCloudApp.closeModal('setFolderPinModal')" 
+                        class="px-4 py-2 rounded-xl text-xs font-semibold app-text-sub hover:bg-slate-500/10 transition">
+                    Batal
+                </button>
+                <button id="btnSaveSetPin" 
+                        class="px-5 py-2 rounded-xl text-xs font-semibold bg-indigo-600 hover:bg-indigo-500 text-white transition">
+                    Kunci Folder
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ================= MODAL: MASUKKAN PIN UNTUK BUKA FOLDER ================= -->
+    <div id="folderPinModal" class="modal-backdrop">
+        <div class="modal-content max-w-sm text-center">
+            <div class="w-12 h-12 rounded-full bg-amber-500/10 text-amber-500 flex items-center justify-center mx-auto mb-3">
+                <i data-lucide="lock" class="w-6 h-6"></i>
+            </div>
+            <h3 class="text-base font-bold app-text-main mb-1">Folder Dilindungi</h3>
+            <p class="text-xs app-text-muted mb-5">Masukkan PIN untuk membuka isi folder ini.</p>
+            <input type="password" id="folderPinInput" maxlength="6" placeholder="&bull; &bull; &bull; &bull;" 
+                   class="w-full text-center tracking-widest text-xl font-bold rounded-xl px-4 py-3 app-text-main focus:outline-none mb-2"
+                   style="background-color: var(--bg-surface-elevated); border: 1px solid var(--border-subtle);">
+            <p id="pinLockError" class="text-xs text-rose-500 mb-5 hidden">PIN yang Anda masukkan salah!</p>
+            <div class="flex justify-end gap-3">
+                <button onclick="window.useCloudApp.closeModal('folderPinModal')" 
+                        class="px-4 py-2 rounded-xl text-xs font-semibold app-text-sub hover:bg-slate-500/10 transition">
+                    Batal
+                </button>
+                <button id="btnSubmitUnlockPin" 
+                        class="px-5 py-2 rounded-xl text-xs font-semibold bg-indigo-600 hover:bg-indigo-500 text-white transition">
+                    Buka Folder
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ================= MODAL: FILTER PENCARIAN LANJUTAN ================= -->
+    <div id="advancedFilterModal" class="modal-backdrop">
+        <div class="modal-content max-w-md">
+            <h3 class="text-base font-bold app-text-main mb-1">Filter Pencarian Lanjutan</h3>
+            <p class="text-xs app-text-muted mb-5">Saring berkas berdasarkan waktu modifikasi dan ukuran.</p>
+            
+            <div class="space-y-4 mb-6">
+                <div>
+                    <label class="block text-xs font-semibold app-text-muted mb-1.5">Waktu Diubah</label>
+                    <select id="filterDateRangeSelect" class="w-full rounded-xl px-3.5 py-2.5 text-xs app-text-main focus:outline-none"
+                            style="background-color: var(--bg-surface-elevated); border: 1px solid var(--border-subtle);">
+                        <option value="all">Kapan Saja</option>
+                        <option value="today">24 Jam Terakhir</option>
+                        <option value="week">7 Hari Terakhir</option>
+                        <option value="month">30 Hari Terakhir</option>
+                    </select>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-semibold app-text-muted mb-1.5">Ukuran Berkas</label>
+                    <select id="filterSizeRangeSelect" class="w-full rounded-xl px-3.5 py-2.5 text-xs app-text-main focus:outline-none"
+                            style="background-color: var(--bg-surface-elevated); border: 1px solid var(--border-subtle);">
+                        <option value="all">Semua Ukuran</option>
+                        <option value="small">Kecil (&lt; 1 MB)</option>
+                        <option value="medium">Sedang (1 MB - 10 MB)</option>
+                        <option value="large">Besar (&gt; 10 MB)</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="flex justify-between items-center">
+                <button id="btnResetAdvancedFilter" class="text-xs text-rose-500 hover:underline">
+                    Reset Filter
+                </button>
+                <div class="flex gap-2">
+                    <button onclick="window.useCloudApp.closeModal('advancedFilterModal')" 
+                            class="px-4 py-2 rounded-xl text-xs font-semibold app-text-sub hover:bg-slate-500/10 transition">
+                        Batal
+                    </button>
+                    <button id="btnApplyAdvancedFilter" 
+                            class="px-5 py-2 rounded-xl text-xs font-semibold bg-indigo-600 hover:bg-indigo-500 text-white transition">
+                        Terapkan
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- ================= DRAG AND DROP OVERLAY ================= -->
     <div id="dropzoneOverlay" class="dropzone-overlay">
         <div class="text-center p-8">
@@ -469,8 +632,9 @@
         </div>
     </div>
 
-    <!-- Hidden File Inputs -->
+    <!-- Hidden File & Folder Inputs -->
     <input type="file" id="fileUploadInput" multiple class="hidden">
+    <input type="file" id="folderUploadInput" webkitdirectory directory multiple class="hidden">
     <input type="file" id="backupFileInput" accept=".json" class="hidden">
 
     <!-- Toast Notifications Container -->

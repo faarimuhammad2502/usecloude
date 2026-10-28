@@ -1,6 +1,6 @@
 /* ==========================================================================
    USECLOUD - Components Styling
-   Context Menu, Modals, Details Panel, Lightbox, Toasts
+   Context Menu, Modals, Details Panel, Lightbox, Toasts, Upload Queue, Color Picker
    ========================================================================== */
 
 /* Floating Selection Action Bar */
@@ -27,6 +27,62 @@
     transform: translateX(-50%) translateY(0);
     opacity: 1;
     pointer-events: auto;
+}
+
+/* Floating Upload Queue Dialog (Google Drive Style) */
+.upload-queue-dialog {
+    position: fixed;
+    bottom: 1.5rem;
+    right: 1.5rem;
+    width: 380px;
+    background-color: var(--bg-surface);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-dropdown);
+    z-index: 80;
+    display: none;
+    flex-direction: column;
+    overflow: hidden;
+    animation: slideInRight 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.upload-queue-dialog.open {
+    display: flex;
+}
+
+.upload-queue-header {
+    padding: 0.85rem 1.15rem;
+    background-color: var(--bg-surface-elevated);
+    border-bottom: 1px solid var(--border-subtle);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.upload-queue-body {
+    max-height: 280px;
+    overflow-y: auto;
+    padding: 0.5rem 1rem;
+    transition: max-height 0.25s ease;
+}
+
+.upload-queue-dialog.minimized .upload-queue-body {
+    max-height: 0;
+    padding: 0 1rem;
+}
+
+.upload-queue-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
+    padding: 0.65rem 0;
+    border-bottom: 1px solid var(--border-subtle);
+    font-size: 0.8125rem;
+}
+
+.upload-queue-item:last-child {
+    border-bottom: none;
 }
 
 /* Context Menu */
@@ -217,6 +273,26 @@ body.light-theme .preview-modal {
     user-select: text;
 }
 
+/* Color Swatches Grid */
+.color-swatch {
+    width: 36px;
+    height: 36px;
+    border-radius: 9999px;
+    cursor: pointer;
+    transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.color-swatch:hover {
+    transform: scale(1.15);
+}
+
+.color-swatch.active {
+    box-shadow: 0 0 0 3px var(--bg-surface), 0 0 0 5px var(--primary);
+}
+
 /* Toast Notifications */
 .toast-container {
     position: fixed;
@@ -252,7 +328,7 @@ body.light-theme .preview-modal {
     border-left-color: var(--status-success);
 }
 
-/* Dropdown Menu (Under "+ Baru" and user profile) */
+/* Dropdown Menu */
 .action-dropdown {
     position: absolute;
     top: calc(100% + 8px);

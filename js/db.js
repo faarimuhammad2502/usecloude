@@ -1,6 +1,6 @@
 /**
  * USECLOUD - Database Layer (IndexedDB & LocalStorage)
- * Manages folders, files, trashed items, starred items, activity logs, and real disk storage estimation.
+ * Manages folders, files, trashed items, starred items, activity logs, folder colors, and PIN locks.
  */
 
 class UseCloudDB {
@@ -57,9 +57,9 @@ class UseCloudDB {
         const folders = await this.getAllFolders();
         if (folders.length === 0) {
             const defaultFolders = [
-                { id: 'f_docs', name: 'Dokumen Penting', parentId: null, color: '#6366f1', isTrash: false, createdAt: Date.now() },
-                { id: 'f_photos', name: 'Foto & Kenangan', parentId: null, color: '#06b6d4', isTrash: false, createdAt: Date.now() },
-                { id: 'f_work', name: 'Project Kerja', parentId: null, color: '#8b5cf6', isTrash: false, createdAt: Date.now() }
+                { id: 'f_docs', name: 'Dokumen Penting', parentId: null, color: '#6366f1', isLocked: false, isTrash: false, createdAt: Date.now() },
+                { id: 'f_photos', name: 'Foto & Kenangan', parentId: null, color: '#06b6d4', isLocked: false, isTrash: false, createdAt: Date.now() },
+                { id: 'f_work', name: 'Project Kerja', parentId: null, color: '#8b5cf6', isLocked: false, isTrash: false, createdAt: Date.now() }
             ];
             for (const f of defaultFolders) {
                 await this.saveFolder(f);
@@ -97,6 +97,27 @@ class UseCloudDB {
             req.onsuccess = () => resolve(folder);
             req.onerror = (e) => reject(e);
         });
+    }
+
+    async updateFolderColor(id, color) {
+        const folder = await this.getFolder(id);
+        if (folder) {
+            folder.color = color;
+            await this.saveFolder(folder);
+            return true;
+        }
+        return false;
+    }
+
+    async setFolderPin(id, pin) {
+        const folder = await this.getFolder(id);
+        if (folder) {
+            folder.isLocked = !!pin;
+            folder.pin = pin || null;
+            await this.saveFolder(folder);
+            return true;
+        }
+        return false;
     }
 
     async deleteFolder(id, permanent = false) {

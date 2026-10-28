@@ -1,7 +1,6 @@
 /**
  * USECLOUD - User Interface Renderer
- * Handles rendering of folders, files (grid/list), breadcrumbs, details panel, storage meter, and toasts.
- * Optimized for seamless Light Mode and Dark Mode rendering.
+ * Handles rendering of folders, files (grid/list), breadcrumbs, details panel, storage meter, toasts, and upload queue dialog.
  */
 
 class UseCloudUI {
@@ -70,20 +69,23 @@ class UseCloudUI {
 
             card.innerHTML = `
                 <div class="flex items-center gap-3 overflow-hidden">
-                    <div class="w-9 h-9 rounded-lg flex items-center justify-center shrink-0" style="background-color: var(--primary-light); color: var(--primary);">
+                    <div class="w-9 h-9 rounded-lg flex items-center justify-center shrink-0" style="background-color: ${folderColor}20; color: ${folderColor};">
                         <i data-lucide="folder" class="w-5 h-5 fill-current"></i>
                     </div>
-                    <span class="font-medium text-sm app-text-main truncate group-hover:text-primary transition-colors">${folder.name}</span>
+                    <div class="flex items-center gap-1.5 overflow-hidden">
+                        <span class="font-medium text-sm app-text-main truncate group-hover:text-primary transition-colors">${folder.name}</span>
+                        ${folder.isLocked ? '<i data-lucide="lock" class="w-3.5 h-3.5 text-amber-500 shrink-0"></i>' : ''}
+                    </div>
                 </div>
                 <button class="p-1.5 rounded-lg app-text-muted hover:text-primary hover:bg-slate-500/10 folder-menu-btn" title="Opsi Folder">
                     <i data-lucide="more-vertical" class="w-4 h-4"></i>
                 </button>
             `;
 
-            // Open on single click
+            // Open on click
             card.addEventListener('click', (e) => {
                 if (e.target.closest('.folder-menu-btn')) return;
-                onOpenFolder(folder.id);
+                onOpenFolder(folder);
             });
 
             // Context menu on right click
@@ -401,9 +403,10 @@ class UseCloudUI {
             }
         } else {
             // Folder
+            const folderColor = item.color || 'var(--primary)';
             if (previewContainer) {
                 previewContainer.innerHTML = `
-                    <div class="w-full h-36 rounded-xl flex items-center justify-center" style="background-color: var(--primary-light); color: var(--primary);">
+                    <div class="w-full h-36 rounded-xl flex items-center justify-center" style="background-color: ${folderColor}20; color: ${folderColor};">
                         <i data-lucide="folder" class="w-14 h-14 fill-current"></i>
                     </div>
                 `;
@@ -414,6 +417,14 @@ class UseCloudUI {
                         <div class="flex justify-between py-2 border-b app-border">
                             <span class="app-text-muted">Tipe</span>
                             <span class="font-medium app-text-main">Folder Direktori</span>
+                        </div>
+                        <div class="flex justify-between py-2 border-b app-border">
+                            <span class="app-text-muted">Warna Folder</span>
+                            <span class="w-4 h-4 rounded-full border app-border inline-block" style="background-color: ${folderColor};"></span>
+                        </div>
+                        <div class="flex justify-between py-2 border-b app-border">
+                            <span class="app-text-muted">Status Kunci PIN</span>
+                            <span class="font-medium ${item.isLocked ? 'text-amber-500' : 'app-text-main'}">${item.isLocked ? 'Terkunci' : 'Terbuka'}</span>
                         </div>
                         <div class="flex justify-between py-2 border-b app-border">
                             <span class="app-text-muted">Dibuat</span>
@@ -452,6 +463,45 @@ class UseCloudUI {
             `;
             container.appendChild(item);
         });
+
+        if (window.lucide) window.lucide.createIcons();
+    }
+
+    // ================= UPLOAD QUEUE DIALOG =================
+    openUploadQueue(totalItems) {
+        const dialog = document.getElementById('uploadQueueDialog');
+        const title = document.getElementById('uploadQueueTitle');
+        const body = document.getElementById('uploadQueueBody');
+
+        if (dialog) dialog.classList.add('open');
+        if (title) title.textContent = `Mengunggah ${totalItems} item...`;
+        if (body) body.innerHTML = '';
+        if (window.lucide) window.lucide.createIcons();
+    }
+
+    addUploadQueueItem(fileName, current, total) {
+        const body = document.getElementById('uploadQueueBody');
+        if (!body) return;
+
+        const row = document.createElement('div');
+        row.className = 'upload-queue-item';
+        row.innerHTML = `
+            <div class="flex items-center gap-2 overflow-hidden flex-1">
+                <i data-lucide="file" class="w-4 h-4 text-indigo-500 shrink-0"></i>
+                <span class="app-text-main truncate text-xs">${fileName}</span>
+            </div>
+            <div class="flex items-center gap-2 shrink-0">
+                <span class="text-[11px] app-text-muted">${current}/${total}</span>
+                <i data-lucide="check-circle" class="w-4 h-4 text-emerald-500"></i>
+            </div>
+        `;
+        body.appendChild(row);
+        body.scrollTop = body.scrollHeight;
+
+        const title = document.getElementById('uploadQueueTitle');
+        if (title) {
+            title.textContent = current === total ? `${total} unggahan selesai` : `Mengunggah (${current}/${total})...`;
+        }
 
         if (window.lucide) window.lucide.createIcons();
     }
