@@ -1,0 +1,8 @@
+{
+  "user": "faari@email.com",
+  "folders": [
+    { "id": "folder_image", "name": "Image" },
+    { "id": "folder_video", "name": "Video" }
+  ],
+  "files": []
+}
