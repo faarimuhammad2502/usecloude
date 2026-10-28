@@ -3,17 +3,17 @@
    Context Menu, Modals, Details Panel, Lightbox, Toasts
    ========================================================================== */
 
-/* Floating Selection Action Bar (Google Drive Style) */
+/* Floating Selection Action Bar */
 .floating-action-bar {
     position: fixed;
     bottom: 2rem;
     left: 50%;
     transform: translateX(-50%) translateY(120px);
-    background-color: var(--bg-surface-elevated);
+    background-color: var(--bg-surface);
     border: 1px solid var(--border-subtle);
     box-shadow: var(--shadow-dropdown);
     border-radius: 9999px;
-    padding: 0.5rem 1.25rem;
+    padding: 0.6rem 1.4rem;
     display: flex;
     align-items: center;
     gap: 1.25rem;
@@ -48,13 +48,13 @@
     display: flex;
     align-items: center;
     gap: 0.75rem;
-    padding: 0.6rem 0.85rem;
+    padding: 0.65rem 0.9rem;
     font-size: 0.845rem;
     font-weight: 500;
     color: var(--text-primary);
     border-radius: var(--radius-sm);
     cursor: pointer;
-    transition: background-color 0.15s ease;
+    transition: background-color 0.15s ease, color 0.15s ease;
 }
 
 .context-menu-item:hover {
@@ -81,7 +81,7 @@
     height: 100%;
     display: flex;
     flex-direction: column;
-    transition: margin-right 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    transition: margin-right 0.3s cubic-bezier(0.16, 1, 0.3, 1), background-color 0.25s ease, border-color 0.25s ease;
     z-index: 20;
 }
 
@@ -99,6 +99,14 @@
     border-bottom: 2px solid transparent;
     cursor: pointer;
     transition: all 0.2s ease;
+    background: transparent;
+    border-top: none;
+    border-left: none;
+    border-right: none;
+}
+
+.details-tab-btn:hover {
+    color: var(--text-primary);
 }
 
 .details-tab-btn.active {
@@ -110,14 +118,18 @@
 .modal-backdrop {
     position: fixed;
     inset: 0;
-    background-color: rgba(0, 0, 0, 0.65);
-    backdrop-filter: blur(6px);
+    background-color: rgba(10, 14, 23, 0.7);
+    backdrop-filter: blur(8px);
     z-index: 100;
     display: none;
     align-items: center;
     justify-content: center;
     opacity: 0;
     transition: opacity 0.25s ease;
+}
+
+body.light-theme .modal-backdrop {
+    background-color: rgba(15, 23, 42, 0.45);
 }
 
 .modal-backdrop.open {
@@ -145,11 +157,15 @@
 .preview-modal {
     position: fixed;
     inset: 0;
-    background-color: rgba(9, 13, 22, 0.95);
-    backdrop-filter: blur(12px);
+    background-color: rgba(10, 14, 23, 0.95);
+    backdrop-filter: blur(16px);
     z-index: 150;
     display: none;
     flex-direction: column;
+}
+
+body.light-theme .preview-modal {
+    background-color: rgba(248, 250, 252, 0.96);
 }
 
 .preview-modal.open {
@@ -157,13 +173,13 @@
 }
 
 .preview-header {
-    height: 60px;
+    height: 64px;
     padding: 0 1.5rem;
     display: flex;
     align-items: center;
     justify-content: space-between;
     border-bottom: 1px solid var(--border-subtle);
-    background-color: rgba(15, 23, 42, 0.7);
+    background-color: var(--bg-surface);
 }
 
 .preview-body {
@@ -185,7 +201,7 @@
 }
 
 .code-preview-container {
-    background-color: #0b0f19;
+    background-color: var(--bg-surface-elevated);
     border: 1px solid var(--border-subtle);
     border-radius: var(--radius-md);
     width: 100%;
@@ -193,10 +209,10 @@
     max-height: 80vh;
     overflow: auto;
     padding: 1.5rem;
-    font-family: 'Fira Code', monospace;
+    font-family: 'Fira Code', 'Cascadia Code', monospace;
     font-size: 0.875rem;
     line-height: 1.6;
-    color: #e2e8f0;
+    color: var(--text-primary);
     white-space: pre-wrap;
     user-select: text;
 }
@@ -213,18 +229,18 @@
 }
 
 .toast {
-    background-color: var(--bg-surface-elevated);
+    background-color: var(--bg-surface);
     color: var(--text-primary);
     border: 1px solid var(--border-subtle);
     border-left: 4px solid var(--primary);
     border-radius: var(--radius-md);
-    padding: 0.85rem 1.25rem;
+    padding: 0.9rem 1.3rem;
     box-shadow: var(--shadow-dropdown);
     font-size: 0.875rem;
     display: flex;
     align-items: center;
     gap: 0.75rem;
-    min-width: 300px;
+    min-width: 320px;
     animation: slideInRight 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
@@ -233,7 +249,7 @@
 }
 
 .toast.toast-success {
-    border-left-color: var(--accent);
+    border-left-color: var(--status-success);
 }
 
 /* Dropdown Menu (Under "+ Baru" and user profile) */
@@ -261,13 +277,13 @@
     display: flex;
     align-items: center;
     gap: 0.75rem;
-    padding: 0.65rem 0.9rem;
+    padding: 0.65rem 0.95rem;
     font-size: 0.875rem;
     font-weight: 500;
     color: var(--text-primary);
     border-radius: var(--radius-sm);
     cursor: pointer;
-    transition: background-color 0.15s ease;
+    transition: background-color 0.15s ease, color 0.15s ease;
 }
 
 .action-dropdown-item:hover {

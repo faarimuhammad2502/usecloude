@@ -1,6 +1,6 @@
 /**
  * USECLOUD - Database Layer (IndexedDB & LocalStorage)
- * Manages folders, files, trashed items, starred items, and activity logs.
+ * Manages folders, files, trashed items, starred items, activity logs, and real disk storage estimation.
  */
 
 class UseCloudDB {
@@ -57,14 +57,14 @@ class UseCloudDB {
         const folders = await this.getAllFolders();
         if (folders.length === 0) {
             const defaultFolders = [
-                { id: 'f_docs', name: 'Dokumen Penting', parentId: null, color: '#0d9488', isTrash: false, createdAt: Date.now() },
+                { id: 'f_docs', name: 'Dokumen Penting', parentId: null, color: '#6366f1', isTrash: false, createdAt: Date.now() },
                 { id: 'f_photos', name: 'Foto & Kenangan', parentId: null, color: '#06b6d4', isTrash: false, createdAt: Date.now() },
-                { id: 'f_work', name: 'Project Kerja', parentId: null, color: '#f59e0b', isTrash: false, createdAt: Date.now() }
+                { id: 'f_work', name: 'Project Kerja', parentId: null, color: '#8b5cf6', isTrash: false, createdAt: Date.now() }
             ];
             for (const f of defaultFolders) {
                 await this.saveFolder(f);
             }
-            await this.logActivity('Inisialisasi', 'Folder dasar berhasil dibuat', 'sparkles');
+            await this.logActivity('Inisialisasi', 'Folder dasar berhasil disiapkan', 'sparkles');
         }
     }
 
@@ -224,7 +224,7 @@ class UseCloudDB {
         });
     }
 
-    // ================= STATS & QUOTA =================
+    // ================= REAL STORAGE ESTIMATION =================
     async calculateStorage() {
         const files = await this.getAllFiles();
         let totalBytes = 0;
@@ -248,15 +248,46 @@ class UseCloudDB {
             else countByType.others += size;
         });
 
-        // Default 15 GB quota like Google Drive (or user custom)
-        const quotaBytes = 15 * 1024 * 1024 * 1024; // 15 GB
+        // Query actual disk storage capability from browser
+        let allocatedQuota = 15 * 1024 * 1024 * 1024; // Default simulated 15 GB
+        let isRealBrowserQuota = false;
+        let isPersisted = false;
+
+        if (navigator.storage && navigator.storage.estimate) {
+            try {
+                const estimate = await navigator.storage.estimate();
+                if (estimate.quota && estimate.quota > 0) {
+                    allocatedQuota = estimate.quota;
+                    isRealBrowserQuota = true;
+                }
+            } catch (err) {
+                console.warn('Storage estimate unavailable:', err);
+            }
+        }
+
+        if (navigator.storage && navigator.storage.persisted) {
+            try {
+                isPersisted = await navigator.storage.persisted();
+            } catch (err) {
+                isPersisted = false;
+            }
+        }
 
         return {
             usedBytes: totalBytes,
-            quotaBytes: quotaBytes,
-            percentage: Math.min(100, ((totalBytes / quotaBytes) * 100).toFixed(1)),
+            quotaBytes: allocatedQuota,
+            isRealBrowserQuota: isRealBrowserQuota,
+            isPersisted: isPersisted,
+            percentage: Math.min(100, ((totalBytes / allocatedQuota) * 100).toFixed(2)),
             countByType
         };
+    }
+
+    async requestPersistentStorage() {
+        if (navigator.storage && navigator.storage.persist) {
+            return await navigator.storage.persist();
+        }
+        return false;
     }
 }
 

@@ -1,6 +1,7 @@
 /**
  * USECLOUD - User Interface Renderer
  * Handles rendering of folders, files (grid/list), breadcrumbs, details panel, storage meter, and toasts.
+ * Optimized for seamless Light Mode and Dark Mode rendering.
  */
 
 class UseCloudUI {
@@ -13,15 +14,15 @@ class UseCloudUI {
         if (!container) return;
 
         let html = `
-            <div class="breadcrumb-item cursor-pointer hover:text-teal-400" id="bcRoot">
+            <div class="breadcrumb-item cursor-pointer" id="bcRoot">
                 <span>Cloud Saya</span>
             </div>
         `;
 
         folderHistory.forEach((folder) => {
             html += `
-                <i data-lucide="chevron-right" class="w-4 h-4 text-slate-500"></i>
-                <div class="breadcrumb-item cursor-pointer hover:text-teal-400" data-folder-id="${folder.id}">
+                <i data-lucide="chevron-right" class="w-4 h-4 app-text-muted"></i>
+                <div class="breadcrumb-item cursor-pointer" data-folder-id="${folder.id}">
                     <span>${folder.name}</span>
                 </div>
             `;
@@ -29,7 +30,7 @@ class UseCloudUI {
 
         if (currentFolder) {
             html += `
-                <i data-lucide="chevron-right" class="w-4 h-4 text-slate-500"></i>
+                <i data-lucide="chevron-right" class="w-4 h-4 app-text-muted"></i>
                 <div class="breadcrumb-item active">
                     <span>${currentFolder.name}</span>
                 </div>
@@ -38,7 +39,7 @@ class UseCloudUI {
 
         container.innerHTML = html;
 
-        // Bind events
+        // Bind navigation events
         document.getElementById('bcRoot')?.addEventListener('click', () => onNavigate(null));
         container.querySelectorAll('[data-folder-id]').forEach(el => {
             el.addEventListener('click', () => onNavigate(el.getAttribute('data-folder-id')));
@@ -65,21 +66,21 @@ class UseCloudUI {
             card.className = 'folder-card group';
             card.setAttribute('data-id', folder.id);
 
-            const folderColor = folder.color || '#0d9488';
+            const folderColor = folder.color || 'var(--primary)';
 
             card.innerHTML = `
                 <div class="flex items-center gap-3 overflow-hidden">
-                    <div class="w-9 h-9 rounded-lg flex items-center justify-center shrink-0" style="background-color: ${folderColor}20; color: ${folderColor};">
+                    <div class="w-9 h-9 rounded-lg flex items-center justify-center shrink-0" style="background-color: var(--primary-light); color: var(--primary);">
                         <i data-lucide="folder" class="w-5 h-5 fill-current"></i>
                     </div>
-                    <span class="font-medium text-sm text-slate-200 truncate group-hover:text-white">${folder.name}</span>
+                    <span class="font-medium text-sm app-text-main truncate group-hover:text-primary transition-colors">${folder.name}</span>
                 </div>
-                <button class="p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-slate-700/50 folder-menu-btn" title="Opsi Folder">
+                <button class="p-1.5 rounded-lg app-text-muted hover:text-primary hover:bg-slate-500/10 folder-menu-btn" title="Opsi Folder">
                     <i data-lucide="more-vertical" class="w-4 h-4"></i>
                 </button>
             `;
 
-            // Open on double click or single click
+            // Open on single click
             card.addEventListener('click', (e) => {
                 if (e.target.closest('.folder-menu-btn')) return;
                 onOpenFolder(folder.id);
@@ -109,7 +110,7 @@ class UseCloudUI {
         const section = document.getElementById('quickAccessSection');
         if (!container || !section) return;
 
-        const recentFiles = files.slice(0, 5);
+        const recentFiles = files.slice(0, 6);
         if (recentFiles.length === 0) {
             section.style.display = 'none';
             return;
@@ -120,20 +121,20 @@ class UseCloudUI {
 
         recentFiles.forEach(file => {
             const card = document.createElement('div');
-            card.className = 'min-w-[190px] max-w-[210px] bg-slate-900 border border-slate-800 rounded-xl p-3 flex flex-col gap-2 hover:border-teal-500/40 hover:bg-slate-800/80 transition-all cursor-pointer shadow-sm';
+            card.className = 'app-card min-w-[200px] max-w-[220px] p-3 flex flex-col gap-2 hover:border-indigo-500/40 cursor-pointer shadow-sm';
             
-            let iconHtml = '<i data-lucide="file" class="w-4 h-4 text-teal-400"></i>';
-            if (file.category === 'image') iconHtml = '<i data-lucide="image" class="w-4 h-4 text-emerald-400"></i>';
-            else if (file.category === 'video') iconHtml = '<i data-lucide="film" class="w-4 h-4 text-purple-400"></i>';
-            else if (file.category === 'pdf') iconHtml = '<i data-lucide="file-text" class="w-4 h-4 text-red-400"></i>';
+            let iconHtml = '<i data-lucide="file" class="w-4 h-4 text-indigo-500"></i>';
+            if (file.category === 'image') iconHtml = '<i data-lucide="image" class="w-4 h-4 text-emerald-500"></i>';
+            else if (file.category === 'video') iconHtml = '<i data-lucide="film" class="w-4 h-4 text-purple-500"></i>';
+            else if (file.category === 'pdf') iconHtml = '<i data-lucide="file-text" class="w-4 h-4 text-rose-500"></i>';
 
             let thumbHtml = '';
             if (file.category === 'image' && file.data) {
-                thumbHtml = `<div class="h-24 w-full rounded-lg overflow-hidden bg-slate-950 flex items-center justify-center">
+                thumbHtml = `<div class="h-24 w-full rounded-lg overflow-hidden bg-slate-500/10 flex items-center justify-center">
                     <img src="${file.data}" alt="${file.name}" class="w-full h-full object-cover">
                 </div>`;
             } else {
-                thumbHtml = `<div class="h-24 w-full rounded-lg bg-slate-950 flex items-center justify-center text-slate-600">
+                thumbHtml = `<div class="h-24 w-full rounded-lg bg-slate-500/10 flex items-center justify-center app-text-muted">
                     <i data-lucide="file-check" class="w-8 h-8 opacity-40"></i>
                 </div>`;
             }
@@ -141,7 +142,7 @@ class UseCloudUI {
             card.innerHTML = `
                 <div class="flex items-center gap-2">
                     ${iconHtml}
-                    <span class="text-xs font-medium text-slate-200 truncate">${file.name}</span>
+                    <span class="text-xs font-medium app-text-main truncate">${file.name}</span>
                 </div>
                 ${thumbHtml}
             `;
@@ -161,13 +162,13 @@ class UseCloudUI {
         container.innerHTML = '';
 
         if (files.length === 0) {
-            container.className = 'w-full py-16 flex flex-col items-center justify-center text-center';
+            container.className = 'w-full py-20 flex flex-col items-center justify-center text-center';
             container.innerHTML = `
-                <div class="w-16 h-16 rounded-2xl bg-teal-500/10 border border-teal-500/20 flex items-center justify-center text-teal-400 mb-4">
+                <div class="w-16 h-16 rounded-2xl flex items-center justify-center mb-4" style="background-color: var(--primary-light); color: var(--primary);">
                     <i data-lucide="folder-open" class="w-8 h-8"></i>
                 </div>
-                <h4 class="text-base font-semibold text-slate-300">Folder ini masih kosong</h4>
-                <p class="text-sm text-slate-500 mt-1 max-w-sm">Tarik dan jatuhkan file ke sini, atau klik tombol "+ Baru" untuk mengunggah.</p>
+                <h4 class="text-base font-semibold app-text-main">Folder ini masih kosong</h4>
+                <p class="text-sm app-text-muted mt-1 max-w-sm">Tarik dan jatuhkan berkas ke sini, atau klik tombol "+ Baru" untuk mengunggah.</p>
             `;
             if (window.lucide) window.lucide.createIcons();
             return;
@@ -184,12 +185,12 @@ class UseCloudUI {
                 thumbContent = `<img src="${file.data}" alt="${file.name}">`;
             } else {
                 let iconName = 'file';
-                let iconColor = 'text-teal-400';
-                if (file.category === 'video') { iconName = 'film'; iconColor = 'text-purple-400'; }
-                else if (file.category === 'audio') { iconName = 'music'; iconColor = 'text-pink-400'; }
-                else if (file.category === 'pdf') { iconName = 'file-text'; iconColor = 'text-red-400'; }
-                else if (file.category === 'code') { iconName = 'code'; iconColor = 'text-amber-400'; }
-                else if (file.category === 'spreadsheet') { iconName = 'table'; iconColor = 'text-emerald-400'; }
+                let iconColor = 'text-indigo-500';
+                if (file.category === 'video') { iconName = 'film'; iconColor = 'text-purple-500'; }
+                else if (file.category === 'audio') { iconName = 'music'; iconColor = 'text-pink-500'; }
+                else if (file.category === 'pdf') { iconName = 'file-text'; iconColor = 'text-rose-500'; }
+                else if (file.category === 'code') { iconName = 'code'; iconColor = 'text-amber-500'; }
+                else if (file.category === 'spreadsheet') { iconName = 'table'; iconColor = 'text-emerald-500'; }
 
                 thumbContent = `<div class="${iconColor} flex items-center justify-center w-full h-full"><i data-lucide="${iconName}" class="w-12 h-12"></i></div>`;
             }
@@ -199,18 +200,18 @@ class UseCloudUI {
                     ${thumbContent}
                     ${file.isStarred ? '<div class="absolute top-2 left-2 text-amber-400 drop-shadow"><i data-lucide="star" class="w-4 h-4 fill-current"></i></div>' : ''}
                 </div>
-                <div class="p-3 flex items-center justify-between gap-2 border-t border-slate-800/80">
+                <div class="p-3 flex items-center justify-between gap-2 border-t app-border">
                     <div class="overflow-hidden">
-                        <p class="text-sm font-medium text-slate-200 truncate" title="${file.name}">${file.name}</p>
-                        <p class="text-xs text-slate-500 mt-0.5">${window.useCloudStorage.formatBytes(file.size)}</p>
+                        <p class="text-sm font-medium app-text-main truncate" title="${file.name}">${file.name}</p>
+                        <p class="text-xs app-text-muted mt-0.5">${window.useCloudStorage.formatBytes(file.size)}</p>
                     </div>
-                    <button class="p-1 rounded-md text-slate-400 hover:text-white hover:bg-slate-700/50 file-menu-btn" title="Opsi">
+                    <button class="p-1 rounded-md app-text-muted hover:text-primary hover:bg-slate-500/10 file-menu-btn" title="Opsi">
                         <i data-lucide="more-vertical" class="w-4 h-4"></i>
                     </button>
                 </div>
             `;
 
-            // Selection or open
+            // Selection
             card.addEventListener('click', (e) => {
                 if (e.target.closest('.file-menu-btn')) return;
                 onSelect(file, e.ctrlKey || e.metaKey || e.shiftKey);
@@ -247,13 +248,13 @@ class UseCloudUI {
         container.innerHTML = '';
 
         if (files.length === 0) {
-            container.className = 'w-full py-16 flex flex-col items-center justify-center text-center';
+            container.className = 'w-full py-20 flex flex-col items-center justify-center text-center';
             container.innerHTML = `
-                <div class="w-16 h-16 rounded-2xl bg-teal-500/10 border border-teal-500/20 flex items-center justify-center text-teal-400 mb-4">
+                <div class="w-16 h-16 rounded-2xl flex items-center justify-center mb-4" style="background-color: var(--primary-light); color: var(--primary);">
                     <i data-lucide="folder-open" class="w-8 h-8"></i>
                 </div>
-                <h4 class="text-base font-semibold text-slate-300">Folder ini masih kosong</h4>
-                <p class="text-sm text-slate-500 mt-1 max-w-sm">Tarik dan jatuhkan file ke sini, atau klik tombol "+ Baru" untuk mengunggah.</p>
+                <h4 class="text-base font-semibold app-text-main">Folder ini masih kosong</h4>
+                <p class="text-sm app-text-muted mt-1 max-w-sm">Tarik dan jatuhkan berkas ke sini, atau klik tombol "+ Baru" untuk mengunggah.</p>
             `;
             if (window.lucide) window.lucide.createIcons();
             return;
@@ -283,11 +284,11 @@ class UseCloudUI {
             tr.setAttribute('data-id', file.id);
 
             let iconName = 'file';
-            let iconColor = 'text-teal-400';
-            if (file.category === 'image') { iconName = 'image'; iconColor = 'text-emerald-400'; }
-            else if (file.category === 'video') { iconName = 'film'; iconColor = 'text-purple-400'; }
-            else if (file.category === 'audio') { iconName = 'music'; iconColor = 'text-pink-400'; }
-            else if (file.category === 'pdf') { iconName = 'file-text'; iconColor = 'text-red-400'; }
+            let iconColor = 'text-indigo-500';
+            if (file.category === 'image') { iconName = 'image'; iconColor = 'text-emerald-500'; }
+            else if (file.category === 'video') { iconName = 'film'; iconColor = 'text-purple-500'; }
+            else if (file.category === 'audio') { iconName = 'music'; iconColor = 'text-pink-500'; }
+            else if (file.category === 'pdf') { iconName = 'file-text'; iconColor = 'text-rose-500'; }
 
             tr.innerHTML = `
                 <td>
@@ -295,15 +296,15 @@ class UseCloudUI {
                         <div class="${iconColor}">
                             <i data-lucide="${iconName}" class="w-4 h-4"></i>
                         </div>
-                        <span class="font-medium text-slate-200 truncate max-w-xs">${file.name}</span>
+                        <span class="font-medium app-text-main truncate max-w-xs">${file.name}</span>
                         ${file.isStarred ? '<i data-lucide="star" class="w-3.5 h-3.5 text-amber-400 fill-current"></i>' : ''}
                     </div>
                 </td>
-                <td class="text-slate-400">Saya</td>
-                <td class="text-slate-400">${window.useCloudStorage.formatDate(file.updatedAt || file.createdAt)}</td>
-                <td class="text-slate-400">${window.useCloudStorage.formatBytes(file.size)}</td>
+                <td class="app-text-sub">Saya</td>
+                <td class="app-text-sub">${window.useCloudStorage.formatDate(file.updatedAt || file.createdAt)}</td>
+                <td class="app-text-sub">${window.useCloudStorage.formatBytes(file.size)}</td>
                 <td class="text-right">
-                    <button class="p-1 rounded text-slate-400 hover:text-white hover:bg-slate-700/50 file-menu-btn" title="Opsi">
+                    <button class="p-1 rounded app-text-muted hover:text-primary hover:bg-slate-500/10 file-menu-btn" title="Opsi">
                         <i data-lucide="more-vertical" class="w-4 h-4"></i>
                     </button>
                 </td>
@@ -340,10 +341,12 @@ class UseCloudUI {
         const textEl = document.getElementById('storageUsageText');
         const fillEl = document.getElementById('storageProgressBar');
         if (textEl) {
-            textEl.textContent = `${window.useCloudStorage.formatBytes(stats.usedBytes)} dari 15 GB digunakan (${stats.percentage}%)`;
+            const usedStr = window.useCloudStorage.formatBytes(stats.usedBytes);
+            const totalStr = window.useCloudStorage.formatBytes(stats.quotaBytes);
+            textEl.textContent = `${usedStr} dari ${totalStr} digunakan`;
         }
         if (fillEl) {
-            fillEl.style.width = `${stats.percentage}%`;
+            fillEl.style.width = `${Math.max(1, stats.percentage)}%`;
         }
     }
 
@@ -353,8 +356,8 @@ class UseCloudUI {
         const metaContainer = document.getElementById('detailsMetadata');
 
         if (!item) {
-            if (titleEl) titleEl.textContent = 'Pilih Berkas atau Folder';
-            if (previewContainer) previewContainer.innerHTML = '<div class="text-slate-500 text-xs py-8 text-center">Pilih item untuk melihat rincian informasi.</div>';
+            if (titleEl) titleEl.textContent = 'Rincian Berkas';
+            if (previewContainer) previewContainer.innerHTML = '<div class="app-text-muted text-xs py-8 text-center">Pilih berkas atau folder untuk melihat informasi lengkap.</div>';
             if (metaContainer) metaContainer.innerHTML = '';
             return;
         }
@@ -364,11 +367,11 @@ class UseCloudUI {
         if (type === 'file') {
             if (previewContainer) {
                 if (item.category === 'image' && item.data) {
-                    previewContainer.innerHTML = `<img src="${item.data}" alt="${item.name}" class="w-full h-36 object-cover rounded-lg border border-slate-800">`;
+                    previewContainer.innerHTML = `<img src="${item.data}" alt="${item.name}" class="w-full h-40 object-cover rounded-xl border app-border">`;
                 } else {
                     previewContainer.innerHTML = `
-                        <div class="w-full h-32 rounded-lg bg-slate-900 border border-slate-800 flex items-center justify-center text-teal-400">
-                            <i data-lucide="file" class="w-12 h-12"></i>
+                        <div class="w-full h-36 rounded-xl bg-slate-500/10 border app-border flex items-center justify-center text-indigo-500">
+                            <i data-lucide="file" class="w-14 h-14"></i>
                         </div>
                     `;
                 }
@@ -376,22 +379,22 @@ class UseCloudUI {
 
             if (metaContainer) {
                 metaContainer.innerHTML = `
-                    <div class="space-y-3 text-xs text-slate-300">
-                        <div class="flex justify-between py-1 border-b border-slate-800/80">
-                            <span class="text-slate-400">Tipe Berkas</span>
-                            <span class="font-medium uppercase">${item.type.split('/')[1] || item.category}</span>
+                    <div class="space-y-3 text-xs">
+                        <div class="flex justify-between py-2 border-b app-border">
+                            <span class="app-text-muted">Tipe Berkas</span>
+                            <span class="font-medium app-text-main uppercase">${item.type.split('/')[1] || item.category}</span>
                         </div>
-                        <div class="flex justify-between py-1 border-b border-slate-800/80">
-                            <span class="text-slate-400">Ukuran</span>
-                            <span class="font-medium">${window.useCloudStorage.formatBytes(item.size)}</span>
+                        <div class="flex justify-between py-2 border-b app-border">
+                            <span class="app-text-muted">Ukuran</span>
+                            <span class="font-medium app-text-main">${window.useCloudStorage.formatBytes(item.size)}</span>
                         </div>
-                        <div class="flex justify-between py-1 border-b border-slate-800/80">
-                            <span class="text-slate-400">Dibuat</span>
-                            <span class="font-medium">${window.useCloudStorage.formatDate(item.createdAt)}</span>
+                        <div class="flex justify-between py-2 border-b app-border">
+                            <span class="app-text-muted">Dibuat</span>
+                            <span class="font-medium app-text-main">${window.useCloudStorage.formatDate(item.createdAt)}</span>
                         </div>
-                        <div class="flex justify-between py-1 border-b border-slate-800/80">
-                            <span class="text-slate-400">Berbintang</span>
-                            <span class="font-medium text-amber-400">${item.isStarred ? 'Ya' : 'Tidak'}</span>
+                        <div class="flex justify-between py-2 border-b app-border">
+                            <span class="app-text-muted">Berbintang</span>
+                            <span class="font-medium text-amber-500">${item.isStarred ? 'Ya' : 'Tidak'}</span>
                         </div>
                     </div>
                 `;
@@ -400,21 +403,21 @@ class UseCloudUI {
             // Folder
             if (previewContainer) {
                 previewContainer.innerHTML = `
-                    <div class="w-full h-32 rounded-lg bg-teal-500/10 border border-teal-500/20 flex items-center justify-center text-teal-400">
-                        <i data-lucide="folder" class="w-12 h-12"></i>
+                    <div class="w-full h-36 rounded-xl flex items-center justify-center" style="background-color: var(--primary-light); color: var(--primary);">
+                        <i data-lucide="folder" class="w-14 h-14 fill-current"></i>
                     </div>
                 `;
             }
             if (metaContainer) {
                 metaContainer.innerHTML = `
-                    <div class="space-y-3 text-xs text-slate-300">
-                        <div class="flex justify-between py-1 border-b border-slate-800/80">
-                            <span class="text-slate-400">Tipe</span>
-                            <span class="font-medium">Folder Direktori</span>
+                    <div class="space-y-3 text-xs">
+                        <div class="flex justify-between py-2 border-b app-border">
+                            <span class="app-text-muted">Tipe</span>
+                            <span class="font-medium app-text-main">Folder Direktori</span>
                         </div>
-                        <div class="flex justify-between py-1 border-b border-slate-800/80">
-                            <span class="text-slate-400">Dibuat</span>
-                            <span class="font-medium">${window.useCloudStorage.formatDate(item.createdAt)}</span>
+                        <div class="flex justify-between py-2 border-b app-border">
+                            <span class="app-text-muted">Dibuat</span>
+                            <span class="font-medium app-text-main">${window.useCloudStorage.formatDate(item.createdAt)}</span>
                         </div>
                     </div>
                 `;
@@ -429,22 +432,22 @@ class UseCloudUI {
         if (!container) return;
 
         if (activities.length === 0) {
-            container.innerHTML = '<div class="text-slate-500 text-xs py-8 text-center">Belum ada riwayat aktivitas.</div>';
+            container.innerHTML = '<div class="app-text-muted text-xs py-8 text-center">Belum ada riwayat aktivitas.</div>';
             return;
         }
 
         container.innerHTML = '';
         activities.forEach(act => {
             const item = document.createElement('div');
-            item.className = 'flex items-start gap-3 py-2 border-b border-slate-800/60 text-xs';
+            item.className = 'flex items-start gap-3 py-2.5 border-b app-border text-xs';
             item.innerHTML = `
-                <div class="w-6 h-6 rounded-full bg-slate-800 text-teal-400 flex items-center justify-center shrink-0 mt-0.5">
+                <div class="w-7 h-7 rounded-full flex items-center justify-center shrink-0 mt-0.5" style="background-color: var(--primary-light); color: var(--primary);">
                     <i data-lucide="activity" class="w-3.5 h-3.5"></i>
                 </div>
-                <div class="flex-1">
-                    <p class="font-medium text-slate-200">${act.action}</p>
-                    <p class="text-slate-400 mt-0.5">${act.description}</p>
-                    <span class="text-[10px] text-slate-500 mt-1 block">${window.useCloudStorage.formatDate(act.timestamp)}</span>
+                <div class="flex-1 overflow-hidden">
+                    <p class="font-medium app-text-main">${act.action}</p>
+                    <p class="app-text-muted mt-0.5 truncate">${act.description}</p>
+                    <span class="text-[10px] app-text-muted mt-1 block">${window.useCloudStorage.formatDate(act.timestamp)}</span>
                 </div>
             `;
             container.appendChild(item);
@@ -465,13 +468,13 @@ class UseCloudUI {
         const toast = document.createElement('div');
         toast.className = `toast ${type === 'error' ? 'toast-error' : type === 'success' ? 'toast-success' : ''}`;
 
-        let icon = '<i data-lucide="info" class="w-5 h-5 text-teal-400"></i>';
-        if (type === 'success') icon = '<i data-lucide="check-circle" class="w-5 h-5 text-emerald-400"></i>';
-        else if (type === 'error') icon = '<i data-lucide="alert-circle" class="w-5 h-5 text-red-400"></i>';
+        let icon = '<i data-lucide="info" class="w-5 h-5 text-indigo-500"></i>';
+        if (type === 'success') icon = '<i data-lucide="check-circle" class="w-5 h-5 text-emerald-500"></i>';
+        else if (type === 'error') icon = '<i data-lucide="alert-circle" class="w-5 h-5 text-rose-500"></i>';
 
         toast.innerHTML = `
             ${icon}
-            <span class="flex-1 font-medium">${message}</span>
+            <span class="flex-1 font-medium app-text-main">${message}</span>
         `;
 
         container.appendChild(toast);

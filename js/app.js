@@ -39,7 +39,7 @@ class UseCloudApp {
     // ================= THEME & CUSTOMIZATION =================
     initTheme() {
         const isLight = localStorage.getItem('usecloud_theme_mode') === 'light';
-        const colorPreset = localStorage.getItem('usecloud_color_preset') || 'emerald';
+        const colorPreset = localStorage.getItem('usecloud_color_preset') || 'indigo';
 
         if (isLight) document.body.classList.add('light-theme');
         document.body.setAttribute('data-color-preset', colorPreset);
@@ -64,7 +64,8 @@ class UseCloudApp {
     setColorPreset(preset) {
         document.body.setAttribute('data-color-preset', preset);
         localStorage.setItem('usecloud_color_preset', preset);
-        window.useCloudUI.showToast(`Tema warna diubah ke ${preset}`, 'info');
+        window.useCloudUI.showToast(`Tema aksen warna diubah ke ${preset}`, 'info');
+        if (window.lucide) window.lucide.createIcons();
     }
 
     // ================= DATA LOADING & ROUTING =================
@@ -281,7 +282,7 @@ class UseCloudApp {
             id: 'f_' + Date.now(),
             name: name.trim(),
             parentId: this.currentFolderId,
-            color: '#0d9488',
+            color: 'var(--primary)',
             isTrash: false,
             createdAt: Date.now()
         };
@@ -308,7 +309,7 @@ class UseCloudApp {
             }
         }
 
-        window.useCloudUI.showToast(`${successCount} berkas berhasil disimpan ke UseCloud!`, 'success');
+        window.useCloudUI.showToast(`${successCount} berkas berhasil disimpan!`, 'success');
         await this.loadCurrentView();
         await this.updateStorageMeter();
     }
@@ -371,6 +372,33 @@ class UseCloudApp {
         await this.updateStorageMeter();
     }
 
+    async showStorageModal() {
+        const stats = await window.useCloudDB.calculateStorage();
+        const modal = document.getElementById('storageModal');
+        if (!modal) return;
+
+        const usedStr = window.useCloudStorage.formatBytes(stats.usedBytes);
+        const quotaStr = window.useCloudStorage.formatBytes(stats.quotaBytes);
+
+        document.getElementById('storageModalUsed').textContent = usedStr;
+        document.getElementById('storageModalQuota').textContent = quotaStr;
+        document.getElementById('storageModalPercentage').textContent = `${stats.percentage}%`;
+        document.getElementById('storageModalProgress').style.width = `${Math.max(2, stats.percentage)}%`;
+
+        document.getElementById('storageBreakdownImages').textContent = window.useCloudStorage.formatBytes(stats.countByType.images);
+        document.getElementById('storageBreakdownVideos').textContent = window.useCloudStorage.formatBytes(stats.countByType.videos);
+        document.getElementById('storageBreakdownDocs').textContent = window.useCloudStorage.formatBytes(stats.countByType.documents);
+        document.getElementById('storageBreakdownAudio').textContent = window.useCloudStorage.formatBytes(stats.countByType.audio);
+        document.getElementById('storageBreakdownOthers').textContent = window.useCloudStorage.formatBytes(stats.countByType.others);
+
+        const persistStatus = document.getElementById('storagePersistStatus');
+        if (persistStatus) {
+            persistStatus.textContent = stats.isPersisted ? 'Aktif (Data Aman)' : 'Standar Browser';
+        }
+
+        this.openModal('storageModal');
+    }
+
     // ================= EVENT BINDINGS =================
     bindEvents() {
         // "+ Baru" Dropdown Toggle
@@ -387,10 +415,24 @@ class UseCloudApp {
         window.addEventListener('click', () => {
             if (dropdownNew) dropdownNew.classList.remove('open');
             this.closeContextMenu();
-            const profileDrop = document.getElementById('profileDropdown');
-            if (profileDrop) profileDrop.classList.remove('open');
-            const themeDrop = document.getElementById('themeDropdown');
-            if (themeDrop) themeDrop.classList.remove('open');
+            const paletteDrop = document.getElementById('paletteDropdown');
+            if (paletteDrop) paletteDrop.classList.remove('open');
+        });
+
+        // Storage Widget Click -> Open Storage Detail Modal
+        document.getElementById('storageWidgetCard')?.addEventListener('click', () => {
+            this.showStorageModal();
+        });
+
+        document.getElementById('btnRequestPersist')?.addEventListener('click', async () => {
+            const granted = await window.useCloudDB.requestPersistentStorage();
+            if (granted) {
+                window.useCloudUI.showToast('Penyimpanan persisten diaktifkan! Browser tidak akan menghapus data ini.', 'success');
+                const persistStatus = document.getElementById('storagePersistStatus');
+                if (persistStatus) persistStatus.textContent = 'Aktif (Data Aman)';
+            } else {
+                window.useCloudUI.showToast('Browser mengelola penyimpanan secara otomatis.', 'info');
+            }
         });
 
         // New Folder Modal

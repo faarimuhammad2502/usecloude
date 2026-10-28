@@ -6,7 +6,7 @@
     <title>UseCloud - Modern Cloud Storage</title>
     
     <!-- Favicon -->
-    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22%2310b981%22 stroke-width=%222%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22><path d=%22M18 10h-1.26A8 8 0 1 0 9 20h9a5 5 0 0 0 0-10z%22></path><circle cx=%2212%22 cy=%2214%22 r=%222%22 fill=%22%2306b6d4%22/></svg>">
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22%236366f1%22 stroke-width=%222%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22><path d=%22M18 10h-1.26A8 8 0 1 0 9 20h9a5 5 0 0 0 0-10z%22></path><circle cx=%2212%22 cy=%2214%22 r=%222%22 fill=%22%238b5cf6%22/></svg>">
     
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -23,28 +23,28 @@
     <link rel="stylesheet" href="css/main.css">
     <link rel="stylesheet" href="css/components.css">
 </head>
-<body data-color-preset="emerald">
+<body data-color-preset="indigo">
 
     <!-- ================= TOP NAVBAR ================= -->
-    <header class="top-navbar">
+    <header class="app-header">
         <!-- Logo Brand -->
         <div class="flex items-center gap-3 shrink-0">
-            <div class="w-10 h-10 rounded-xl bg-teal-500/10 border border-teal-500/20 flex items-center justify-center text-teal-400 shadow-sm">
+            <div class="w-10 h-10 rounded-xl flex items-center justify-center shadow-sm" style="background-color: var(--primary-light); color: var(--primary);">
                 <i data-lucide="cloud" class="w-6 h-6 stroke-[2.2]"></i>
             </div>
             <div>
-                <span class="text-lg font-bold tracking-tight bg-gradient-to-r from-teal-400 to-emerald-400 bg-clip-text text-transparent">usecloud</span>
-                <span class="text-[10px] block text-slate-400 font-medium tracking-wider uppercase -mt-1">Private Cloud</span>
+                <span class="text-lg font-bold tracking-tight bg-gradient-to-r from-indigo-500 to-purple-500 bg-clip-text text-transparent">usecloud</span>
+                <span class="text-[10px] block app-text-muted font-medium tracking-wider uppercase -mt-1">Private Cloud</span>
             </div>
         </div>
 
         <!-- Center Omnibox Search (Google Drive Style) -->
         <div class="flex-1 max-w-2xl mx-4 hidden sm:block">
             <div class="omnibox-search flex items-center px-4 py-2 gap-3">
-                <i data-lucide="search" class="w-5 h-5 text-slate-400 shrink-0"></i>
+                <i data-lucide="search" class="w-5 h-5 app-text-muted shrink-0"></i>
                 <input type="text" id="omniboxSearchInput" placeholder="Cari di UseCloud (nama berkas, folder, atau tipe)..." 
-                       class="w-full bg-transparent text-sm focus:outline-none placeholder-slate-400 text-slate-100">
-                <button class="text-slate-400 hover:text-slate-200" title="Filter Pencarian">
+                       class="w-full bg-transparent text-sm focus:outline-none">
+                <button class="app-text-muted hover:text-primary transition-colors" title="Pencarian Cepat">
                     <i data-lucide="sliders-horizontal" class="w-4 h-4"></i>
                 </button>
             </div>
@@ -53,46 +53,46 @@
         <!-- Right Quick Actions -->
         <div class="flex items-center gap-2">
             <!-- View Mode Switcher -->
-            <button id="toggleViewModeBtn" class="p-2 rounded-xl text-slate-400 hover:text-slate-200 hover:bg-slate-800/60 transition" title="Ganti Tampilan (Grid / List)">
+            <button id="toggleViewModeBtn" class="p-2 rounded-xl app-text-muted hover:text-primary hover:bg-slate-500/10 transition" title="Ganti Tampilan (Grid / List)">
                 <i data-lucide="list" class="w-5 h-5"></i>
             </button>
 
             <!-- Details Panel Toggle -->
-            <button id="toggleDetailsBtn" class="p-2 rounded-xl text-slate-400 hover:text-slate-200 hover:bg-slate-800/60 transition" title="Lihat Rincian & Aktivitas">
+            <button id="toggleDetailsBtn" class="p-2 rounded-xl app-text-muted hover:text-primary hover:bg-slate-500/10 transition" title="Lihat Rincian & Aktivitas">
                 <i data-lucide="info" class="w-5 h-5"></i>
             </button>
 
             <!-- Theme Preset Palette Dropdown Button -->
             <div class="relative">
-                <button id="paletteBtn" class="p-2 rounded-xl text-slate-400 hover:text-slate-200 hover:bg-slate-800/60 transition" title="Pilihan Tema Warna"
+                <button id="paletteBtn" class="p-2 rounded-xl app-text-muted hover:text-primary hover:bg-slate-500/10 transition" title="Pilihan Warna Aksen"
                         onclick="document.getElementById('paletteDropdown').classList.toggle('open')">
                     <i data-lucide="palette" class="w-5 h-5"></i>
                 </button>
-                <div id="paletteDropdown" class="action-dropdown w-48 right-0 left-auto">
-                    <div class="text-[11px] font-semibold text-slate-400 px-3 py-1.5 uppercase tracking-wider">Aksen Warna</div>
-                    <div class="action-dropdown-item" onclick="window.useCloudApp.setColorPreset('emerald')">
-                        <span class="w-3.5 h-3.5 rounded-full bg-emerald-500 mr-2"></span> Emerald Aurora
+                <div id="paletteDropdown" class="action-dropdown w-52 right-0 left-auto">
+                    <div class="text-[11px] font-semibold app-text-muted px-3 py-1.5 uppercase tracking-wider">Aksen Warna</div>
+                    <div class="action-dropdown-item" onclick="window.useCloudApp.setColorPreset('indigo')">
+                        <span class="w-3.5 h-3.5 rounded-full bg-indigo-500 mr-2 shadow-sm"></span> Royal Indigo
                     </div>
-                    <div class="action-dropdown-item" onclick="window.useCloudApp.setColorPreset('violet')">
-                        <span class="w-3.5 h-3.5 rounded-full bg-purple-500 mr-2"></span> Royal Violet
+                    <div class="action-dropdown-item" onclick="window.useCloudApp.setColorPreset('emerald')">
+                        <span class="w-3.5 h-3.5 rounded-full bg-emerald-500 mr-2 shadow-sm"></span> Cyber Emerald
                     </div>
                     <div class="action-dropdown-item" onclick="window.useCloudApp.setColorPreset('cyan')">
-                        <span class="w-3.5 h-3.5 rounded-full bg-cyan-500 mr-2"></span> Cyber Cyan
+                        <span class="w-3.5 h-3.5 rounded-full bg-cyan-500 mr-2 shadow-sm"></span> Ocean Cyan
                     </div>
-                    <div class="action-dropdown-item" onclick="window.useCloudApp.setColorPreset('sunset')">
-                        <span class="w-3.5 h-3.5 rounded-full bg-orange-500 mr-2"></span> Sunset Coral
+                    <div class="action-dropdown-item" onclick="window.useCloudApp.setColorPreset('rose')">
+                        <span class="w-3.5 h-3.5 rounded-full bg-rose-500 mr-2 shadow-sm"></span> Sunset Rose
                     </div>
                 </div>
             </div>
 
             <!-- Dark / Light Theme Toggle -->
-            <button id="themeToggleBtn" class="p-2 rounded-xl text-slate-400 hover:text-slate-200 hover:bg-slate-800/60 transition" title="Mode Terang / Gelap">
+            <button id="themeToggleBtn" class="p-2 rounded-xl app-text-muted hover:text-primary hover:bg-slate-500/10 transition" title="Mode Terang / Gelap">
                 <i data-lucide="sun" class="w-5 h-5"></i>
             </button>
 
             <!-- User Profile Avatar -->
-            <div class="flex items-center gap-2 ml-2 pl-2 border-l border-slate-800">
-                <div class="w-9 h-9 rounded-full bg-gradient-to-tr from-teal-500 to-emerald-400 flex items-center justify-center font-bold text-sm text-slate-950 cursor-pointer shadow-sm">
+            <div class="flex items-center gap-2 ml-2 pl-2 border-l app-border">
+                <div class="w-9 h-9 rounded-full bg-gradient-to-tr from-indigo-500 to-purple-400 flex items-center justify-center font-bold text-sm text-white cursor-pointer shadow-sm">
                     F
                 </div>
             </div>
@@ -103,7 +103,7 @@
     <div class="flex h-[calc(100vh-64px)] w-full overflow-hidden">
 
         <!-- ================= LEFT SIDEBAR ================= -->
-        <aside class="w-64 bg-slate-950/60 border-r border-slate-800/80 p-4 flex flex-col justify-between shrink-0">
+        <aside class="app-sidebar">
             <div>
                 <!-- "+ Baru" Button with Dropdown (Google Drive Style) -->
                 <div class="relative mb-6">
@@ -115,21 +115,21 @@
                     <!-- Dropdown Under "+ Baru" -->
                     <div id="dropdownNewItem" class="action-dropdown w-full">
                         <div id="actionNewFolder" class="action-dropdown-item">
-                            <i data-lucide="folder-plus" class="w-4 h-4 text-teal-400"></i>
+                            <i data-lucide="folder-plus" class="w-4 h-4 text-indigo-500"></i>
                             <span>Folder Baru</span>
                         </div>
                         <div class="context-menu-separator"></div>
                         <div id="actionUploadFile" class="action-dropdown-item">
-                            <i data-lucide="upload" class="w-4 h-4 text-emerald-400"></i>
+                            <i data-lucide="upload" class="w-4 h-4 text-emerald-500"></i>
                             <span>Unggah Berkas</span>
                         </div>
                         <div class="context-menu-separator"></div>
                         <div id="actionExportBackup" class="action-dropdown-item">
-                            <i data-lucide="download" class="w-4 h-4 text-cyan-400"></i>
+                            <i data-lucide="download" class="w-4 h-4 text-cyan-500"></i>
                             <span>Ekspor Cadangan</span>
                         </div>
                         <div id="actionImportBackup" class="action-dropdown-item">
-                            <i data-lucide="upload-cloud" class="w-4 h-4 text-amber-400"></i>
+                            <i data-lucide="upload-cloud" class="w-4 h-4 text-amber-500"></i>
                             <span>Impor Cadangan</span>
                         </div>
                     </div>
@@ -160,23 +160,26 @@
                 </nav>
             </div>
 
-            <!-- Storage Quota Widget -->
-            <div class="p-3.5 rounded-xl bg-slate-900/80 border border-slate-800">
-                <div class="flex items-center gap-2 text-xs font-semibold text-slate-300 mb-2">
-                    <i data-lucide="cloud" class="w-4 h-4 text-teal-400"></i>
-                    <span>Penyimpanan</span>
+            <!-- Storage Quota Widget (Clickable to open Storage Modal) -->
+            <div id="storageWidgetCard" class="storage-card" title="Klik untuk rincian penyimpanan">
+                <div class="flex items-center justify-between text-xs font-semibold app-text-main mb-2">
+                    <div class="flex items-center gap-2">
+                        <i data-lucide="database" class="w-4 h-4 text-indigo-500"></i>
+                        <span>Penyimpanan</span>
+                    </div>
+                    <i data-lucide="chevron-right" class="w-3.5 h-3.5 app-text-muted"></i>
                 </div>
                 <div class="storage-progress-bar mb-2">
                     <div id="storageProgressBar" class="storage-progress-fill" style="width: 0%;"></div>
                 </div>
-                <p id="storageUsageText" class="text-[11px] text-slate-400">Menghitung kuota...</p>
+                <p id="storageUsageText" class="text-[11px] app-text-muted">Menghitung kuota...</p>
             </div>
         </aside>
 
         <!-- ================= CENTER WORKSPACE ================= -->
-        <main class="flex-1 flex flex-col h-full overflow-hidden bg-slate-950/20">
-            <!-- Breadcrumbs & Action Bar -->
-            <div class="p-4 sm:px-6 flex items-center justify-between border-b border-slate-800/60 shrink-0">
+        <main class="app-main-workspace">
+            <!-- Breadcrumbs Bar -->
+            <div class="p-4 sm:px-6 flex items-center justify-between border-b app-border shrink-0">
                 <div id="breadcrumbContainer" class="flex items-center gap-2 overflow-x-auto">
                     <!-- Dynamic breadcrumbs injected here -->
                 </div>
@@ -184,17 +187,17 @@
 
             <!-- Trash View Banner (Visible only in Trash view) -->
             <div id="trashActionBar" class="bg-red-500/10 border-b border-red-500/20 px-6 py-2.5 flex items-center justify-between" style="display: none;">
-                <div class="flex items-center gap-2 text-xs text-red-300">
-                    <i data-lucide="alert-triangle" class="w-4 h-4 text-red-400"></i>
+                <div class="flex items-center gap-2 text-xs text-red-500 font-medium">
+                    <i data-lucide="alert-triangle" class="w-4 h-4"></i>
                     <span>Item di sampah dapat dipulihkan atau dihapus secara permanen.</span>
                 </div>
-                <button id="btnEmptyTrash" class="text-xs font-semibold text-red-400 hover:text-red-300 hover:underline">
+                <button id="btnEmptyTrash" class="text-xs font-semibold text-red-500 hover:underline">
                     Kosongkan Sampah
                 </button>
             </div>
 
             <!-- Filter Chips Bar (Category Filters) -->
-            <div class="px-6 py-3 flex items-center gap-2 overflow-x-auto shrink-0 border-b border-slate-800/40">
+            <div class="px-6 py-3 flex items-center gap-2 overflow-x-auto shrink-0 border-b app-border">
                 <button class="filter-chip active" data-filter="all">Semua</button>
                 <button class="filter-chip" data-filter="image">Gambar</button>
                 <button class="filter-chip" data-filter="document">Dokumen</button>
@@ -208,7 +211,7 @@
             <div class="flex-1 overflow-y-auto p-4 sm:p-6 space-y-6">
                 <!-- Suggested / Akses Cepat Section -->
                 <section id="quickAccessSection" style="display: none;">
-                    <h3 class="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-3">Akses Cepat</h3>
+                    <h3 class="text-xs font-semibold app-text-muted uppercase tracking-wider mb-3">Akses Cepat</h3>
                     <div id="quickAccessList" class="flex gap-4 overflow-x-auto pb-2">
                         <!-- Quick access cards injected here -->
                     </div>
@@ -216,7 +219,7 @@
 
                 <!-- Folders Section -->
                 <section id="foldersSection">
-                    <h3 class="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-3">Folder</h3>
+                    <h3 class="text-xs font-semibold app-text-muted uppercase tracking-wider mb-3">Folder</h3>
                     <div id="foldersGrid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3">
                         <!-- Folder cards injected here -->
                     </div>
@@ -224,7 +227,7 @@
 
                 <!-- Files Section -->
                 <section id="filesSection">
-                    <h3 class="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-3">Berkas</h3>
+                    <h3 class="text-xs font-semibold app-text-muted uppercase tracking-wider mb-3">Berkas</h3>
                     <div id="filesContainer">
                         <!-- Grid or List rendered here -->
                     </div>
@@ -235,15 +238,15 @@
         <!-- ================= RIGHT DETAILS PANEL ================= -->
         <aside id="detailsPanel" class="details-panel shrink-0">
             <!-- Details Header -->
-            <div class="p-4 border-b border-slate-800 flex items-center justify-between">
-                <span id="detailsTitle" class="font-semibold text-sm text-slate-200 truncate">Rincian</span>
-                <button onclick="document.getElementById('detailsPanel').classList.add('hidden')" class="p-1 rounded text-slate-400 hover:text-white">
+            <div class="p-4 border-b app-border flex items-center justify-between">
+                <span id="detailsTitle" class="font-semibold text-sm app-text-main truncate">Rincian</span>
+                <button onclick="document.getElementById('detailsPanel').classList.add('hidden')" class="p-1.5 rounded-lg app-text-muted hover:text-primary hover:bg-slate-500/10 transition">
                     <i data-lucide="x" class="w-4 h-4"></i>
                 </button>
             </div>
 
             <!-- Tabs: Rincian vs Aktivitas -->
-            <div class="flex border-b border-slate-800 text-xs">
+            <div class="flex border-b app-border text-xs">
                 <button class="details-tab-btn active" data-tab="rincian">Rincian</button>
                 <button class="details-tab-btn" data-tab="activity">Aktivitas</button>
             </div>
@@ -269,16 +272,16 @@
 
     <!-- ================= FLOATING SELECTION ACTION BAR ================= -->
     <div id="floatingActionBar" class="floating-action-bar">
-        <span id="selectedItemsCount" class="text-xs font-medium text-slate-200">0 dipilih</span>
-        <div class="h-4 w-[1px] bg-slate-700"></div>
+        <span id="selectedItemsCount" class="text-xs font-semibold app-text-main">0 dipilih</span>
+        <div class="h-4 w-[1px] bg-slate-500/30"></div>
         <div class="flex items-center gap-2">
-            <button id="btnFabDownloadAll" class="p-1.5 rounded-lg text-slate-300 hover:text-white hover:bg-slate-700/50" title="Unduh Terpilih">
+            <button id="btnFabDownloadAll" class="p-1.5 rounded-lg app-text-sub hover:text-primary hover:bg-slate-500/10" title="Unduh Terpilih">
                 <i data-lucide="download" class="w-4 h-4"></i>
             </button>
-            <button id="btnFabDeleteAll" class="p-1.5 rounded-lg text-red-400 hover:text-red-300 hover:bg-slate-700/50" title="Hapus Terpilih">
+            <button id="btnFabDeleteAll" class="p-1.5 rounded-lg text-rose-500 hover:bg-rose-500/10" title="Hapus Terpilih">
                 <i data-lucide="trash-2" class="w-4 h-4"></i>
             </button>
-            <button id="btnFabClearSelection" class="p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-slate-700/50" title="Batal Pilihan">
+            <button id="btnFabClearSelection" class="p-1.5 rounded-lg app-text-muted hover:text-primary hover:bg-slate-500/10" title="Batal Pilihan">
                 <i data-lucide="x" class="w-4 h-4"></i>
             </button>
         </div>
@@ -287,28 +290,28 @@
     <!-- ================= CONTEXT MENU ================= -->
     <div id="contextMenu" class="context-menu">
         <div id="cmPreview" class="context-menu-item">
-            <i data-lucide="eye" class="w-4 h-4 text-teal-400"></i>
+            <i data-lucide="eye" class="w-4 h-4 text-indigo-500"></i>
             <span>Pratinjau</span>
         </div>
         <div id="cmDownload" class="context-menu-item">
-            <i data-lucide="download" class="w-4 h-4 text-emerald-400"></i>
+            <i data-lucide="download" class="w-4 h-4 text-emerald-500"></i>
             <span>Unduh</span>
         </div>
         <div id="cmShare" class="context-menu-item">
-            <i data-lucide="share-2" class="w-4 h-4 text-cyan-400"></i>
+            <i data-lucide="share-2" class="w-4 h-4 text-cyan-500"></i>
             <span>Salin Tautan</span>
         </div>
         <div id="cmStar" class="context-menu-item">
-            <i data-lucide="star" class="w-4 h-4 text-amber-400"></i>
+            <i data-lucide="star" class="w-4 h-4 text-amber-500"></i>
             <span id="cmStarText">Beri Bintang</span>
         </div>
         <div class="context-menu-separator"></div>
         <div id="cmDetails" class="context-menu-item">
-            <i data-lucide="info" class="w-4 h-4 text-blue-400"></i>
+            <i data-lucide="info" class="w-4 h-4 text-blue-500"></i>
             <span>Lihat Rincian</span>
         </div>
         <div id="cmRestore" class="context-menu-item" style="display: none;">
-            <i data-lucide="rotate-ccw" class="w-4 h-4 text-emerald-400"></i>
+            <i data-lucide="rotate-ccw" class="w-4 h-4 text-emerald-500"></i>
             <span>Pulihkan</span>
         </div>
         <div id="cmDelete" class="context-menu-item danger">
@@ -321,25 +324,25 @@
     <div id="previewModal" class="preview-modal">
         <div class="preview-header">
             <div class="flex items-center gap-3">
-                <button onclick="window.useCloudPreviewer.close()" class="p-2 rounded-xl text-slate-400 hover:text-white hover:bg-slate-800">
+                <button onclick="window.useCloudPreviewer.close()" class="p-2 rounded-xl app-text-muted hover:text-primary hover:bg-slate-500/10">
                     <i data-lucide="arrow-left" class="w-5 h-5"></i>
                 </button>
                 <div>
-                    <h4 id="previewTitle" class="text-sm font-semibold text-white truncate max-w-md">Nama File</h4>
-                    <span id="previewCounter" class="text-xs text-slate-400">1 / 1</span>
+                    <h4 id="previewTitle" class="text-sm font-semibold app-text-main truncate max-w-md">Nama File</h4>
+                    <span id="previewCounter" class="text-xs app-text-muted">1 / 1</span>
                 </div>
             </div>
             <div class="flex items-center gap-2">
-                <button onclick="window.useCloudPreviewer.zoomIn()" class="p-2 rounded-xl text-slate-400 hover:text-white hover:bg-slate-800" title="Perbesar">
+                <button onclick="window.useCloudPreviewer.zoomIn()" class="p-2 rounded-xl app-text-muted hover:text-primary hover:bg-slate-500/10" title="Perbesar">
                     <i data-lucide="zoom-in" class="w-5 h-5"></i>
                 </button>
-                <button onclick="window.useCloudPreviewer.zoomOut()" class="p-2 rounded-xl text-slate-400 hover:text-white hover:bg-slate-800" title="Perkecil">
+                <button onclick="window.useCloudPreviewer.zoomOut()" class="p-2 rounded-xl app-text-muted hover:text-primary hover:bg-slate-500/10" title="Perkecil">
                     <i data-lucide="zoom-out" class="w-5 h-5"></i>
                 </button>
-                <button onclick="window.useCloudPreviewer.rotate()" class="p-2 rounded-xl text-slate-400 hover:text-white hover:bg-slate-800" title="Putar">
+                <button onclick="window.useCloudPreviewer.rotate()" class="p-2 rounded-xl app-text-muted hover:text-primary hover:bg-slate-500/10" title="Putar">
                     <i data-lucide="rotate-cw" class="w-5 h-5"></i>
                 </button>
-                <button id="previewDownloadBtn" class="p-2 rounded-xl text-slate-400 hover:text-white hover:bg-slate-800" title="Unduh">
+                <button id="previewDownloadBtn" class="p-2 rounded-xl app-text-muted hover:text-primary hover:bg-slate-500/10" title="Unduh">
                     <i data-lucide="download" class="w-5 h-5"></i>
                 </button>
             </div>
@@ -349,20 +352,105 @@
         </div>
     </div>
 
+    <!-- ================= MODAL: STORAGE DETAILS ================= -->
+    <div id="storageModal" class="modal-backdrop">
+        <div class="modal-content max-w-lg">
+            <div class="flex items-center justify-between pb-3 mb-4 border-b app-border">
+                <div class="flex items-center gap-2.5">
+                    <div class="w-8 h-8 rounded-lg flex items-center justify-center text-indigo-500" style="background-color: var(--primary-light);">
+                        <i data-lucide="database" class="w-4 h-4"></i>
+                    </div>
+                    <div>
+                        <h3 class="text-base font-bold app-text-main">Informasi Penyimpanan</h3>
+                        <p class="text-[11px] app-text-muted">Alokasi & Kapasitas Disk Browser Anda</p>
+                    </div>
+                </div>
+                <button onclick="window.useCloudApp.closeModal('storageModal')" class="p-1 rounded-lg app-text-muted hover:text-primary">
+                    <i data-lucide="x" class="w-4 h-4"></i>
+                </button>
+            </div>
+
+            <!-- Storage Progress Meter -->
+            <div class="p-4 rounded-xl mb-4" style="background-color: var(--bg-surface-elevated); border: 1px solid var(--border-subtle);">
+                <div class="flex justify-between text-xs font-semibold app-text-main mb-2">
+                    <span>Terpakai: <span id="storageModalUsed" class="text-indigo-500 font-bold">0 B</span></span>
+                    <span>Total Kuota: <span id="storageModalQuota" class="font-bold">15 GB</span></span>
+                </div>
+                <div class="storage-progress-bar mb-2 h-2.5">
+                    <div id="storageModalProgress" class="storage-progress-fill" style="width: 0%;"></div>
+                </div>
+                <div class="flex justify-between text-[11px] app-text-muted">
+                    <span>Persentase Penggunaan</span>
+                    <span id="storageModalPercentage" class="font-semibold app-text-main">0%</span>
+                </div>
+            </div>
+
+            <!-- Breakdown Per Category -->
+            <div class="space-y-2 mb-4 text-xs">
+                <div class="flex justify-between py-1.5 border-b app-border">
+                    <span class="flex items-center gap-2 app-text-sub"><i data-lucide="image" class="w-3.5 h-3.5 text-emerald-500"></i> Gambar</span>
+                    <span id="storageBreakdownImages" class="font-medium app-text-main">0 B</span>
+                </div>
+                <div class="flex justify-between py-1.5 border-b app-border">
+                    <span class="flex items-center gap-2 app-text-sub"><i data-lucide="film" class="w-3.5 h-3.5 text-purple-500"></i> Video</span>
+                    <span id="storageBreakdownVideos" class="font-medium app-text-main">0 B</span>
+                </div>
+                <div class="flex justify-between py-1.5 border-b app-border">
+                    <span class="flex items-center gap-2 app-text-sub"><i data-lucide="file-text" class="w-3.5 h-3.5 text-indigo-500"></i> Dokumen & PDF</span>
+                    <span id="storageBreakdownDocs" class="font-medium app-text-main">0 B</span>
+                </div>
+                <div class="flex justify-between py-1.5 border-b app-border">
+                    <span class="flex items-center gap-2 app-text-sub"><i data-lucide="music" class="w-3.5 h-3.5 text-pink-500"></i> Audio</span>
+                    <span id="storageBreakdownAudio" class="font-medium app-text-main">0 B</span>
+                </div>
+                <div class="flex justify-between py-1.5 border-b app-border">
+                    <span class="flex items-center gap-2 app-text-sub"><i data-lucide="archive" class="w-3.5 h-3.5 text-amber-500"></i> Lainnya / Berkas Umum</span>
+                    <span id="storageBreakdownOthers" class="font-medium app-text-main">0 B</span>
+                </div>
+            </div>
+
+            <!-- Persistent Storage Banner & Explanation -->
+            <div class="p-3.5 rounded-xl text-xs space-y-2 mb-5" style="background-color: var(--primary-light); border: 1px solid var(--primary-border);">
+                <div class="flex items-start gap-2.5">
+                    <i data-lucide="shield-check" class="w-5 h-5 text-indigo-500 shrink-0 mt-0.5"></i>
+                    <div>
+                        <p class="font-semibold app-text-main">Penyimpanan Lokal Browser (IndexedDB)</p>
+                        <p class="app-text-sub text-[11px] mt-0.5 leading-relaxed">
+                            Berkas tersimpan langsung di hard disk perangkat Anda. Browser Chrome/Edge dapat mengalokasikan hingga puluhan Gigabyte secara otomatis sesuai sisa ruang disk Anda.
+                        </p>
+                    </div>
+                </div>
+                <div class="flex items-center justify-between pt-1 border-t border-indigo-500/20">
+                    <span class="text-[11px] app-text-sub">Status Perlindungan Data: <b id="storagePersistStatus" class="app-text-main">Standar</b></span>
+                    <button id="btnRequestPersist" class="px-3 py-1 rounded-lg text-[11px] font-semibold bg-indigo-600 hover:bg-indigo-500 text-white transition">
+                        Aktifkan Mode Permanen
+                    </button>
+                </div>
+            </div>
+
+            <div class="flex justify-end">
+                <button onclick="window.useCloudApp.closeModal('storageModal')" class="px-5 py-2 rounded-xl text-xs font-semibold bg-slate-500/10 hover:bg-slate-500/20 app-text-main transition">
+                    Tutup
+                </button>
+            </div>
+        </div>
+    </div>
+
     <!-- ================= MODAL: FOLDER BARU ================= -->
     <div id="newFolderModal" class="modal-backdrop">
         <div class="modal-content">
-            <h3 class="text-base font-semibold text-white mb-2">Folder Baru</h3>
-            <p class="text-xs text-slate-400 mb-4">Masukkan nama untuk folder baru Anda.</p>
+            <h3 class="text-base font-bold app-text-main mb-1">Folder Baru</h3>
+            <p class="text-xs app-text-muted mb-4">Masukkan nama untuk folder baru Anda.</p>
             <input type="text" id="newFolderNameInput" placeholder="Nama Folder..." 
-                   class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:border-teal-500 mb-6">
+                   class="w-full rounded-xl px-4 py-2.5 text-sm app-text-main focus:outline-none mb-6"
+                   style="background-color: var(--bg-surface-elevated); border: 1px solid var(--border-subtle);">
             <div class="flex justify-end gap-3">
                 <button onclick="window.useCloudApp.closeModal('newFolderModal')" 
-                        class="px-4 py-2 rounded-xl text-xs font-semibold text-slate-300 hover:bg-slate-800 transition">
+                        class="px-4 py-2 rounded-xl text-xs font-semibold app-text-sub hover:bg-slate-500/10 transition">
                     Batal
                 </button>
                 <button id="submitNewFolderBtn" 
-                        class="px-5 py-2 rounded-xl text-xs font-semibold bg-teal-600 hover:bg-teal-500 text-white transition">
+                        class="px-5 py-2 rounded-xl text-xs font-semibold bg-indigo-600 hover:bg-indigo-500 text-white transition">
                     Buat Folder
                 </button>
             </div>
@@ -372,11 +460,12 @@
     <!-- ================= DRAG AND DROP OVERLAY ================= -->
     <div id="dropzoneOverlay" class="dropzone-overlay">
         <div class="text-center p-8">
-            <div class="w-20 h-20 rounded-full bg-teal-500/20 border border-teal-500/30 flex items-center justify-center text-teal-400 mx-auto mb-4 animate-bounce">
+            <div class="w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-4 animate-bounce"
+                 style="background-color: var(--primary-light); color: var(--primary);">
                 <i data-lucide="upload-cloud" class="w-10 h-10"></i>
             </div>
-            <h3 class="text-xl font-bold text-white mb-1">Lepaskan Berkas ke Sini</h3>
-            <p class="text-sm text-slate-400">Berkas akan otomatis disimpan ke UseCloud</p>
+            <h3 class="text-xl font-bold app-text-main mb-1">Lepaskan Berkas ke Sini</h3>
+            <p class="text-sm app-text-muted">Berkas akan langsung disimpan ke UseCloud</p>
         </div>
     </div>
 
