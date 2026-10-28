@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>UseCloud - Modern Cloud Storage</title>
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22%2310b981%22 stroke-width=%222%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22><path d=%22M18 10h-1.26A8 8 0 1 0 9 20h9a5 5 0 0 0 0-10z%22></path><circle cx=%2212%22 cy=%2214%22 r=%222%22 fill=%22%2306b6d4%22/></svg>">
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Lucide Icons CDN -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <!-- App Modular Stylesheets -->
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/components.css">
+</head>
+<body data-color-preset="emerald">
+
+    <!-- ================= TOP NAVBAR ================= -->
+    <header class="top-navbar">
+        <!-- Logo Brand -->
+        <div class="flex items-center gap-3 shrink-0">
+            <div class="w-10 h-10 rounded-xl bg-teal-500/10 border border-teal-500/20 flex items-center justify-center text-teal-400 shadow-sm">
+                <i data-lucide="cloud" class="w-6 h-6 stroke-[2.2]"></i>
+            </div>
+            <div>
+                <span class="text-lg font-bold tracking-tight bg-gradient-to-r from-teal-400 to-emerald-400 bg-clip-text text-transparent">usecloud</span>
+                <span class="text-[10px] block text-slate-400 font-medium tracking-wider uppercase -mt-1">Private Cloud</span>
+            </div>
+        </div>
+
+        <!-- Center Omnibox Search (Google Drive Style) -->
+        <div class="flex-1 max-w-2xl mx-4 hidden sm:block">
+            <div class="omnibox-search flex items-center px-4 py-2 gap-3">
+                <i data-lucide="search" class="w-5 h-5 text-slate-400 shrink-0"></i>
+                <input type="text" id="omniboxSearchInput" placeholder="Cari di UseCloud (nama berkas, folder, atau tipe)..." 
+                       class="w-full bg-transparent text-sm focus:outline-none placeholder-slate-400 text-slate-100">
+                <button class="text-slate-400 hover:text-slate-200" title="Filter Pencarian">
+                    <i data-lucide="sliders-horizontal" class="w-4 h-4"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Right Quick Actions -->
+        <div class="flex items-center gap-2">
+            <!-- View Mode Switcher -->
+            <button id="toggleViewModeBtn" class="p-2 rounded-xl text-slate-400 hover:text-slate-200 hover:bg-slate-800/60 transition" title="Ganti Tampilan (Grid / List)">
+                <i data-lucide="list" class="w-5 h-5"></i>
+            </button>
+
+            <!-- Details Panel Toggle -->
+            <button id="toggleDetailsBtn" class="p-2 rounded-xl text-slate-400 hover:text-slate-200 hover:bg-slate-800/60 transition" title="Lihat Rincian & Aktivitas">
+                <i data-lucide="info" class="w-5 h-5"></i>
+            </button>
+
+            <!-- Theme Preset Palette Dropdown Button -->
+            <div class="relative">
+                <button id="paletteBtn" class="p-2 rounded-xl text-slate-400 hover:text-slate-200 hover:bg-slate-800/60 transition" title="Pilihan Tema Warna"
+                        onclick="document.getElementById('paletteDropdown').classList.toggle('open')">
+                    <i data-lucide="palette" class="w-5 h-5"></i>
+                </button>
+                <div id="paletteDropdown" class="action-dropdown w-48 right-0 left-auto">
+                    <div class="text-[11px] font-semibold text-slate-400 px-3 py-1.5 uppercase tracking-wider">Aksen Warna</div>
+                    <div class="action-dropdown-item" onclick="window.useCloudApp.setColorPreset('emerald')">
+                        <span class="w-3.5 h-3.5 rounded-full bg-emerald-500 mr-2"></span> Emerald Aurora
+                    </div>
+                    <div class="action-dropdown-item" onclick="window.useCloudApp.setColorPreset('violet')">
+                        <span class="w-3.5 h-3.5 rounded-full bg-purple-500 mr-2"></span> Royal Violet
+                    </div>
+                    <div class="action-dropdown-item" onclick="window.useCloudApp.setColorPreset('cyan')">
+                        <span class="w-3.5 h-3.5 rounded-full bg-cyan-500 mr-2"></span> Cyber Cyan
+                    </div>
+                    <div class="action-dropdown-item" onclick="window.useCloudApp.setColorPreset('sunset')">
+                        <span class="w-3.5 h-3.5 rounded-full bg-orange-500 mr-2"></span> Sunset Coral
+                    </div>
+                </div>
+            </div>
+
+            <!-- Dark / Light Theme Toggle -->
+            <button id="themeToggleBtn" class="p-2 rounded-xl text-slate-400 hover:text-slate-200 hover:bg-slate-800/60 transition" title="Mode Terang / Gelap">
+                <i data-lucide="sun" class="w-5 h-5"></i>
+            </button>
+
+            <!-- User Profile Avatar -->
+            <div class="flex items-center gap-2 ml-2 pl-2 border-l border-slate-800">
+                <div class="w-9 h-9 rounded-full bg-gradient-to-tr from-teal-500 to-emerald-400 flex items-center justify-center font-bold text-sm text-slate-950 cursor-pointer shadow-sm">
+                    F
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- ================= MAIN CONTAINER ================= -->
+    <div class="flex h-[calc(100vh-64px)] w-full overflow-hidden">
+
+        <!-- ================= LEFT SIDEBAR ================= -->
+        <aside class="w-64 bg-slate-950/60 border-r border-slate-800/80 p-4 flex flex-col justify-between shrink-0">
+            <div>
+                <!-- "+ Baru" Button with Dropdown (Google Drive Style) -->
+                <div class="relative mb-6">
+                    <button id="btnNewItem" class="btn-new-item w-full justify-center">
+                        <i data-lucide="plus" class="w-5 h-5 stroke-[2.5]"></i>
+                        <span>Baru</span>
+                    </button>
+
+                    <!-- Dropdown Under "+ Baru" -->
+                    <div id="dropdownNewItem" class="action-dropdown w-full">
+                        <div id="actionNewFolder" class="action-dropdown-item">
+                            <i data-lucide="folder-plus" class="w-4 h-4 text-teal-400"></i>
+                            <span>Folder Baru</span>
+                        </div>
+                        <div class="context-menu-separator"></div>
+                        <div id="actionUploadFile" class="action-dropdown-item">
+                            <i data-lucide="upload" class="w-4 h-4 text-emerald-400"></i>
+                            <span>Unggah Berkas</span>
+                        </div>
+                        <div class="context-menu-separator"></div>
+                        <div id="actionExportBackup" class="action-dropdown-item">
+                            <i data-lucide="download" class="w-4 h-4 text-cyan-400"></i>
+                            <span>Ekspor Cadangan</span>
+                        </div>
+                        <div id="actionImportBackup" class="action-dropdown-item">
+                            <i data-lucide="upload-cloud" class="w-4 h-4 text-amber-400"></i>
+                            <span>Impor Cadangan</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Navigation Links -->
+                <nav class="space-y-1">
+                    <a href="#" class="sidebar-link active" data-view="my-cloud">
+                        <i data-lucide="hard-drive" class="w-4 h-4"></i>
+                        <span>Cloud Saya</span>
+                    </a>
+                    <a href="#" class="sidebar-link" data-view="shared">
+                        <i data-lucide="users" class="w-4 h-4"></i>
+                        <span>Dibagikan</span>
+                    </a>
+                    <a href="#" class="sidebar-link" data-view="recent">
+                        <i data-lucide="clock" class="w-4 h-4"></i>
+                        <span>Terbaru</span>
+                    </a>
+                    <a href="#" class="sidebar-link" data-view="starred">
+                        <i data-lucide="star" class="w-4 h-4"></i>
+                        <span>Berbintang</span>
+                    </a>
+                    <a href="#" class="sidebar-link" data-view="trash">
+                        <i data-lucide="trash-2" class="w-4 h-4"></i>
+                        <span>Sampah</span>
+                    </a>
+                </nav>
+            </div>
+
+            <!-- Storage Quota Widget -->
+            <div class="p-3.5 rounded-xl bg-slate-900/80 border border-slate-800">
+                <div class="flex items-center gap-2 text-xs font-semibold text-slate-300 mb-2">
+                    <i data-lucide="cloud" class="w-4 h-4 text-teal-400"></i>
+                    <span>Penyimpanan</span>
+                </div>
+                <div class="storage-progress-bar mb-2">
+                    <div id="storageProgressBar" class="storage-progress-fill" style="width: 0%;"></div>
+                </div>
+                <p id="storageUsageText" class="text-[11px] text-slate-400">Menghitung kuota...</p>
+            </div>
+        </aside>
+
+        <!-- ================= CENTER WORKSPACE ================= -->
+        <main class="flex-1 flex flex-col h-full overflow-hidden bg-slate-950/20">
+            <!-- Breadcrumbs & Action Bar -->
+            <div class="p-4 sm:px-6 flex items-center justify-between border-b border-slate-800/60 shrink-0">
+                <div id="breadcrumbContainer" class="flex items-center gap-2 overflow-x-auto">
+                    <!-- Dynamic breadcrumbs injected here -->
+                </div>
+            </div>
+
+            <!-- Trash View Banner (Visible only in Trash view) -->
+            <div id="trashActionBar" class="bg-red-500/10 border-b border-red-500/20 px-6 py-2.5 flex items-center justify-between" style="display: none;">
+                <div class="flex items-center gap-2 text-xs text-red-300">
+                    <i data-lucide="alert-triangle" class="w-4 h-4 text-red-400"></i>
+                    <span>Item di sampah dapat dipulihkan atau dihapus secara permanen.</span>
+                </div>
+                <button id="btnEmptyTrash" class="text-xs font-semibold text-red-400 hover:text-red-300 hover:underline">
+                    Kosongkan Sampah
+                </button>
+            </div>
+
+            <!-- Filter Chips Bar (Category Filters) -->
+            <div class="px-6 py-3 flex items-center gap-2 overflow-x-auto shrink-0 border-b border-slate-800/40">
+                <button class="filter-chip active" data-filter="all">Semua</button>
+                <button class="filter-chip" data-filter="image">Gambar</button>
+                <button class="filter-chip" data-filter="document">Dokumen</button>
+                <button class="filter-chip" data-filter="video">Video</button>
+                <button class="filter-chip" data-filter="pdf">PDF</button>
+                <button class="filter-chip" data-filter="audio">Audio</button>
+                <button class="filter-chip" data-filter="code">Kode</button>
+            </div>
+
+            <!-- Workspace Scroll Area -->
+            <div class="flex-1 overflow-y-auto p-4 sm:p-6 space-y-6">
+                <!-- Suggested / Akses Cepat Section -->
+                <section id="quickAccessSection" style="display: none;">
+                    <h3 class="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-3">Akses Cepat</h3>
+                    <div id="quickAccessList" class="flex gap-4 overflow-x-auto pb-2">
+                        <!-- Quick access cards injected here -->
+                    </div>
+                </section>
+
+                <!-- Folders Section -->
+                <section id="foldersSection">
+                    <h3 class="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-3">Folder</h3>
+                    <div id="foldersGrid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3">
+                        <!-- Folder cards injected here -->
+                    </div>
+                </section>
+
+                <!-- Files Section -->
+                <section id="filesSection">
+                    <h3 class="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-3">Berkas</h3>
+                    <div id="filesContainer">
+                        <!-- Grid or List rendered here -->
+                    </div>
+                </section>
+            </div>
+        </main>
+
+        <!-- ================= RIGHT DETAILS PANEL ================= -->
+        <aside id="detailsPanel" class="details-panel shrink-0">
+            <!-- Details Header -->
+            <div class="p-4 border-b border-slate-800 flex items-center justify-between">
+                <span id="detailsTitle" class="font-semibold text-sm text-slate-200 truncate">Rincian</span>
+                <button onclick="document.getElementById('detailsPanel').classList.add('hidden')" class="p-1 rounded text-slate-400 hover:text-white">
+                    <i data-lucide="x" class="w-4 h-4"></i>
+                </button>
+            </div>
+
+            <!-- Tabs: Rincian vs Aktivitas -->
+            <div class="flex border-b border-slate-800 text-xs">
+                <button class="details-tab-btn active" data-tab="rincian">Rincian</button>
+                <button class="details-tab-btn" data-tab="activity">Aktivitas</button>
+            </div>
+
+            <!-- Tab Content: Rincian -->
+            <div id="detailsTabRincian" class="p-4 space-y-4 overflow-y-auto flex-1">
+                <div id="detailsPreviewArea">
+                    <!-- Thumbnail preview injected here -->
+                </div>
+                <div id="detailsMetadata">
+                    <!-- Metadata injected here -->
+                </div>
+            </div>
+
+            <!-- Tab Content: Aktivitas -->
+            <div id="detailsTabActivity" class="p-4 space-y-2 overflow-y-auto flex-1" style="display: none;">
+                <div id="detailsActivityList">
+                    <!-- Activities list injected here -->
+                </div>
+            </div>
+        </aside>
+    </div>
+
+    <!-- ================= FLOATING SELECTION ACTION BAR ================= -->
+    <div id="floatingActionBar" class="floating-action-bar">
+        <span id="selectedItemsCount" class="text-xs font-medium text-slate-200">0 dipilih</span>
+        <div class="h-4 w-[1px] bg-slate-700"></div>
+        <div class="flex items-center gap-2">
+            <button id="btnFabDownloadAll" class="p-1.5 rounded-lg text-slate-300 hover:text-white hover:bg-slate-700/50" title="Unduh Terpilih">
+                <i data-lucide="download" class="w-4 h-4"></i>
+            </button>
+            <button id="btnFabDeleteAll" class="p-1.5 rounded-lg text-red-400 hover:text-red-300 hover:bg-slate-700/50" title="Hapus Terpilih">
+                <i data-lucide="trash-2" class="w-4 h-4"></i>
+            </button>
+            <button id="btnFabClearSelection" class="p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-slate-700/50" title="Batal Pilihan">
+                <i data-lucide="x" class="w-4 h-4"></i>
+            </button>
+        </div>
+    </div>
+
+    <!-- ================= CONTEXT MENU ================= -->
+    <div id="contextMenu" class="context-menu">
+        <div id="cmPreview" class="context-menu-item">
+            <i data-lucide="eye" class="w-4 h-4 text-teal-400"></i>
+            <span>Pratinjau</span>
+        </div>
+        <div id="cmDownload" class="context-menu-item">
+            <i data-lucide="download" class="w-4 h-4 text-emerald-400"></i>
+            <span>Unduh</span>
+        </div>
+        <div id="cmShare" class="context-menu-item">
+            <i data-lucide="share-2" class="w-4 h-4 text-cyan-400"></i>
+            <span>Salin Tautan</span>
+        </div>
+        <div id="cmStar" class="context-menu-item">
+            <i data-lucide="star" class="w-4 h-4 text-amber-400"></i>
+            <span id="cmStarText">Beri Bintang</span>
+        </div>
+        <div class="context-menu-separator"></div>
+        <div id="cmDetails" class="context-menu-item">
+            <i data-lucide="info" class="w-4 h-4 text-blue-400"></i>
+            <span>Lihat Rincian</span>
+        </div>
+        <div id="cmRestore" class="context-menu-item" style="display: none;">
+            <i data-lucide="rotate-ccw" class="w-4 h-4 text-emerald-400"></i>
+            <span>Pulihkan</span>
+        </div>
+        <div id="cmDelete" class="context-menu-item danger">
+            <i data-lucide="trash-2" class="w-4 h-4"></i>
+            <span>Pindahkan ke Sampah</span>
+        </div>
+    </div>
+
+    <!-- ================= LIGHTBOX PREVIEW MODAL ================= -->
+    <div id="previewModal" class="preview-modal">
+        <div class="preview-header">
+            <div class="flex items-center gap-3">
+                <button onclick="window.useCloudPreviewer.close()" class="p-2 rounded-xl text-slate-400 hover:text-white hover:bg-slate-800">
+                    <i data-lucide="arrow-left" class="w-5 h-5"></i>
+                </button>
+                <div>
+                    <h4 id="previewTitle" class="text-sm font-semibold text-white truncate max-w-md">Nama File</h4>
+                    <span id="previewCounter" class="text-xs text-slate-400">1 / 1</span>
+                </div>
+            </div>
+            <div class="flex items-center gap-2">
+                <button onclick="window.useCloudPreviewer.zoomIn()" class="p-2 rounded-xl text-slate-400 hover:text-white hover:bg-slate-800" title="Perbesar">
+                    <i data-lucide="zoom-in" class="w-5 h-5"></i>
+                </button>
+                <button onclick="window.useCloudPreviewer.zoomOut()" class="p-2 rounded-xl text-slate-400 hover:text-white hover:bg-slate-800" title="Perkecil">
+                    <i data-lucide="zoom-out" class="w-5 h-5"></i>
+                </button>
+                <button onclick="window.useCloudPreviewer.rotate()" class="p-2 rounded-xl text-slate-400 hover:text-white hover:bg-slate-800" title="Putar">
+                    <i data-lucide="rotate-cw" class="w-5 h-5"></i>
+                </button>
+                <button id="previewDownloadBtn" class="p-2 rounded-xl text-slate-400 hover:text-white hover:bg-slate-800" title="Unduh">
+                    <i data-lucide="download" class="w-5 h-5"></i>
+                </button>
+            </div>
+        </div>
+        <div id="previewBody" class="preview-body">
+            <!-- Dynamic Preview Content -->
+        </div>
+    </div>
+
+    <!-- ================= MODAL: FOLDER BARU ================= -->
+    <div id="newFolderModal" class="modal-backdrop">
+        <div class="modal-content">
+            <h3 class="text-base font-semibold text-white mb-2">Folder Baru</h3>
+            <p class="text-xs text-slate-400 mb-4">Masukkan nama untuk folder baru Anda.</p>
+            <input type="text" id="newFolderNameInput" placeholder="Nama Folder..." 
+                   class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:border-teal-500 mb-6">
+            <div class="flex justify-end gap-3">
+                <button onclick="window.useCloudApp.closeModal('newFolderModal')" 
+                        class="px-4 py-2 rounded-xl text-xs font-semibold text-slate-300 hover:bg-slate-800 transition">
+                    Batal
+                </button>
+                <button id="submitNewFolderBtn" 
+                        class="px-5 py-2 rounded-xl text-xs font-semibold bg-teal-600 hover:bg-teal-500 text-white transition">
+                    Buat Folder
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ================= DRAG AND DROP OVERLAY ================= -->
+    <div id="dropzoneOverlay" class="dropzone-overlay">
+        <div class="text-center p-8">
+            <div class="w-20 h-20 rounded-full bg-teal-500/20 border border-teal-500/30 flex items-center justify-center text-teal-400 mx-auto mb-4 animate-bounce">
+                <i data-lucide="upload-cloud" class="w-10 h-10"></i>
+            </div>
+            <h3 class="text-xl font-bold text-white mb-1">Lepaskan Berkas ke Sini</h3>
+            <p class="text-sm text-slate-400">Berkas akan otomatis disimpan ke UseCloud</p>
+        </div>
+    </div>
+
+    <!-- Hidden File Inputs -->
+    <input type="file" id="fileUploadInput" multiple class="hidden">
+    <input type="file" id="backupFileInput" accept=".json" class="hidden">
+
+    <!-- Toast Notifications Container -->
+    <div id="toastContainer" class="toast-container"></div>
+
+    <!-- ================= APP SCRIPTS ================= -->
+    <script src="js/db.js"></script>
+    <script src="js/storage.js"></script>
+    <script src="js/preview.js"></script>
+    <script src="js/ui.js"></script>
+    <script src="js/app.js"></script>
+</body>
+</html>
